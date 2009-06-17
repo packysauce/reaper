@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models import Q
-from django.core.exceptions import *
 
 class SparseField(models.TextField):
     """Field used to tie sparse strings to many database objects.
@@ -40,19 +38,7 @@ class SparseField(models.TextField):
         return result[:-1]
         
     def __init__(self, *args, **kwargs):
-        try:
-            if args[0].__class__ == models.Model.__class__:
-                self.__model_link_type__ = args[0]
-                self.__model_remote_column__ = kwargs['link_on']
-                del kwargs['link_on']
-            else:
-                raise FieldError('Linked model error')
-        except:
-            raise FieldError("Linked model error")
-
         super(SparseField, self).__init__(*args, **kwargs)
-        self.cached = False
-        self.cache = []
 
     def to_python(self, value):
         return self.__desparse__(value)
