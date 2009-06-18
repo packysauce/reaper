@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>View All IPs</title>
+    </head>
+
+    <body>
+        <h1>View All IPs</h1>
+        <ul>
+            {% for ip in ip_list %}
+            <li><a href="{{ ip }}">{{ ip }}</a></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

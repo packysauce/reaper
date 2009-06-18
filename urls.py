@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib import databrowse
 from sarimui.models import *
+from sarimui import views
 
 databrowse.site.register(Source)
 databrowse.site.register(ConfigList)
@@ -31,7 +32,10 @@ databrowse.site.register(VlanScanState)
 urlpatterns = patterns('',
     # Example:
     # (r'^reaper/', include('reaper.foo.urls')),
-    (r'databrowse/(.*)', databrowse.site.root),
+    (r'^db/(.*)$', databrowse.site.root),
+    url(r'^index/$', views.index),
+    url(r'^ip/$', views.ip_list),
+    url(r'^ip/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

@@ -75,6 +75,7 @@ class IpHostname(models.Model):
     entered = models.DateTimeField()
     sourceid = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
+        ordering = ["ip", "observed"]
         managed = False
         db_table = u'iphostname'
 
