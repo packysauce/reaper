@@ -1,16 +1,9 @@
 
-# Bob uses individual numbers and ranges for values in his tables.
-# This is a utility to break those apart into a tuple of ranges
-# Useful for putting together relationships between Django DB models
-#  when Bob has used this data storage technique
+def aton(address):
+    bits = [int(i) for i in address.split('.')]
+    return int("%02x%02x%02x%02x" % (bits[0],bits[1],bits[2],bits[3]),16)
 
-def desparse(sparse_string):
-    result = []
-    for item in sparse_string.split(','):
-        parts = item.split('-')
-        if len(parts) == 1:
-            result.append(int(parts[0]))
-        elif len(parts) == 2:
-            [result.append(i) for i in range(int(parts[0]),int(parts[1])+1)]
+def ntoa(value):
+    string = "%08x" % value
+    return '.'.join(["%d" % int(string[i]+string[i+1],16) for i in range(0,8,2)])
 
-    return sorted(result)
