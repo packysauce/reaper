@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import *
+import re
 
 class SparseField(models.TextField):
     """Field used to tie sparse strings to many database objects.
@@ -14,7 +15,6 @@ class SparseField(models.TextField):
             parts = item.split('-')
             if len(parts) == 1:
                 result.append(int(parts[0]))
-
             elif len(parts) == 2:
                 [result.append(i) for i in range(int(parts[0]),int(parts[1])+1)]
 
@@ -43,6 +43,8 @@ class SparseField(models.TextField):
         super(SparseField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
+        if value == '':
+            return []
         return self.__desparse__(value)
     
     def get_db_prep_value(self, value):

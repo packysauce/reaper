@@ -1,14 +1,13 @@
 <html>
     <head>
-        <title>View All IPs</title>
+        <title>Search by IP</title>
     </head>
 
     <body>
-        <h1>View All IPs</h1>
-        <ul>
-            {% for ip in ip_list %}
-            <li><a href="{{ ip }}">{{ ip }}</a></li>
-            {% endfor %}
-        </ul>
+        <h1>Search by IP</h1>
+        <form action="javascript:window.location.href=document.getElementById('ipbox').value;">
+            <input type='text' id='ipbox'/>
+            <button type='submit'>Search for IP</button>
+        </form>
     </body>
 </html>

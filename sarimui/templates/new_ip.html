@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>View IP Details</title>
+    </head>
+
+    <body>
+        <h1>Database results for {{ ip }}</h1>
+        {% for mac,scans in scans_by_mac.items %}
+            {% if forloop.first %}
+            <h3>{{ scans_by_mac|length }} MAC associations found</h3>
+            <ul class='mac_list'>
+            {% endif %}
+                <li class='mac_item'><h2>{{ mac }}</h2></li>
+                    <ul class='scan_list'>
+                        {% for scan in scans %}
+                        <li class='scan_item'>{{ scan.ports }} found {{ scan.end|date:"F j, Y" }}</li>
+                        {% empty %}
+                        <div class='empty'>No scans for this MAC</div>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% if forloop.last %}
+            </ul>
+            {% endif %}
+        {% empty %}
+            <h2>{{ ip }} has no scan history</h2>
+        {% endfor %}
+    </body>
+</html>
+

@@ -6,4 +6,3 @@ def aton(address):
 def ntoa(value):
     string = "%08x" % value
     return '.'.join(["%d" % int(string[i]+string[i+1],16) for i in range(0,8,2)])
-

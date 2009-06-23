@@ -21,7 +21,7 @@
             <h2>Associated MACs</h2>
             <ul>
                 {% for mac in macs %}
-                <li>{{ mac }}</li>
+                <li>{{ mac.mac }}</li>
                 {% endfor %}
             </ul>
         </div>
@@ -35,6 +35,10 @@
                 <li>Scan {{ scan.id }}: Started on {{ scan.start }}</li>
                 {% endfor %}
             </ul>
+        </div>
+        {% else %}
+        <div class='noscans'>
+            <h3>Device has no scan results</h3>
         </div>
         {% endif %}
     </body>

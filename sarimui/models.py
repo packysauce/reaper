@@ -37,13 +37,16 @@ class Hostname(models.Model):
         db_table = u'hostname'
 
 class HostSet(models.Model):
+    def __unicode__(self):
+        return '%s(%d)' % (self.name, self.id)
+
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=96)
     type = models.CharField(max_length=48)
     iplist = SparseField(blank=True)
     digest = models.CharField(max_length=192)
     entered = models.DateTimeField()
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         managed = False
         db_table = u'hostset'
@@ -63,17 +66,17 @@ class IpComments(models.Model):
     entered = models.DateTimeField()
     content = models.TextField()
     analyst = models.CharField(max_length=96)
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         managed = False
         db_table = u'ipcomments'
 
 class IpHostname(models.Model):
     ip = models.IntegerField(primary_key=True)
-    hostnameid = models.ForeignKey('Hostname', db_column='hostnameid')
+    hostname = models.ForeignKey('Hostname', db_column='hostnameid')
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField()
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         ordering = ["ip", "observed"]
         managed = False
@@ -90,21 +93,26 @@ class Log(models.Model):
         db_table = u'log'
 
 class Mac(models.Model):
+    def __unicode__(self):
+        return self.mac
     id = models.IntegerField(primary_key=True)
     mac = models.CharField(max_length=51, blank=True)
-    sourceid = models.ForeignKey(Source, db_column='sourceid')
+    source = models.ForeignKey(Source, db_column='sourceid')
     entered = models.DateTimeField()
     class Meta:
         managed = False
         db_table = u'mac'
 
 class MacIp(models.Model):
+    def __unicode__(self):
+        return self.macid.__unicode__()
     macid = models.ForeignKey('Mac', db_column='macid')
     ip = models.IntegerField(primary_key=True)
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField()
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
+        ordering = ["ip","observed"]
         managed = False
         db_table = u'macip'
 
@@ -145,7 +153,7 @@ class PluginDump(models.Model):
     pluginsadded = models.IntegerField(null=True, blank=True)
     pluginlist = SparseField(blank=True)
     digest = models.CharField(unique=True, max_length=120)
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     starttime = models.DateTimeField()
     endtime = models.DateTimeField(null=True, blank=True)
     plugins = models.ManyToManyField('Plugin', through='PluginDumpPlugin')
@@ -154,8 +162,8 @@ class PluginDump(models.Model):
         db_table = u'plugindump'
 
 class PluginDumpPlugin(models.Model):
-    plugindumpid = models.ForeignKey('PluginDump', db_column='plugindumpid')
-    pluginid = models.ForeignKey('Plugin', db_column='pluginid')
+    plugindump = models.ForeignKey('PluginDump', db_column='plugindumpid')
+    plugin = models.ForeignKey('Plugin', db_column='pluginid')
     class Meta:
         managed = False
         db_table = u'plugindumpplugin'
@@ -171,7 +179,7 @@ class Scanner(models.Model):
 
 class ScanResults(models.Model):
     id = models.IntegerField(primary_key=True)
-    scanrunid = models.ForeignKey('ScanRun', db_column='scanrunid')
+    scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
     ip = models.IntegerField()
     state = models.CharField(max_length=12)
     start = models.DateTimeField()
@@ -187,9 +195,9 @@ class ScanRun(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     status = models.CharField(max_length=48)
-    scansetid = models.ForeignKey('ScanSet', db_column='scansetid')
-    hostsetid = models.ForeignKey('HostSet', db_column='hostsetid')
-    scannerid = models.ForeignKey('Scanner', db_column='scannerid')
+    scanset = models.ForeignKey('ScanSet', db_column='scansetid')
+    hostset = models.ForeignKey('HostSet', db_column='hostsetid')
+    scanner = models.ForeignKey('Scanner', db_column='scannerid')
     configfile = models.TextField()
     resultfile = models.TextField()
     class Meta:
@@ -199,10 +207,10 @@ class ScanRun(models.Model):
 class ScanSet(models.Model):
     id = models.IntegerField(primary_key=True)
     digest = models.CharField(unique=True, max_length=192)
-    plugindumpid = models.ForeignKey('PluginDump', db_column='plugindumpid')
+    plugindump = models.ForeignKey('PluginDump', db_column='plugindumpid')
     type = models.CharField(max_length=96)
     pluginlist = SparseField(blank=True)
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     entered = models.DateTimeField()
     class Meta:
         managed = False
@@ -222,7 +230,7 @@ class Top20Lists(models.Model):
     digest = models.CharField(max_length=192)
     cvelist = models.TextField()
     entered = models.DateTimeField()
-    sourceid = models.ForeignKey('Source', db_column='sourceid')
+    source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         managed = False
         db_table = u'top20lists'
