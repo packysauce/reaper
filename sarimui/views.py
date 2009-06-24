@@ -23,24 +23,34 @@ def new_ip_view(request, ip):
     #third, look at the MAC assoc. between the scan start and end times to see
     #        what MAC a particular IP was using at the time
 
+    # ['macs'][<mac address>]
+    #                       +-['scans']
+    #                       +-['vulns']
+
+    tmp_dict = dict()
+
     scanresults = ScanResults.objects.filter(ip=aton(ip), state='up')
     scans = set([i.scanrun for i in scanresults])
     associations = MacIp.objects.filter(ip=aton(ip))
 
+    tmp_dict['macs'] = dict()
+
     #set up a dictionary of lists, where the dictionary holds the MACs
     # and the list holds all the scan results
-    arranged_scans = dict()
-    assoc_set = set([i.macid.mac for i in associations])
-    for mac in assoc_set:
-        arranged_scans[mac] = []
+    for mac in set([i.macid.mac for i in associations]):
+        tmp_dict['macs'][mac] = dict()
+        tmp_dict['macs'][mac]['scans'] = []
+        tmp_dict['macs'][mac]['vulns'] = []
 
     for assoc in associations:
         for scan in scanresults:
             if (scan.end >= assoc.observed) and (scan.end <= assoc.entered):
-                arranged_scans[assoc.macid.mac].append(scan)
+                tmp_dict['macs'][assoc.macid.mac]['scans'].append(scan)
+                try:
+                    tmp_dict['macs'][assoc.macid.mac]['vulns'].append(scan.vulns.split(','))
+                except:
+                    pass
 
-    tmp_dict = dict()
-    tmp_dict['scans_by_mac'] = arranged_scans
     tmp_dict['ip'] = ip
 
     return render_to_response('new_ip.html', tmp_dict)

@@ -9,6 +9,7 @@
 
 from django.db import models
 from reaper.fields import SparseField
+from utils.bobdb import *
 
 class Source(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -30,6 +31,9 @@ class ConfigList(models.Model):
         db_table = u'configlist'
 
 class Hostname(models.Model):
+    def __unicode__(self):
+        return self.hostname
+
     id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=384)
     class Meta:
@@ -53,7 +57,7 @@ class HostSet(models.Model):
 
 class ImapLoginList(models.Model):
     id = models.IntegerField(primary_key=True)
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpHostname', db_column='ip')
     date = models.DateField()
     username = models.CharField(max_length=96)
     class Meta:
@@ -61,8 +65,11 @@ class ImapLoginList(models.Model):
         db_table = u'imaploginlist'
 
 class IpComments(models.Model):
+    def __unicode__(self):
+        return '{0}..{1}'.format(self.content[:10], self.content[-10:])
+
     id = models.IntegerField(primary_key=True)
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpHostname', db_column='ip')
     entered = models.DateTimeField()
     content = models.TextField()
     analyst = models.CharField(max_length=96)
@@ -72,13 +79,18 @@ class IpComments(models.Model):
         db_table = u'ipcomments'
 
 class IpHostname(models.Model):
+    def __unicode__(self):
+        return '{0} - {1}'.format(ntoa(self.ip), self.hostname)
+    
     ip = models.IntegerField(primary_key=True)
     hostname = models.ForeignKey('Hostname', db_column='hostnameid')
-    observed = models.DateTimeField(primary_key=True)
-    entered = models.DateTimeField()
+    first_seen = models.DateTimeField(primary_key=True, db_column = 'observed')
+    last_seen = models.DateTimeField(db_column='entered')
     source = models.ForeignKey('Source', db_column='sourceid')
+    macs = models.ManyToManyField('Mac', through='MacIp', related_name='iphostnames')
+
     class Meta:
-        ordering = ["ip", "observed"]
+        ordering = ["ip", "first_seen"]
         managed = False
         db_table = u'iphostname'
 
@@ -105,14 +117,15 @@ class Mac(models.Model):
 
 class MacIp(models.Model):
     def __unicode__(self):
-        return self.macid.__unicode__()
+        return '{0} - {1}'.format(self.mac, self.ip)
+
     macid = models.ForeignKey('Mac', db_column='macid')
-    ip = models.IntegerField(primary_key=True)
-    observed = models.DateTimeField(primary_key=True)
-    entered = models.DateTimeField()
+    ip = models.ForeignKey('IpHostname', db_column = 'ip', to_field='ip')
+    first_seen = models.DateTimeField(primary_key=True, db_column = 'observed')
+    last_seen = models.DateTimeField(db_column='entered')
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
-        ordering = ["ip","observed"]
+        ordering = ["ip","first_seen"]
         managed = False
         db_table = u'macip'
 
@@ -180,7 +193,7 @@ class Scanner(models.Model):
 class ScanResults(models.Model):
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpHostname', db_column='ip')
     state = models.CharField(max_length=12)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
