@@ -31,7 +31,7 @@ def new_ip_view(request, ip):
 
     scanresults = ScanResults.objects.filter(ip=aton(ip), state='up')
     scans = set([i.scanrun for i in scanresults])
-    associations = MacIp.objects.filter(ip=aton(ip))
+    associations = scanresults.ip.macs.all()
 
     tmp_dict['macs'] = dict()
 

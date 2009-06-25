@@ -119,7 +119,7 @@ class MacIp(models.Model):
     def __unicode__(self):
         return '{0} - {1}'.format(self.mac, self.ip)
 
-    macid = models.ForeignKey('Mac', db_column='macid')
+    macid = models.IntegerField()
     ip = models.ForeignKey('IpHostname', db_column = 'ip', to_field='ip')
     first_seen = models.DateTimeField(primary_key=True, db_column = 'observed')
     last_seen = models.DateTimeField(db_column='entered')
@@ -191,9 +191,33 @@ class Scanner(models.Model):
         db_table = u'scanner'
 
 class ScanResults(models.Model):
+    def __unicode__(self):
+        retstr = '{0}: '.format(ntoa(self.ip))
+        if self.ports:
+            n = len(self.ports.split(','))
+            if n != 1:
+                plural = 's'
+            else:
+                plural = ''
+            retstr += '{0} open port{1}. '.format(n, plural)
+        else:
+            retstr += '0 open ports. '
+
+        if self.vulns:
+            n = len(self.vulns.split(','))
+            if n != 1:
+                plural = 'ies'
+            else:
+                plural = 'y'
+            retstr += '{0} vulnerabilit{1}. '.format(n, plural)
+        else:
+            retstr += '0 vulnerabilities. '
+
+        return retstr
+
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
-    ip = models.ForeignKey('IpHostname', db_column='ip')
+    ip = models.IntegerField()
     state = models.CharField(max_length=12)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
@@ -202,6 +226,7 @@ class ScanResults(models.Model):
     class Meta:
         managed = False
         db_table = u'scanresults'
+        ordering = ['ip','end']
 
 class ScanRun(models.Model):
     id = models.IntegerField(primary_key=True)
