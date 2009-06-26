@@ -9,7 +9,6 @@
 
 from django.db import models
 from reaper.fields import SparseField
-from utils.bobdb import *
 
 class Source(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -31,9 +30,6 @@ class ConfigList(models.Model):
         db_table = u'configlist'
 
 class Hostname(models.Model):
-    def __unicode__(self):
-        return self.hostname
-
     id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=384)
     class Meta:
@@ -57,7 +53,7 @@ class HostSet(models.Model):
 
 class ImapLoginList(models.Model):
     id = models.IntegerField(primary_key=True)
-    ip = models.ForeignKey('IpHostname', db_column='ip')
+    ip = models.IntegerField()
     date = models.DateField()
     username = models.CharField(max_length=96)
     class Meta:
@@ -65,11 +61,8 @@ class ImapLoginList(models.Model):
         db_table = u'imaploginlist'
 
 class IpComments(models.Model):
-    def __unicode__(self):
-        return '{0}..{1}'.format(self.content[:10], self.content[-10:])
-
     id = models.IntegerField(primary_key=True)
-    ip = models.ForeignKey('IpHostname', db_column='ip')
+    ip = models.IntegerField()
     entered = models.DateTimeField()
     content = models.TextField()
     analyst = models.CharField(max_length=96)
@@ -79,18 +72,13 @@ class IpComments(models.Model):
         db_table = u'ipcomments'
 
 class IpHostname(models.Model):
-    def __unicode__(self):
-        return '{0} - {1}'.format(ntoa(self.ip), self.hostname)
-    
     ip = models.IntegerField(primary_key=True)
     hostname = models.ForeignKey('Hostname', db_column='hostnameid')
-    first_seen = models.DateTimeField(primary_key=True, db_column = 'observed')
-    last_seen = models.DateTimeField(db_column='entered')
+    observed = models.DateTimeField(primary_key=True)
+    entered = models.DateTimeField()
     source = models.ForeignKey('Source', db_column='sourceid')
-    macs = models.ManyToManyField('Mac', through='MacIp', related_name='iphostnames')
-
     class Meta:
-        ordering = ["ip", "first_seen"]
+        ordering = ["ip", "-observed"]
         managed = False
         db_table = u'iphostname'
 
@@ -117,15 +105,14 @@ class Mac(models.Model):
 
 class MacIp(models.Model):
     def __unicode__(self):
-        return '{0} - {1}'.format(self.mac, self.ip)
-
-    macid = models.IntegerField()
-    ip = models.ForeignKey('IpHostname', db_column = 'ip', to_field='ip')
-    first_seen = models.DateTimeField(primary_key=True, db_column = 'observed')
-    last_seen = models.DateTimeField(db_column='entered')
+        return self.macid.__unicode__()
+    macid = models.ForeignKey('Mac', db_column='macid')
+    ip = models.IntegerField(primary_key=True)
+    observed = models.DateTimeField(primary_key=True)
+    entered = models.DateTimeField()
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
-        ordering = ["ip","first_seen"]
+        ordering = ["ip","observed"]
         managed = False
         db_table = u'macip'
 
@@ -191,30 +178,6 @@ class Scanner(models.Model):
         db_table = u'scanner'
 
 class ScanResults(models.Model):
-    def __unicode__(self):
-        retstr = '{0}: '.format(ntoa(self.ip))
-        if self.ports:
-            n = len(self.ports.split(','))
-            if n != 1:
-                plural = 's'
-            else:
-                plural = ''
-            retstr += '{0} open port{1}. '.format(n, plural)
-        else:
-            retstr += '0 open ports. '
-
-        if self.vulns:
-            n = len(self.vulns.split(','))
-            if n != 1:
-                plural = 'ies'
-            else:
-                plural = 'y'
-            retstr += '{0} vulnerabilit{1}. '.format(n, plural)
-        else:
-            retstr += '0 vulnerabilities. '
-
-        return retstr
-
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
     ip = models.IntegerField()
@@ -226,7 +189,6 @@ class ScanResults(models.Model):
     class Meta:
         managed = False
         db_table = u'scanresults'
-        ordering = ['ip','end']
 
 class ScanRun(models.Model):
     id = models.IntegerField(primary_key=True)

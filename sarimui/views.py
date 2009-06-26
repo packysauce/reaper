@@ -31,7 +31,7 @@ def new_ip_view(request, ip):
 
     scanresults = ScanResults.objects.filter(ip=aton(ip), state='up')
     scans = set([i.scanrun for i in scanresults])
-    associations = scanresults.ip.macs.all()
+    associations = MacIp.objects.filter(ip=aton(ip))
 
     tmp_dict['macs'] = dict()
 
@@ -40,18 +40,24 @@ def new_ip_view(request, ip):
     for mac in set([i.macid.mac for i in associations]):
         tmp_dict['macs'][mac] = dict()
         tmp_dict['macs'][mac]['scans'] = []
-        tmp_dict['macs'][mac]['vulns'] = []
 
+    tmp_dict['vuln_total'] = 0
     for assoc in associations:
         for scan in scanresults:
             if (scan.end >= assoc.observed) and (scan.end <= assoc.entered):
-                tmp_dict['macs'][assoc.macid.mac]['scans'].append(scan)
                 try:
-                    tmp_dict['macs'][assoc.macid.mac]['vulns'].append(scan.vulns.split(','))
+                    tmp_vulns = scan.vulns.split(',')
+                    tmp_dict['vuln_total'] += len(tmp_vulns)
                 except:
-                    pass
+                    tmp_vulns = []
+
+                entry = (scan, tmp_vulns)
+                tmp_dict['macs'][assoc.macid.mac]['scans'].append(entry)
 
     tmp_dict['ip'] = ip
+
+    for i in tmp_dict['macs']:
+        tmp_dict['macs'][i]['scans'].reverse()
 
     return render_to_response('new_ip.html', tmp_dict)
 

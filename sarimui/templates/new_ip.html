@@ -12,11 +12,21 @@
             {% endif %}
                 <li class='mac_item'><h2>{{ mac }}</h2></li>
                     <ul class='scan_list'>
-                        {% for scan in mac_data.scans %}
+                        {% for scan, vulns in mac_data.scans %}
                         {% if forloop.first %}
-                        <li class='scan_header'>Found {{ mac_data.vulns|length }} vulnerabilities in {{ mac_data.scans|length}} scans.</li>
+                        <li class='scan_header'>Found {{ vuln_total }} vulnerabilities in {{ mac_data.scans|length}} scans.</li>
                         {% endif %}
-                        <li class='scan_item'>{{ scan.end|date:"F j, Y" }}</li>
+                        <li class='scan_item'>Scan ID {{scan.id}}: {{ scan.end|date:"F j, Y" }}</li>
+                        {% for vuln in vulns %}
+                            {% if forloop.first %}
+                            <ul>
+                            {% endif %}
+                                <li class='vuln_item'>{{ vuln }}</li>
+                            {% if forloop.last %}
+                            </ul>
+                            {% endif %}
+                            {% empty %}
+                        {% endfor %}
                         {% empty %}
                         <div class='empty'>No scans for this MAC</div>
                         {% endfor %}
