@@ -1,8 +1,8 @@
 import re
 
 def aton(address):
-    if not isinstance(address, str):
-        raise ValueError("Argument must be of type string")
+    if not isinstance(address, basestring):
+        raise ValueError("Argument must be of type string or unicode")
     if not re.match("(\d{1,3}\.){3}\d{1,3}", address):
         raise ValueError("Argument must be in the format 'xxx.xxx.xxx.xxx'. IPv6 not supported")
     bits = [int(i) for i in address.split('.')]
