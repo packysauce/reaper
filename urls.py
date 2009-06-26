@@ -36,7 +36,9 @@ urlpatterns = patterns('',
     url(r'^index/$', views.index),
     url(r'^ip/$', views.ip_list),
     url(r'^ip/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
-    url(r'^nip/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.new_ip_view),
+    url(r'^plugin/(\d*)$', views.plugin_view),
+    url(r'^scan/(\d*)$', views.scan_view),
+    url(r'^mac/([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})$', views.mac_view),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
