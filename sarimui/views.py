@@ -9,15 +9,6 @@ import ipcalc
 def index(request):
     return HttpResponse("LOL HAI")
 
-def ip_list(request):
-    tmp_dict = dict()
-
-    dedupe = set([ i.ip for i in IpHostname.objects.all()[0:100] ])
-
-    tmp_dict['ip_list'] = [ ntoa(i) for i in dedupe]
-
-    return render_to_response('ip_list.html', tmp_dict)
-
 def plugin_view(request, plugin):
     return HttpResponse("Plugin {0}".format(plugin))
 
@@ -28,16 +19,50 @@ def mac_view(request, mac):
     return HttpResponse("Mac {0}".format(mac))
 
 def hostname_view(request, hostname):
-    return HttpResponse("Hostname {0}".format(hostname))
+    hostobj = Hostname.objects.get(hostname=hostname)
+    addresses = hostobj.ipaddress_set.all()
+    iphosts = hostobj.iphostname_set.all()
+
+    results = []
+
+    render_dict = dict()
+    render_dict['ips'] = dict()
+
+    for ip in set(addresses):
+        render_dict['ips'][ntoa(ip.ip)] = dict()
+        render_dict['ips'][ntoa(ip.ip)]['scans'] = []
+        render_dict['ips'][ntoa(ip.ip)]['vuln_total'] = 0
+        results += ScanResults.objects.filter(ip=ip.ip)
+
+    for iphost in iphosts:
+        macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
+        if len(macs) > 0:
+            render_dict['ips']iphost.ip]['mac'] = macs[0]
+        else:
+            render_dict['ips'][iphost.ip]['mac'] = "No MAC Available"
+
+        for scan in results:
+            if (scan.end >= iphost.entered) and (scan.start <= iphost.observed):
+                try:
+                    #try and get the vulnerabilities out of it
+                    vulns = scan.vulns.split(',')
+                    render_dict['ips'][iphost.ip]['vuln_total'] += len(vulns)
+                    vulns = [i.split('|') for i in vulns]
+                except:
+                    vulns = []
+                #add the scan and its vulnerabilities to the rendering structure
+                render_dict['ips'][iphost.ip]['scans'].append( ( scan, vulns ) )
+
+    return render_to_response('ip_view.html', render_dict)
 
 def ip_view(request, ip):
     render_dict = dict()
+    render_dict['ip'] = ip
 
     #Grab the IP object and all the scanresults for it
     try:
         _ip = IpAddress.objects.get(ip=aton(ip))
     except:
-        render_dict['ip'] = ip
         return render_to_response('new_ip.html', render_dict)
 
     results = ScanResults.objects.filter(ip=_ip, state='up')
@@ -45,8 +70,8 @@ def ip_view(request, ip):
     #setup for the data structure to pass to the template
     render_dict['macs'] = dict()
     
+    #I flesh out the dict here to make sure that if a MAC has no data it is shown as being empty instead of not present
     for i in _ip.macs.all():
-        
         mac = i.mac
         render_dict['macs'][mac] = dict()
         render_dict['macs'][mac]['scans'] = []
@@ -82,4 +107,4 @@ def ip_view(request, ip):
 
     for i in render_dict['macs']:
         render_dict['macs'][i]['scans'].reverse()
-    return render_to_response('new_ip.html', render_dict)
+    return render_to_response('ip_view.html', render_dict)
