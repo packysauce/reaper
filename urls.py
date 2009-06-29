@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     url(r'^ip/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
     url(r'^plugin/(\d*)$', views.plugin_view),
     url(r'^scan/(\d*)$', views.scan_view),
+    url(r'^hostname/(.*)$', views.hostname_view),
     url(r'^mac/([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})$', views.mac_view),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
