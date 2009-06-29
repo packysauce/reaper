@@ -9,6 +9,7 @@
 
 from django.db import models
 from reaper.fields import SparseField
+from utils.bobdb import *
 
 class Source(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -30,6 +31,9 @@ class ConfigList(models.Model):
         db_table = u'configlist'
 
 class Hostname(models.Model):
+    def __unicode__(self):
+        return self.hostname
+
     id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=384)
     class Meta:
@@ -38,7 +42,7 @@ class Hostname(models.Model):
 
 class HostSet(models.Model):
     def __unicode__(self):
-        return '%s(%d)' % (self.name, self.id)
+        return self.name
 
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=96)
@@ -53,16 +57,23 @@ class HostSet(models.Model):
 
 class ImapLoginList(models.Model):
     id = models.IntegerField(primary_key=True)
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpAddress', db_column='ip')
     date = models.DateField()
     username = models.CharField(max_length=96)
     class Meta:
         managed = False
         db_table = u'imaploginlist'
 
+class IpAddress(models.Model):
+    def __unicode__(self):
+        return ntoa(self.ip)
+    ip = models.IntegerField(primary_key=True)
+    hostnames = models.ManyToManyField('Hostname', through='IpHostname')
+    macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
+
 class IpComments(models.Model):
     id = models.IntegerField(primary_key=True)
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpAddress', db_column='ip')
     entered = models.DateTimeField()
     content = models.TextField()
     analyst = models.CharField(max_length=96)
@@ -72,8 +83,8 @@ class IpComments(models.Model):
         db_table = u'ipcomments'
 
 class IpHostname(models.Model):
-    ip = models.IntegerField(primary_key=True)
-    hostname = models.ForeignKey('Hostname', db_column='hostnameid')
+    ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
+    hostname = models.ForeignKey('Hostname', db_column='hostnameid', primary_key=True)
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField()
     source = models.ForeignKey('Source', db_column='sourceid')
@@ -104,10 +115,8 @@ class Mac(models.Model):
         db_table = u'mac'
 
 class MacIp(models.Model):
-    def __unicode__(self):
-        return self.macid.__unicode__()
-    macid = models.ForeignKey('Mac', db_column='macid')
-    ip = models.IntegerField(primary_key=True)
+    mac = models.ForeignKey('Mac', db_column='macid', primary_key=True)
+    ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField()
     source = models.ForeignKey('Source', db_column='sourceid')
@@ -171,7 +180,7 @@ class PluginDumpPlugin(models.Model):
 class Scanner(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=384)
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpAddress')
     entered = models.DateTimeField()
     class Meta:
         managed = False
@@ -180,13 +189,14 @@ class Scanner(models.Model):
 class ScanResults(models.Model):
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
-    ip = models.IntegerField()
+    ip = models.ForeignKey('IpAddress', db_column='ip')
     state = models.CharField(max_length=12)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
     ports = models.TextField(blank=True)
     vulns = models.TextField(blank=True)
     class Meta:
+        ordering = ['end']
         managed = False
         db_table = u'scanresults'
 

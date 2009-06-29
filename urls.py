@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     # Example:
     # (r'^reaper/', include('reaper.foo.urls')),
     (r'^db/(.*)$', databrowse.site.root),
-    url(r'^index/$', views.index),
+    url(r'^index/$', views.ip_list),
     url(r'^ip/$', views.ip_list),
     url(r'^ip/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
     url(r'^plugin/(\d*)$', views.plugin_view),
