@@ -27,22 +27,23 @@ def hostname_view(request, hostname):
 
     render_dict = dict()
     render_dict['ips'] = dict()
+    render_dict['hostname'] = hostname
 
     for ip in set(addresses):
-        render_dict['ips'][ntoa(ip.ip)] = dict()
-        render_dict['ips'][ntoa(ip.ip)]['scans'] = []
-        render_dict['ips'][ntoa(ip.ip)]['vuln_total'] = 0
+        render_dict['ips'][ip] = dict()
+        render_dict['ips'][ip]['scans'] = []
+        render_dict['ips'][ip]['vuln_total'] = 0
         results += ScanResults.objects.filter(ip=ip.ip)
 
     for iphost in iphosts:
         macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
         if len(macs) > 0:
-            render_dict['ips']iphost.ip]['mac'] = macs[0]
+            render_dict['ips'][iphost.ip]['mac'] = macs[0]
         else:
-            render_dict['ips'][iphost.ip]['mac'] = "No MAC Available"
+            render_dict['ips'][iphost.ip]['mac'] = "NoMACAvailable"
 
         for scan in results:
-            if (scan.end >= iphost.entered) and (scan.start <= iphost.observed):
+            if (scan.end >= iphost.observed) and (scan.start <= iphost.entered):
                 try:
                     #try and get the vulnerabilities out of it
                     vulns = scan.vulns.split(',')
@@ -53,7 +54,11 @@ def hostname_view(request, hostname):
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['ips'][iphost.ip]['scans'].append( ( scan, vulns ) )
 
-    return render_to_response('ip_view.html', render_dict)
+    for i in connection.queries:
+        print i['sql']
+    print "{0} queries.".format(len(connection.queries))
+
+    return render_to_response('hostname_view.html', render_dict)
 
 def ip_view(request, ip):
     render_dict = dict()

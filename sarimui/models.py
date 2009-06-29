@@ -121,7 +121,7 @@ class MacIp(models.Model):
     entered = models.DateTimeField()
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
-        ordering = ["ip","observed"]
+        ordering = ["ip","-observed"]
         managed = False
         db_table = u'macip'
 
@@ -196,7 +196,7 @@ class ScanResults(models.Model):
     ports = models.TextField(blank=True)
     vulns = models.TextField(blank=True)
     class Meta:
-        ordering = ['end']
+        ordering = ['end','id']
         managed = False
         db_table = u'scanresults'
 
@@ -211,6 +211,7 @@ class ScanRun(models.Model):
     configfile = models.TextField()
     resultfile = models.TextField()
     class Meta:
+        ordering = ['end']
         managed = False
         db_table = u'scanrun'
 

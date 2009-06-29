@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>View Hostname Details</title>
+    </head>
+
+    <body>
+        <h1>Database results for {{ hostname }}</h1>
+        <h2>{{ ips|length }} IP association{{ ips|length|pluralize }} found</h2>
+        {% if ips %}
+            <ul class='ip_list'>
+            {% for ip,ip_data in ips.items %}
+            <li class='ip_item'><h2>
+                <a href='{% url sarimui.views.ip_view ip %}'>{{ ip }}</a>
+                (
+                {% ifequal ip_data.hostname 'NoMACAvailable' %}
+                    No MAC Available
+                {% else %}
+                    <a href='{% url sarimui.views.mac_view ip_data.mac.mac %}'>{{ip_data.mac.mac}}</a>
+                    {% endifequal %}
+                    )
+            </h2></li>
+                {% if ip_data.scans %}
+                <ul class='scan_list'>
+                    <h3 class='scan_header'>Found {{ ip_data.vuln_total }} vulnerabilit{{ ip_data.vuln_total|pluralize:"y,ies" }} in {{ mac_data.scans|length}} scan{{ mac_data.scans|length|pluralize }}.</h3>
+                    {% for scan, vulns in ip_data.scans %}
+                    <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.id %}'>{{scan.id}}</a>: {{ scan.end|date:"F j, Y" }}</li>
+                        {% if vulns %}
+                        <ul>
+                            {% for name, plugin in vulns %}
+                            <li class='vuln_item'>{{ name }} (<a href='{% url sarimui.views.plugin_view plugin %}'>{{plugin}}</a>)</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    <div class='empty'>No scans for this IP</div>
+                {% endif %}
+                </li>
+            {% endfor %}
+        {% else %}
+            <h2>{{ hostname }} has no scan history</h2>
+        {% endif %}
+    </body>
+</html>
+
