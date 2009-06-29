@@ -54,10 +54,6 @@ def hostname_view(request, hostname):
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['ips'][iphost.ip]['scans'].append( ( scan, vulns ) )
 
-    for i in connection.queries:
-        print i['sql']
-    print "{0} queries.".format(len(connection.queries))
-
     return render_to_response('hostname_view.html', render_dict)
 
 def ip_view(request, ip):

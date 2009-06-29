@@ -21,7 +21,7 @@
             </h2></li>
                 {% if ip_data.scans %}
                 <ul class='scan_list'>
-                    <h3 class='scan_header'>Found {{ ip_data.vuln_total }} vulnerabilit{{ ip_data.vuln_total|pluralize:"y,ies" }} in {{ mac_data.scans|length}} scan{{ mac_data.scans|length|pluralize }}.</h3>
+                    <h3 class='scan_header'>Found {{ ip_data.vuln_total }} vulnerabilit{{ ip_data.vuln_total|pluralize:"y,ies" }} in {{ ip_data.scans|length}} scan{{ ip_data.scans|length|pluralize }}.</h3>
                     {% for scan, vulns in ip_data.scans %}
                     <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.id %}'>{{scan.id}}</a>: {{ scan.end|date:"F j, Y" }}</li>
                         {% if vulns %}

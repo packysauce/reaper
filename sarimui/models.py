@@ -79,6 +79,7 @@ class IpComments(models.Model):
     analyst = models.CharField(max_length=96)
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
+        ordering = ["ip", "-entered"]
         managed = False
         db_table = u'ipcomments'
 
@@ -111,6 +112,7 @@ class Mac(models.Model):
     source = models.ForeignKey(Source, db_column='sourceid')
     entered = models.DateTimeField()
     class Meta:
+        ordering = ["entered"]
         managed = False
         db_table = u'mac'
 
@@ -196,7 +198,7 @@ class ScanResults(models.Model):
     ports = models.TextField(blank=True)
     vulns = models.TextField(blank=True)
     class Meta:
-        ordering = ['end','id']
+        ordering = ['-end']
         managed = False
         db_table = u'scanresults'
 
