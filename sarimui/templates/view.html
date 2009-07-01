@@ -1,40 +1,40 @@
 <html>
     <head>
-        <title>View IP Details</title>
+        <title>View {{category}} Details</title>
     </head>
 
     <body>
         {% ifequal days_back -1 %}
-        <h1>Database results for {{ ip }}</h1>
+        <h1>Database results for {{ entry }}</h1>
         {% else %}
-        <h1>Dashboard for {{ ip }}</h1>
+        <h1>Dashboard for {{ entry }}</h1>
         <h3>{{ days_back }} days of information</h3>
-        <div class='details'><a href='{% url sarimui.views.ip_view ip %}'>Detail view</a></div>
+        <div class='details'><a href='{{entry}}'>Detail view</a></div>
         {% endifequal %}
-        <h2>{{ macs|length }} MAC association{{ macs|length|pluralize }} found</h2>
-        {% if macs %}
-            <ul class='mac_list'>
-            {% for mac,mac_data in macs.items %}
-            <li class='mac_item'><h2>
-                {% ifequal mac_data.hostname 'NoHostAvailable' %}
-                    No Hostname Available
+        <h2>{{ entries|length }} {{category}} association{{ entries|length|pluralize }} found</h2>
+        {% if entries %}
+            <ul class='entry_list'>
+            {% for entry,entry_data in entries.items %}
+            <li class='entry_item'><h2>
+                {% ifequal entry_data.name 'NoNameAvailable' %}
+                    No {{entry_data.hr_name}} Available
                 {% else %}
                     {% ifequal days_back -1 %}
-                    <a href='{% url sarimui.views.hostname_view mac_data.hostname %}'>{{mac_data.hostname}}</a>
+                    <a href='/{{entry_data.name}}'>{{entry_data.name}}</a>
                     {% else %}
-                    <a href='{% url sarimui.views.dashboard_host_view mac_data.hostname %}'>{{mac_data.hostname}}</a>
+                    <a href='/dashboard/{{entry_data.name}}'>{{entry_data.name}}</a>
                     {% endifequal %}
                 {% endifequal %}
                 {% ifequal days_back -1 %}
-                (<a href='{% url sarimui.views.mac_view mac %}'>{{ mac }}</a>)
+                (<a href='/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
                 {% else %}
-                (<a href='{% url sarimui.views.dashboard_mac_view mac %}'>{{ mac }}</a>)
+                (<a href='/dashboard/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
                 {% endifequal %}
             </h2></li>
-                {% ifnotequal mac_data.scans|length 0 %}
+                {% ifnotequal entry_data.scans|length 0 %}
                 <ul class='scan_list'>
-                    <h3 class='scan_header'>Found {{ mac_data.vuln_total }} vulnerabilit{{ mac_data.vuln_total|pluralize:"y,ies" }} in {{ mac_data.scans|length}} scan{{ mac_data.scans|length|pluralize }}.</h3>
-                    {% for scan, vulns in mac_data.scans %}
+                    <h3 class='scan_header'>Found {{ entry_data.vuln_total }} vulnerabilit{{ entry_data.vuln_total|pluralize:"y,ies" }} in {{ entry_data.scans|length}} scan{{ entry_data.scans|length|pluralize }}.</h3>
+                    {% for scan, vulns in entry_data.scans %}
                     <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.scanrun.id %}'>{{scan.scanrun.id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
                         {% if vulns %}
                         <ul>

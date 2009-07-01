@@ -4,18 +4,32 @@
     </head>
 
     <body>
+        {% ifequal days_back -1 %}
         <h1>Database results for {{ hostname }}</h1>
+        {% else %}
+        <h1>Dashboard view for {{ hostname }}</h1>
+        <h3>{{ days_back }} days of information</h3>
+        <div class='details'><a href='{% url sarimui.views.hostname_view hostname %}'>Detail view</a></div>
+        {% endifequal %}
         <h2>{{ ips|length }} IP association{{ ips|length|pluralize }} found</h2>
         {% if ips %}
             <ul class='ip_list'>
             {% for ip,ip_data in ips.items %}
             <li class='ip_item'><h2>
+                {% ifequal days_back -1 %}
                 <a href='{% url sarimui.views.ip_view ip %}'>{{ ip }}</a>
-                (
-                {% ifequal ip_data.hostname 'NoMACAvailable' %}
-                    No MAC Available
                 {% else %}
-                    <a href='{% url sarimui.views.mac_view ip_data.mac.mac %}'>{{ip_data.mac.mac}}</a>
+                <a href='{% url sarimui.views.dashboard_ip_view ip %}'>{{ ip }}</a>
+                {% endifequal %}
+                    (
+                    {% ifequal ip_data.hostname 'NoMACAvailable' %}
+                        No MAC Available
+                    {% else %}
+                        {% ifequal days_back -1 %}
+                        <a href='{% url sarimui.views.mac_view ip_data.mac.mac %}'>{{ip_data.mac.mac}}</a>
+                        {% else %}
+                        <a href='{% url sarimui.views.dashboard_mac_view ip_data.mac.mac %}'>{{ip_data.mac.mac}}</a>
+                        {% endifequal %}
                     {% endifequal %}
                     )
             </h2></li>

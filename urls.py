@@ -33,11 +33,14 @@ urlpatterns = patterns('',
     # Example:
     # (r'^reaper/', include('reaper.foo.urls')),
     (r'^db/(.*)$', databrowse.site.root),
-    url(r'^ip/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
-    url(r'^plugin/(\d*)$', views.plugin_view),
-    url(r'^scan/(\d*)$', views.scan_view),
-    url(r'^hostname/(.*)$', views.hostname_view),
-    url(r'^mac/([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})$', views.mac_view),
+    url(r'^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
+    url(r'^([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})/$', views.mac_view),
+    url(r'^plugin/(\d*)/$', views.plugin_view),
+    url(r'^scan/(\d*)/$', views.scan_view),
+    url(r'^dashboard/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.dashboard_ip_view),
+    url(r'^dashboard/([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})/$', views.dashboard_mac_view),
+    url(r'^dashboard/(.+)/$', views.dashboard_host_view),
+    url(r'^(.+)/$', views.hostname_view),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

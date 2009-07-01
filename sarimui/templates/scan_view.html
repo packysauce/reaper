@@ -1,18 +1,31 @@
 <html>
     <head>
         <title>View Scan: {{ scan.id }}</title>
+        <style>
+            .state-up {
+                color: black;
+                background-color: green;
+            }
+            .state-down {
+                color: black;
+                background-color: red;
+            }
+        </style>
     </head>
 
     {% if scan %}
     <body>
         <h1>Details for Scan {{ scan.id }}</h1>
-        <div class='info'>Started {{scan.start|date:"l, F j, Y \a\t g:i:s A "}}, finished {{scan.end|date:"l, F j, Y \a\t g:i:s A "}}</div>
         <div class='status'>Status: {{ scan.status }}</div>
         <div class='scanset'>Scanset {{ scan.scanset.id }}</div>
+        <div class='info'>
+            <p>Started {{scan.start|date:"l, F j, Y \a\t g:i:s A "}}, finished {{scan.end|date:"l, F j, Y \a\t g:i:s A "}}</p>
+            <p>State during scan: <span class='state-up'>UP</span> <span class='state-down'>DOWN</span></p>
+        </div>
         <div class='hosts'>
             <ul>
-            {% for host in hosts %}
-                <li><a href='{% url sarimui.views.ip_view host %}'>{{host}}</a></li>
+            {% for host, state in hosts %}
+            <li><a class={% ifequal state 'up' %}'state-up'{%else%}'state-down'{% endifequal %} href='{% url sarimui.views.ip_view host %}'>{{host}}</a></li>
             {% endfor %}
             </ul>
         </div>
