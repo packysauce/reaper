@@ -71,6 +71,9 @@ class IpAddress(models.Model):
     hostnames = models.ManyToManyField('Hostname', through='IpHostname')
     macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
 
+    class Meta:
+        ordering = ['ip']
+
 class IpComments(models.Model):
     id = models.IntegerField(primary_key=True)
     ip = models.ForeignKey('IpAddress', db_column='ip')
@@ -189,6 +192,8 @@ class Scanner(models.Model):
         db_table = u'scanner'
 
 class ScanResults(models.Model):
+    def __unicode__(self):
+        return "{0}".format(self.id)
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
     ip = models.ForeignKey('IpAddress', db_column='ip')
@@ -198,7 +203,7 @@ class ScanResults(models.Model):
     ports = models.TextField(blank=True)
     vulns = models.TextField(blank=True)
     class Meta:
-        ordering = ['-end']
+        ordering = ['-id','-end']
         managed = False
         db_table = u'scanresults'
 

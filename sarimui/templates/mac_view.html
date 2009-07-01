@@ -4,20 +4,20 @@
     </head>
 
     <body>
-        <h1>Database results for {{ hostname }}</h1>
+        <h1>Database results for {{ mac }}</h1>
         <h2>{{ ips|length }} IP association{{ ips|length|pluralize }} found</h2>
         {% if ips %}
             <ul class='ip_list'>
             {% for ip,ip_data in ips.items %}
             <li class='ip_item'><h2>
-                <a href='{% url sarimui.views.ip_view ip %}'>{{ ip }}</a>
+                    <a href='{% url sarimui.views.ip_view ip %}'>{{ ip }}</a>
                 (
-                {% ifequal ip_data.hostname 'NoMACAvailable' %}
-                    No MAC Available
+                {% if ip_data.hostname %}
+                    <a href='{% url sarimui.views.hostname_view ip_data.hostname %}'>{{ip_data.hostname}}</a>
                 {% else %}
-                    <a href='{% url sarimui.views.mac_view ip_data.mac.mac %}'>{{ip_data.mac.mac}}</a>
-                    {% endifequal %}
-                    )
+                    No Hostname Available
+                {% endif %}
+                )
             </h2></li>
                 {% if ip_data.scans %}
                 <ul class='scan_list'>

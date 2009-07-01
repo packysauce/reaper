@@ -16,18 +16,84 @@ def scan_view(request, scan):
     return HttpResponse("Scan {0}".format(scan))
 
 def mac_view(request, mac):
-    return HttpResponse("Mac {0}".format(mac))
+    render_dict = dict()
+    render_dict['mac'] = mac
+    try:
+        macobj = Mac.objects.get(mac=mac)
+    except:
+        return render_to_response('mac_view.html', render_dict)
+
+    addresses = macobj.ipaddresses.all()
+    macips = macobj.macip_set.all()
+
+    results = []
+    timestamps = dict()
+    iphtimes = dict()
+
+    for i in macips:
+        for j in IpHostname.objects.filter(ip=i.ip):
+            try:
+                iphtimes[ntoa(i.ip.ip)].append( ( j.observed, j.entered, j.hostname ) )
+            except:
+                iphtimes[ntoa(i.ip.ip)] = []
+                iphtimes[ntoa(i.ip.ip)].append( ( j.observed, j.entered, j.hostname ) )
+        try:
+            timestamps[ntoa(i.ip.ip)].append( ( i.observed, i.entered ) )
+        except:
+            timestamps[ntoa(i.ip.ip)] = []
+            timestamps[ntoa(i.ip.ip)].append( ( i.observed, i.entered ) )
+
+    
+
+    render_dict['ips'] = dict()
+
+    for ip in set(addresses):
+        aip = ntoa(ip.ip)
+        for scan in ScanResults.objects.filter(ip=ip.ip):
+            try:
+                render_dict['ips'][aip]
+                render_dict['ips'][aip]['scans']
+                render_dict['ips'][aip]['vuln_total']
+            except:
+                render_dict['ips'][aip] = dict()
+                render_dict['ips'][aip]['scans'] = []
+                render_dict['ips'][aip]['vuln_total'] = 0
+
+            if scan.vulns:
+                vulns = scan.vulns.split(',')
+                render_dict['ips'][aip]['vuln_total'] += len(vulns)
+                vulns = [i.split('|') for i in vulns]
+            else:
+                vulns = []
+
+            for first, last in timestamps[aip]:
+                if (scan.end <= last) and (scan.start >= first):
+                    render_dict['ips'][aip]['scans'].append( ( scan, vulns) )
+
+    for ip in iphtimes:
+        htimes = iphtimes[ip]
+        for ifirst, ilast in timestamps[ip]:
+            for hfirst, hlast, hostname in htimes:
+                if hfirst == ifirst and hlast == ilast:
+                    render_dict['ips'][ip]['hostname'] = hostname
+    
+    return render_to_response('mac_view.html', render_dict)
+
 
 def hostname_view(request, hostname):
-    hostobj = Hostname.objects.get(hostname=hostname)
+    render_dict = dict()
+    render_dict['hostname'] = hostname
+    try:
+        hostobj = Hostname.objects.get(hostname=hostname)
+    except:
+        return render_to_response('hostname_view.html', render_dict)
+
     addresses = hostobj.ipaddress_set.all()
     iphosts = hostobj.iphostname_set.all()
 
     results = []
 
-    render_dict = dict()
     render_dict['ips'] = dict()
-    render_dict['hostname'] = hostname
 
     for ip in set(addresses):
         render_dict['ips'][ip] = dict()
@@ -106,6 +172,4 @@ def ip_view(request, ip):
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['macs'][assoc.mac.mac]['scans'].append( ( scan, vulns ) )
 
-    for i in render_dict['macs']:
-        render_dict['macs'][i]['scans'].reverse()
     return render_to_response('ip_view.html', render_dict)
