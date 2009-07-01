@@ -22,7 +22,7 @@ def ip_view_core(ip, days_back):
     try:
         _ip = IpAddress.objects.get(ip=aton(ip))
     except:
-        return render_to_response('ip_view.html', render_dict)
+        return render_to_response('view.html', render_dict)
 
     dtime = datetime.now() - timedelta(days=days_back)
     if days_back == -1:
@@ -75,26 +75,27 @@ def ip_view_core(ip, days_back):
 
 def host_view_core(hostname, days_back):
     render_dict = dict()
-    render_dict['hostname'] = hostname
+    render_dict['entry'] = hostname
+    render_dict['category'] = 'MAC'
     render_dict['days_back'] = days_back
 
     try:
         hostobj = Hostname.objects.get(hostname=hostname)
     except:
-        return render_to_response('hostname_view.html', render_dict)
+        return render_to_response('view.html', render_dict)
 
     addresses = hostobj.ipaddress_set.all()
     iphosts = hostobj.iphostname_set.all()
 
     results = []
 
-    render_dict['ips'] = dict()
+    render_dict['entries'] = dict()
 
     dtime = datetime.now()-timedelta(days=days_back)
     for ip in set(addresses):
-        render_dict['ips'][ip] = dict()
-        render_dict['ips'][ip]['scans'] = []
-        render_dict['ips'][ip]['vuln_total'] = 0
+        render_dict['entries'][ip] = dict()
+        render_dict['entries'][ip]['scans'] = []
+        render_dict['entries'][ip]['vuln_total'] = 0
         if days_back != -1:
             results += ScanResults.objects.filter(ip=ip.ip, end__gte=dtime)
         else:
@@ -102,34 +103,37 @@ def host_view_core(hostname, days_back):
 
     for iphost in iphosts:
         macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
+        render_dict['entries'][iphost.ip]['hr_name'] = 'MAC'
         if len(macs) > 0:
-            render_dict['ips'][iphost.ip]['mac'] = macs[0]
+            render_dict['entries'][iphost.ip]['name'] = macs[0].ip
+            render_dict['entries'][iphost.ip]['alt_name'] = macs[0].mac
         else:
-            render_dict['ips'][iphost.ip]['mac'] = "NoMACAvailable"
+            render_dict['entries'][iphost.ip]['name'] = "NoNameAvailable"
 
         for scan in results:
             if (scan.end >= iphost.observed) and (scan.start <= iphost.entered):
                 try:
                     #try and get the vulnerabilities out of it
                     vulns = scan.vulns.split(',')
-                    render_dict['ips'][iphost.ip]['vuln_total'] += len(vulns)
+                    render_dict['entries'][iphost.ip]['vuln_total'] += len(vulns)
                     vulns = [i.split('|') for i in vulns]
                 except:
                     vulns = []
                 #add the scan and its vulnerabilities to the rendering structure
-                render_dict['ips'][iphost.ip]['scans'].append( ( scan, vulns ) )
+                render_dict['entries'][iphost.ip]['scans'].append( ( scan, vulns ) )
 
-    return render_to_response('hostname_view.html', render_dict)
+    return render_to_response('view.html', render_dict)
 
 def mac_view_core(mac, days_back):
     render_dict = dict()
-    render_dict['mac'] = mac
+    render_dict['category'] = 'IP'
+    render_dict['entry'] = mac
     render_dict['days_back'] = days_back
 
     try:
         macobj = Mac.objects.get(mac=mac)
     except:
-        return render_to_response('mac_view.html', render_dict)
+        return render_to_response('view.html', render_dict)
 
     addresses = list(macobj.ipaddresses.all())
     macips = list(macobj.macip_set.all())
@@ -151,9 +155,7 @@ def mac_view_core(mac, days_back):
             timestamps[ntoa(i.ip.ip)] = []
             timestamps[ntoa(i.ip.ip)].append( ( i.observed, i.entered ) )
 
-    
-
-    render_dict['ips'] = dict()
+    render_dict['entries'] = dict()
 
     dtime = datetime.now() - timedelta(days=days_back)
     for ip in set(addresses):
@@ -164,33 +166,34 @@ def mac_view_core(mac, days_back):
             results = list(ScanResults.objects.filter(ip=ip.ip, end__gte=dtime))
         for scan in results:
             try:
-                render_dict['ips'][aip]
-                render_dict['ips'][aip]['scans']
-                render_dict['ips'][aip]['vuln_total']
+                render_dict['entries'][aip]
+                render_dict['entries'][aip]['scans']
+                render_dict['entries'][aip]['vuln_total']
             except:
-                render_dict['ips'][aip] = dict()
-                render_dict['ips'][aip]['scans'] = []
-                render_dict['ips'][aip]['vuln_total'] = 0
+                render_dict['entries'][aip] = dict()
+                render_dict['entries'][aip]['scans'] = []
+                render_dict['entries'][aip]['vuln_total'] = 0
+                render_dict['entries'][aip]['name'] = aip
 
             if scan.vulns:
                 vulns = scan.vulns.split(',')
-                render_dict['ips'][aip]['vuln_total'] += len(vulns)
+                render_dict['entries'][aip]['vuln_total'] += len(vulns)
                 vulns = [i.split('|') for i in vulns]
             else:
                 vulns = []
 
             for first, last in timestamps[aip]:
                 if (scan.end <= last) and (scan.start >= first):
-                    render_dict['ips'][aip]['scans'].append( ( scan, vulns) )
+                    render_dict['entries'][aip]['scans'].append( ( scan, vulns) )
 
     for ip in iphtimes:
         htimes = iphtimes[ip]
         for ifirst, ilast in timestamps[ip]:
             for hfirst, hlast, hostname in htimes:
                 if hfirst == ifirst and hlast == ilast:
-                    render_dict['ips'][ip]['hostname'] = hostname
+                    render_dict['entries'][ip]['alt_name'] = hostname
     
-    return render_to_response('mac_view.html', render_dict)
+    return render_to_response('view.html', render_dict)
 
 def scan_view(request, scan):
     render_dict = dict()
