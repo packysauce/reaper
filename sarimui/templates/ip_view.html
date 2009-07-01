@@ -21,7 +21,7 @@
                 <ul class='scan_list'>
                     <h3 class='scan_header'>Found {{ mac_data.vuln_total }} vulnerabilit{{ mac_data.vuln_total|pluralize:"y,ies" }} in {{ mac_data.scans|length}} scan{{ mac_data.scans|length|pluralize }}.</h3>
                     {% for scan, vulns in mac_data.scans %}
-                    <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.scanrun.id %}'>{{scan.scanrun.id}}</a>: {{ scan.end|date:"F j, Y" }}</li>
+                    <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.scanrun.id %}'>{{scan.scanrun.id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
                         {% if vulns %}
                         <ul>
                             {% for name, plugin in vulns %}
@@ -41,4 +41,3 @@
         {% endif %}
     </body>
 </html>
-

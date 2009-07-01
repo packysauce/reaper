@@ -4,7 +4,6 @@ from django.shortcuts import render_to_response
 from sarimui.models import *
 from utils.bobdb import *
 from django.db import connection
-import ipcalc
 
 def index(request):
     return HttpResponse("LOL HAI")
@@ -13,7 +12,19 @@ def plugin_view(request, plugin):
     return HttpResponse("Plugin {0}".format(plugin))
 
 def scan_view(request, scan):
-    return HttpResponse("Scan {0}".format(scan))
+    render_dict = dict()
+    render_dict['id'] = scan
+    try:
+        scanobj = ScanRun.objects.get(id=scan)
+    except:
+        return render_to_response('scan_view.html', render_dict)
+
+    render_dict['scan'] = scanobj
+    render_dict['hosts'] = []
+
+    [render_dict['hosts'].append(ntoa(i)) for i in scanobj.hostset.iplist]
+
+    return render_to_response('scan_view.html', render_dict)
 
 def mac_view(request, mac):
     render_dict = dict()
@@ -130,7 +141,7 @@ def ip_view(request, ip):
     try:
         _ip = IpAddress.objects.get(ip=aton(ip))
     except:
-        return render_to_response('new_ip.html', render_dict)
+        return render_to_response('ip_view.html', render_dict)
 
     results = ScanResults.objects.filter(ip=_ip, state='up')
 
