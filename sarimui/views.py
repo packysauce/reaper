@@ -50,7 +50,7 @@ def ip_view_core(ip, days_back):
     for assoc in macips:
         #grab the iphostname association with the same ip and timestamps to get the hostname
         if render_dict['entries'][assoc.mac.mac]['name'] == '':
-            hostnames = list(IpHostname.objects.filter(ip=_ip, observed=assoc.observed, entered=assoc.entered))
+            hostnames = list(IpHostname.objects.filter(ip=_ip, observed__gte=assoc.observed, entered__lte=assoc.entered))
             render_dict['entries'][assoc.mac.mac]['alt_name'] = assoc.mac.mac
             if len(hostnames) > 0:
                 render_dict['entries'][assoc.mac.mac]['name'] = hostnames[0].hostname
