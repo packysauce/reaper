@@ -9,7 +9,7 @@
         {% else %}
         <h1>Dashboard for {{ entry }}</h1>
         <h3>{{ days_back }} days of information</h3>
-        <div class='details'><a href='{{entry}}'>Detail view</a></div>
+        <div class='details'><a href='/{{entry}}'>Detailed view</a></div>
         {% endifequal %}
         <h2>{{ entries|length }} {{category}} association{{ entries|length|pluralize }} found</h2>
         {% if entries %}

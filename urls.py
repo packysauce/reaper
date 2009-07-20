@@ -32,6 +32,7 @@ databrowse.site.register(VlanScanState)
 urlpatterns = patterns('',
     # Example:
     # (r'^reaper/', include('reaper.foo.urls')),
+    url(r'^$', views.index),
     (r'^db/(.*)$', databrowse.site.root),
     url(r'^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
     url(r'^([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})/$', views.mac_view),
