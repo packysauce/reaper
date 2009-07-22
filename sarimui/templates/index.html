@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Vulnerabilities</title>
+    </head>
+
+    <body>
+        <h1>Recent Vulnerabilities</h1>
+        {% for vuln in vulns %}
+        {% if forloop.first %}
+        <table border=1>
+            <tr>
+                {% for title in vuln_head %}
+                <th>{{title}}</th>
+                {% endfor %}
+            </tr>
+        {% endif %}
+            {% for ip, vlist in vulns.items %}
+            {% for desc, id in vlist %}
+            <tr>
+                {% if forloop.first %}
+                <th rowspan={{vlist|length}}>{{ip}}</th>
+                {% endif %}
+                <td>{{desc}}....{{id}}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        {% if forloop.last %}
+        </table>
+        {% endif %}
+        {% endfor %}
+    </body>
+</html>
