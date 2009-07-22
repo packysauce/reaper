@@ -7,7 +7,26 @@ from django.db import connection
 from datetime import *
 
 def index(request):
-    return HttpResponse("LOL HAI")
+    render_dict = dict()
+    vuln_days = 7
+
+    results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=7), state='up', vulns__isnull=False))
+    # I'm thinking of a table for this...?
+    
+    render_dict['vulns'] = dict() 
+    render_dict['vuln_head'] = ['IP Address', 'Vulnerabilities']
+
+    for result in results:
+        ip = ntoa(result.ip_id)
+        try:
+            render_dict['vulns'][ip]
+        except:
+            render_dict['vulns'][ip] = set()
+
+        [render_dict['vulns'][ip].add( tuple(i.split('|')) ) for i in result.vulns.split(',') ] 
+
+  #  raise ValueError("Diagnostically relevant")
+    return render_to_response('index.html',render_dict)
 
 def plugin_view(request, plugin):
     return HttpResponse("Plugin {0}".format(plugin))

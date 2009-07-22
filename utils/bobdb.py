@@ -1,6 +1,8 @@
 import re
 
 def aton(address):
+    """Support function to convert an IP address in dotted quad notation to a 32-bit integer
+    """
     if not isinstance(address, basestring):
         raise ValueError("Argument must be of type string or unicode")
     if not re.match("(\d{1,3}\.){3}\d{1,3}", address):
@@ -9,6 +11,8 @@ def aton(address):
     return int("%02x%02x%02x%02x" % (bits[0],bits[1],bits[2],bits[3]),16)
 
 def ntoa(value):
+    """Support function to convert a 32-bit integer to an IP address in dotted quad notation
+    """
     if not isinstance(value, long):
         raise ValueError("Argument must be of type long")
     string = "%08x" % value
