@@ -3,30 +3,33 @@
         <title>Vulnerabilities</title>
     </head>
 
+
     <body>
         <h1>Recent Vulnerabilities</h1>
-        {% for vuln in vulns %}
-        {% if forloop.first %}
         <table border=1>
             <tr>
                 {% for title in vuln_head %}
-                <th>{{title}}</th>
+                {% ifequal title "Vulnerabilities"%}
+                <th colspan=2>
+                {% else %}
+                <th>
+                {% endifequal %}
+                {{title}}
+                </th>
                 {% endfor %}
             </tr>
-        {% endif %}
             {% for ip, vlist in vulns.items %}
             {% for desc, id in vlist %}
             <tr>
                 {% if forloop.first %}
-                <th rowspan={{vlist|length}}>{{ip}}</th>
+                <th rowspan={{vlist|length}}>
+                    <a href="{% url sarimui.views.dashboard_ip_view ip %}">{{ip}}</a>
+                </th>
                 {% endif %}
-                <td>{{desc}}....{{id}}</td>
+                <td>{{desc}}</td><td><a href="{% url sarimui.views.plugin_view id %}">{{id}}</a></td>
             </tr>
             {% endfor %}
             {% endfor %}
-        {% if forloop.last %}
         </table>
-        {% endif %}
-        {% endfor %}
     </body>
 </html>

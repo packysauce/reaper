@@ -11,7 +11,6 @@ def index(request):
     vuln_days = 7
 
     results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=7), state='up', vulns__isnull=False))
-    # I'm thinking of a table for this...?
     
     render_dict['vulns'] = dict() 
     render_dict['vuln_head'] = ['IP Address', 'Vulnerabilities']
@@ -25,7 +24,7 @@ def index(request):
 
         [render_dict['vulns'][ip].add( tuple(i.split('|')) ) for i in result.vulns.split(',') ] 
 
-  #  raise ValueError("Diagnostically relevant")
+    #raise ValueError("Diagnostically relevant")
     return render_to_response('index.html',render_dict)
 
 def plugin_view(request, plugin):
