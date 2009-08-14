@@ -10,7 +10,7 @@ def index(request):
     render_dict = dict()
     vuln_days = 7
 
-    results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=7), state='up', vulns__isnull=False))
+    results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=vuln_days), state='up', vulns__isnull=False))
     
     render_dict['vulns'] = dict() 
     render_dict['vuln_head'] = ['IP Address', 'Vulnerabilities']
