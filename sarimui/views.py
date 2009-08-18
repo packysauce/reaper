@@ -7,8 +7,37 @@ from django.db import connection
 from datetime import *
 from django.core.exceptions import *
 
+def vulns_by_ip(request):
+    render_dict = {}
+    days_back = 7
+
+    results = ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False)
+
+    render_dict['vuln_head'] = ['IP Address', 'Vulnerabilities']
+
+    vuln_list = []
+    vuln_count = {}
+    id_cache = {}
+    for result in results:
+        ip = ntoa(result.ip_id)
+        vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
+        try:
+            [vuln_list[id_cache[ip]]['vulns'].add(i) for i in vuln_data]
+        except KeyError, e:
+            reshash = {'ip':ip, 'scanresult':result, 'vulns':set()}
+            [reshash['vulns'].add(i) for i in vuln_data]
+            vuln_list.append(reshash)
+            id_cache[ip] = len(vuln_list)-1
+
+    import operator
+    render_dict['vuln_list'] = sorted(vuln_list, key=operator.itemgetter('ip'))
+
+    #raise ValueError("Diagnostic")
+    return render_to_response('vulns_by_ip.html', render_dict)
+
 def index(request):
-    render_dict = dict()
+    return vulns_by_ip(request)
+    render_dict = {}
     vuln_days = 7
 
     results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=vuln_days), state='up', vulns__isnull=False))
@@ -27,7 +56,7 @@ def index(request):
             render_dict['vulns'][ip].add( tuple(i.split('|')) )
         #[render_dict['vulns'][ip].add( tuple(i.split('|')) ) for i in result.vulns.split(',') ] 
 
-    #raise ValueError("Diagnostically relevant")
+    raise ValueError("Diagnostically relevant")
     return render_to_response('index.html',render_dict)
 
 def plugin_view(request, plugin):

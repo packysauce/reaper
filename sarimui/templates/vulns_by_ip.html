@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Vulnerabilities (by IP)</title>
+    </head>
+
+    <body>
+        <h1>Vulnerabilities<h3>by IP - <a href="{% url reaper.sarimui.views.index %}?view=vuln"</a>by Vulnerability</a></h3></h1>
+        <table border=1>
+            <tr><th>IP Address</th><th colspan=2>Vulnerabilities</th></tr>
+            {% for ip in vuln_list %}
+                {% for desc, id in ip.vulns %}
+                <tr>
+                {% if forloop.first %}
+                    <td rowspan={{ip.vulns|length}}>{{ ip.ip }}</td>
+                {% endif%}
+                    <td>{{ desc }}</td><td>{{ id }}</td>
+                </tr>
+            {% endfor %}
+            {% endfor %}
+        </table>
+    </body>
+</html>
+                        
