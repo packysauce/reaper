@@ -159,7 +159,9 @@ class Plugin(models.Model):
     entered = models.DateTimeField()
     class Meta:
         managed = False
+        ordering = ['-entered']
         db_table = u'plugin'
+        get_latest_by = u'entered'
 
 class PluginDump(models.Model):
     id = models.IntegerField(primary_key=True)

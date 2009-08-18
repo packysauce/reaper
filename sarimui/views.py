@@ -5,6 +5,7 @@ from sarimui.models import *
 from utils.bobdb import *
 from django.db import connection
 from datetime import *
+from django.core.exceptions import *
 
 def index(request):
     render_dict = dict()
@@ -22,13 +23,107 @@ def index(request):
         except:
             render_dict['vulns'][ip] = set()
 
-        [render_dict['vulns'][ip].add( tuple(i.split('|')) ) for i in result.vulns.split(',') ] 
+        for i in result.vulns.split(','):
+            render_dict['vulns'][ip].add( tuple(i.split('|')) )
+        #[render_dict['vulns'][ip].add( tuple(i.split('|')) ) for i in result.vulns.split(',') ] 
 
     #raise ValueError("Diagnostically relevant")
     return render_to_response('index.html',render_dict)
 
 def plugin_view(request, plugin):
-    return HttpResponse("Plugin {0}".format(plugin))
+    render_dict = {}
+    render_dict['plugin'] = plugin
+    try:
+        render_dict['version'] = request.GET['v']
+    except KeyError:
+        p_all = Plugin.objects.filter(nessusid=plugin)
+        p = p_all.latest()
+        render_dict['version'] = p.version
+    except ObjectDoesNotExist:
+        render_dict['version'] = Plugin.objects.filter(nessusid=plugin).latest().version
+
+    return render_to_response("plugin.html", render_dict)
+
+def plugin_list_view(request, plugin):
+    return HttpResponse("List of things with this vulnerability found, part of the scan, etc goes here")
+
+def plugin_info_view(request, plugin, version):
+    render_dict = {}
+    render_dict['versions'] = []
+
+    p_all = Plugin.objects.filter(nessusid=plugin)
+    for plug in p_all:
+        render_dict['versions'].append(plug.version)
+    try:
+        p = Plugin.objects.get(nessusid=plugin, version=version)
+    except ObjectDoesNotExist:
+        render_dict['errormessage'] = "Invalid version selected, defaulting to latest"
+        p = Plugin.objects.filter(nessusid=plugin).latest()
+
+    render_dict['selected_version'] = p.version
+    render_dict['plugin'] = p
+    render_dict['cve_list'] = [i.strip() for i in p.cveid.split(',')]
+    render_dict['bid_list'] = [i.strip() for i in p.bugtraqid.split(',')]
+
+    if 'noxref' not in p.xref.lower():
+        render_dict['xref_list'] = []
+        xref_list = [i.strip() for i in p.xref.split(',')]
+        for xref in xref_list:
+            (type, id) = xref.split(':',1)
+            if 'OSVDB' in type:
+                href = 'http://osvdb.org/show/osvdb/' + id
+                render_dict['xref_list'].append( (type, id, href) )
+            if 'RHSA' in type:
+                rhsaid = '%s-%s' % (id[:9], id[10:13])
+                href = 'http://rhn.redhat.com/errata/%s.html' % rhsaid
+                render_dict['xref_list'].append( (type, id, href) )
+
+    #get everything ready to work on
+    desc = p.description
+    ldesc = desc.lower()
+    index = []
+    #words to look for
+    words = ['synopsis','description','solution','risk factor']
+    #build a list of tuples of format (<word position>, <word>)
+    for word in words:
+        try:
+            index.append( (ldesc.index(word), word) )
+        except:
+            index.append( (-1, word) )
+    #sort the aforementioned list according to word position
+    import operator
+    sindex = sorted(index, key=operator.itemgetter(0))
+
+    for pos, word in sindex:
+        #Get the tuple's position in the list of tuples
+        mappos = sindex.index( (pos, word) )
+        #-1 means the word wasn't found...
+        if pos == -1:
+            #All this does is go find the next word without a -1 position
+            #and copy all of the text from the start of the description to the
+            #first position found
+            if word == 'description':
+                x = -1
+                for i in range(mappos,len(sindex)):
+                    if sindex[i][0] != -1:
+                        x = sindex[i][0]
+                s = desc[0:x]
+            else:
+                continue
+        else:
+            if mappos == len(sindex)-1:
+                s = desc[pos+len(word):]
+            else:
+                s = desc[pos+len(word):sindex[mappos+1][0]]
+
+        #The nessus plugin info has some stupid escaping going on
+        s = s.replace(':\\n\\n', '')
+        s = s.replace('\\n', ' ')
+        s = s.replace(': ', '', 1)
+        #Take care of dictionary names with spaces in them
+        render_dict[word.replace(' ', '')] = s
+
+    return render_to_response('plugin/plugin_info.html', render_dict)
 
 def ip_view_core(ip, days_back):
     render_dict = dict()
