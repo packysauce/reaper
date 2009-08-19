@@ -22,15 +22,24 @@ def vulns_by_ip(request):
         ip = ntoa(result.ip_id)
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
         try:
-            [vuln_list[id_cache[ip]]['vulns'].add(i) for i in vuln_data]
+            for v in vuln_data:
+                if v not in vuln_list[id_cache[ip]]['vulns']:
+                    vuln_list[id_cache[ip]]['vulns'].add(v)
+                    vuln_list[id_cache[ip]]['resmap'].append((v,result))
         except KeyError, e:
-            reshash = {'ip':ip, 'scanresult':result, 'vulns':set()}
-            [reshash['vulns'].add(i) for i in vuln_data]
-            vuln_list.append(reshash)
-            id_cache[ip] = len(vuln_list)-1
+            reshash = {'ip':ip, 'vulns':set(), 'resmap':[]}
+            for v in vuln_data:
+                if v not in reshash['vulns']:
+                    reshash['vulns'].add(v)
+                    reshash['resmap'].append((v,result))
+            else:
+                vuln_list.append(reshash)
+                id_cache[ip] = len(vuln_list)-1
 
     import operator
-    render_dict['vuln_list'] = sorted(vuln_list, key=operator.itemgetter('ip'))
+    def ipsort(x):
+        return aton(x['ip'])
+    render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
 
     #raise ValueError("Diagnostic")
     return render_to_response('vulns_by_ip.html', render_dict)
