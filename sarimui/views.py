@@ -7,13 +7,43 @@ from django.db import connection
 from datetime import *
 from django.core.exceptions import *
 
+def ips_by_vuln(request):
+    render_dict = {}
+    days_back = 7
+
+    results = ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False)
+    vuln_list = []
+    id_cache = {}
+    for result in results:
+        ip = ntoa(result.ip_id)
+        vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
+        for v in vuln_data:
+            try:
+                c = id_cache[v[1]]
+                if ip not in [i[0] for i in vuln_list[c]['ips']]:
+                    vuln_list[c]['ips'].append( [ip, result] )
+                else:
+                    idx = [x for x,y in vuln_list[c]['ips']].index(ip)
+                    vuln_list[c]['ips'][idx][1] = result
+            except KeyError, e:
+                reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result],]}
+                vuln_list.append(reshash)
+                id_cache[v[1]] = len(vuln_list)-1
+
+    def vsort(x):
+        return len(x['ips'])
+    for i in range(0,len(vuln_list)):
+        vuln_list[i]['ips'].sort(lambda x,y: int(aton(x[0])-aton(y[0])))
+
+    render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
+
+    return render_to_response('ips_by_vuln.html', render_dict)
+
 def vulns_by_ip(request):
     render_dict = {}
     days_back = 7
 
     results = ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False)
-
-    render_dict['vuln_head'] = ['IP Address', 'Vulnerabilities']
 
     vuln_list = []
     vuln_count = {}
@@ -36,37 +66,18 @@ def vulns_by_ip(request):
                 vuln_list.append(reshash)
                 id_cache[ip] = len(vuln_list)-1
 
-    import operator
     def ipsort(x):
         return aton(x['ip'])
     render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
 
-    #raise ValueError("Diagnostic")
     return render_to_response('vulns_by_ip.html', render_dict)
 
 def index(request):
-    return vulns_by_ip(request)
-    render_dict = {}
-    vuln_days = 7
-
-    results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=vuln_days), state='up', vulns__isnull=False))
-    
-    render_dict['vulns'] = dict() 
-    render_dict['vuln_head'] = ['IP Address', 'Vulnerabilities']
-
-    for result in results:
-        ip = ntoa(result.ip_id)
-        try:
-            render_dict['vulns'][ip]
-        except:
-            render_dict['vulns'][ip] = set()
-
-        for i in result.vulns.split(','):
-            render_dict['vulns'][ip].add( tuple(i.split('|')) )
-        #[render_dict['vulns'][ip].add( tuple(i.split('|')) ) for i in result.vulns.split(',') ] 
-
-    raise ValueError("Diagnostically relevant")
-    return render_to_response('index.html',render_dict)
+    handlers = {'ip': vulns_by_ip, 'vulns':ips_by_vuln}
+    try:
+        return handlers[request.GET['view']](request)
+    except KeyError, e:
+        return handlers['vulns'](request)
 
 def plugin_view(request, plugin):
     render_dict = {}
