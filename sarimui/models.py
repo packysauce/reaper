@@ -6,6 +6,8 @@
 #
 # Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
 # into your database.
+import sys
+sys.path.append('/opt/reaper')
 
 from django.db import models
 from reaper.fields import SparseField

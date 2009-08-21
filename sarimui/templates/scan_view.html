@@ -25,7 +25,7 @@
         <div class='hosts'>
             <ul>
             {% for host, state in hosts %}
-            <li><a class={% ifequal state 'up' %}'state-up'{%else%}'state-down'{% endifequal %} href='{% url sarimui.views.ip_view host %}'>{{host}}</a></li>
+            <li><a class={% ifequal state 'up' %}'state-up'{%else%}'state-down'{% endifequal %} href='{% url sarimui.views.dashboard_ip_view host %}'>{{host}}</a></li>
             {% endfor %}
             </ul>
         </div>

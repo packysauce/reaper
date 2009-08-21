@@ -104,7 +104,10 @@ def plugin_info_view(request, plugin, version):
     for plug in p_all:
         render_dict['versions'].append(plug.version)
     try:
-        p = Plugin.objects.get(nessusid=plugin, version=version)
+        if version.lower() == 'latest':
+            p = Plugin.objects.filter(nessusid=plugin).latest()
+        else:
+            p = Plugin.objects.get(nessusid=plugin, version=version)
     except ObjectDoesNotExist:
         render_dict['errormessage'] = "Invalid version selected, defaulting to latest"
         p = Plugin.objects.filter(nessusid=plugin).latest()
@@ -382,16 +385,28 @@ def mac_view(request, mac):
     return mac_view_core(mac, -1)
 
 def dashboard_mac_view(request, mac):
-    return mac_view_core(mac, 7)
+    try:
+        days = int(request.GET['days'])
+    except:
+        days = 7
+    return mac_view_core(mac, days)
 
 def hostname_view(request, hostname):
     return host_view_core(hostname, -1)
 
 def dashboard_host_view(request, hostname):
-    return host_view_core(hostname, 7)
+    try:
+        days = int(request.GET['days'])
+    except:
+        days = 7
+    return host_view_core(hostname, days)
 
 def ip_view(request, ip):
     return ip_view_core(ip, -1)
 
 def dashboard_ip_view(request, ip):
-    return ip_view_core(ip, 7)
+    try:
+        days = int(request.GET['days'])
+    except:
+        days = 7
+    return ip_view_core(ip, days)

@@ -11,7 +11,7 @@
                 {% for vuln, result in ip.resmap %}
                     <tr>
                     {% if forloop.first %}
-                        <td rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.ip_view ip.ip %}">{{ ip.ip }}</a></td>
+                        <td rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.dashboard_ip_view ip.ip %}">{{ ip.ip }}</a></td>
                     {% endif %}
                     <td>{{ vuln.0 }}</td>
                     <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 latest %}">{{ vuln.1 }}</a></td>

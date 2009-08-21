@@ -9,7 +9,7 @@
         {% else %}
         <h1>Dashboard for {{ entry }}</h1>
         <h3>{{ days_back }} days of information</h3>
-        <div class='details'><a href='/{{entry}}'>Detailed view</a></div>
+        <div class='details'><a href='/sarim/{{entry}}'>Detailed view</a></div>
         {% endifequal %}
         <h2>{{ entries|length }} {{category}} association{{ entries|length|pluralize }} found</h2>
         {% if entries %}
@@ -20,15 +20,15 @@
                     No {{entry_data.hr_name}} Available
                 {% else %}
                     {% ifequal days_back -1 %}
-                    <a href='/{{entry_data.name}}'>{{entry_data.name}}</a>
+                    <a href='/sarim/{{entry_data.name}}'>{{entry_data.name}}</a>
                     {% else %}
-                    <a href='/dashboard/{{entry_data.name}}'>{{entry_data.name}}</a>
+                    <a href='/sarim/dashboard/{{entry_data.name}}'>{{entry_data.name}}</a>
                     {% endifequal %}
                 {% endifequal %}
                 {% ifequal days_back -1 %}
-                (<a href='/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
+                (<a href='/sarim/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
                 {% else %}
-                (<a href='/dashboard/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
+                (<a href='/sarim/dashboard/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
                 {% endifequal %}
             </h2></li>
                 {% ifnotequal entry_data.scans|length 0 %}
