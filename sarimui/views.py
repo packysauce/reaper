@@ -370,9 +370,22 @@ def scan_view(request, scan):
 
     render_dict['scan'] = scanobj
     render_dict['hosts'] = []
+    render_dict['repairs'] = 0
+    render_dict['broken_ips'] = []
 
-    scanresults = [i.ip.ip for i in ScanResults.objects.filter(scanrun=scanobj, state='up')]
+    sresults = list(ScanResults.objects.filter(scanrun=scanobj, state='up'))
+    scanresults = []
+    for i in sresults:
+        try:
+            scanresults.append(i.ip.ip)
+        except:
+            render_dict['repairs']+=1
+            render_dict['broken_ips'].append(ntoa(i.ip_id))
+            nip = IpAddress(ip=i.ip_id)
+            nip.save()
+            scanresults.append(nip.ip)
 
+    render_dict['repairs'] = repairs
     for i in scanobj.hostset.iplist:
         if i in scanresults:
             render_dict['hosts'].append( (ntoa(i), 'up') )

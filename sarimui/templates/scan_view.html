@@ -1,3 +1,5 @@
+{% load comparisons %}
+
 <html>
     <head>
         <title>View Scan: {{ scan.id }}</title>
@@ -16,6 +18,12 @@
     {% if scan %}
     <body>
         <h1>Details for Scan {{ scan.id }}</h1>
+        {% if repairs|gte:1 %}
+        <div class='warning'>
+            <h2>Encountered {{ repairs }} broken IP links, fixed.</h2>
+            <p>{{ broken_ips }}</p>
+        </div>
+        {% endif %}
         <div class='status'>Status: {{ scan.status }}</div>
         <div class='scanset'>Scanset {{ scan.scanset.id }}</div>
         <div class='info'>
