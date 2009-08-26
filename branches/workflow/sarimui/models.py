@@ -39,6 +39,8 @@ class FalsePositive(models.Model):
     date_added = models.DateTimeField(auto_now_add=True, auto_now=True)
     includes = models.TextField()
     excludes = models.TextField()
+    comment = models.TextField()
+    status = models.BooleanField()
 
 class Hostname(models.Model):
     def __unicode__(self):
@@ -209,7 +211,6 @@ class ScanResults(models.Model):
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
     ip = models.ForeignKey('IpAddress', db_column='ip')
-    ip_id = models.IntegerField(db_column='ip')
     state = models.CharField(max_length=12)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
@@ -219,6 +220,7 @@ class ScanResults(models.Model):
         ordering = ['-id','-end']
         managed = False
         db_table = u'scanresults'
+        get_latest_by = u'end'
 
 class ScanRun(models.Model):
     id = models.IntegerField(primary_key=True)
