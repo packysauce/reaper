@@ -10,7 +10,7 @@
         <table border=1>
             <tr><th>Nessus ID</th><th>IP Addresses</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
             {% for vuln in vuln_list %}
-                {% for ip, result in vuln.ips %}
+                {% for ip, result, scanrun in vuln.ips %}
                     <tr>
                     {% if forloop.first %}
                     <td rowspan={{ vuln.ips|length }}>
@@ -24,11 +24,9 @@
                     </td>
                     {% endif %}
                     <td><a href="{% url reaper.sarimui.views.dashboard_ip_view ip %}">{{ ip }}</a></td>
-                    {% with result.scanrun as scanrun %}
                         <td>{{ scanrun.scanset.type }}</td>
                         <td>{{ result.end|date:"F j, Y" }}</td>
                         <td><a href="{% url reaper.sarimui.views.scan_view scanrun.id %}">{{ scanrun.id }}</a></td>
-                    {% endwith %}
                     </tr>
                 {% endfor %}
             {% endfor %}

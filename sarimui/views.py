@@ -8,12 +8,18 @@ from datetime import *
 from django.core.exceptions import *
 
 def ips_by_vuln(request):
+    m_s = datetime.now()
     render_dict = {}
     days_back = 7
 
-    results = ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False)
+    s = datetime.now()
+    results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False))
+    e = datetime.now()
+
     vuln_list = []
     id_cache = {}
+    cache_misses = 0
+    s = datetime.now()
     for result in results:
         ip = ntoa(result.ip_id)
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
@@ -21,21 +27,28 @@ def ips_by_vuln(request):
             try:
                 c = id_cache[v[1]]
                 if ip not in [i[0] for i in vuln_list[c]['ips']]:
-                    vuln_list[c]['ips'].append( [ip, result] )
+                    vuln_list[c]['ips'].append( [ip, result, result.scanrun] )
                 else:
-                    idx = [x for x,y in vuln_list[c]['ips']].index(ip)
+                    idx = [x for x,y,z in vuln_list[c]['ips']].index(ip)
                     vuln_list[c]['ips'][idx][1] = result
             except KeyError, e:
-                reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result],]}
+                reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result,result.scanrun],]}
                 vuln_list.append(reshash)
                 id_cache[v[1]] = len(vuln_list)-1
+                cache_misses += 1
+
+    e = datetime.now()
 
     def vsort(x):
         return len(x['ips'])
+    s = datetime.now()
     for i in range(0,len(vuln_list)):
         vuln_list[i]['ips'].sort(lambda x,y: int(aton(x[0])-aton(y[0])))
+    e = datetime.now()
+
 
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
+    m_e = datetime.now()
 
     return render_to_response('ips_by_vuln.html', render_dict)
 
