@@ -32,6 +32,14 @@ class ConfigList(models.Model):
         managed = False
         db_table = u'configlist'
 
+class FalsePositive(models.Model):
+    nessusid = models.ForeignKey('Plugin', to_field='nessusid')
+    version = models.CharField(max_length=5)
+    added_by = models.CharField(max_length=20)
+    date_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    includes = models.TextField()
+    excludes = models.TextField()
+
 class Hostname(models.Model):
     def __unicode__(self):
         return self.hostname
