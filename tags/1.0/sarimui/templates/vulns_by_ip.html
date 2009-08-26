@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>SARIM - Vulnerabilities</title>
+    </head>
+
+    <body>
+        <h1>Vulnerabilities<h3><a href="{% url reaper.sarimui.views.index %}?view=vuln">by Vulnerability</a> - by IP</h3></h1>
+        <table border=1>
+            <tr><th>IP Address</th><th>Vulnerability</th><th>Nessus ID</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
+            {% for ip in vuln_list %}
+                {% for vuln, result in ip.resmap %}
+                    <tr>
+                    {% if forloop.first %}
+                        <td rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.dashboard_ip_view ip.ip %}">{{ ip.ip }}</a></td>
+                    {% endif %}
+                    <td>{{ vuln.0 }}</td>
+                    <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 latest %}">{{ vuln.1 }}</a></td>
+                    {% with result.scanrun as scanrun %}
+                        <td>{{ scanrun.scanset.type }}</td>
+                        <td>{{ result.end|date:"F j, Y" }}</td>
+                        <td><a href="{% url reaper.sarimui.views.scan_view scanrun.id %}">{{ scanrun.id }}</a></td>
+                    {% endwith %}
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+    </body>
+</html>
+                        
