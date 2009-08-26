@@ -398,7 +398,6 @@ def scan_view(request, scan):
             nip.save()
             scanresults.append(nip.ip)
 
-    render_dict['repairs'] = repairs
     for i in scanobj.hostset.iplist:
         if i in scanresults:
             render_dict['hosts'].append( (ntoa(i), 'up') )
