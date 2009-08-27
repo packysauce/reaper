@@ -85,20 +85,6 @@ def vulns_by_ip(request):
                 reshash = {'ip':ip, 'vulns':set([v,]), 'resmap':[(v,result, scan_types[result.scanrun_id]),]}
                 vuln_list.append(reshash)
                 id_cache[ip] = len(vuln_list)-1
-        try:
-            for v in vuln_data:
-                if v not in vuln_list[id_cache[ip]]['vulns']:
-                    vuln_list[id_cache[ip]]['vulns'].add(v)
-                    vuln_list[id_cache[ip]]['resmap'].append((v,result,scan_types[result.scanrun_id]))
-        except KeyError, e:
-            reshash = {'ip':ip, 'vulns':set(), 'resmap':[]}
-            for v in vuln_data:
-                if v not in reshash['vulns']:
-                    reshash['vulns'].add(v)
-                    reshash['resmap'].append((v,result,scan_types[result.scanrun_id]))
-            else:
-                vuln_list.append(reshash)
-                id_cache[ip] = len(vuln_list)-1
 
     def ipsort(x):
         return aton(x['ip'])
