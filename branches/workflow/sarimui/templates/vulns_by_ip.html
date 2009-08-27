@@ -14,7 +14,7 @@
                         <td rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.dashboard_ip_view ip.ip %}">{{ ip.ip }}</a></td>
                     {% endif %}
                     <td>{{ vuln.0 }}</td>
-                    <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 latest %}">{{ vuln.1 }}</a></td>
+                    <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
                     <td>{{ scantype }}</td>
                     <td>{{ result.end|date:"F j, Y" }}</td>
                     <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>

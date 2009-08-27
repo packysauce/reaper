@@ -18,29 +18,38 @@ def ips_by_vuln(request):
     #Set up the structures
     vuln_list = []
     scan_types = {}
+    #id_cache is where we keep track of the index in vuln_list for a particular vulnerability id
     id_cache = {}
-    cache_misses = 0
 
     for result in results:
         if result.scanrun_id not in scan_types.keys():
             scan_types[result.scanrun_id] = result.scanrun.scanset.type
+
         ip = ntoa(result.ip_id)
         #Vulnerability lists look like this: "description (port/proto)|#####,description (port/proto)|#####"
+        #break up vulnerabilities into a list of tuples [(general (443/tcp), 22648), (description (port/proto), #####)]
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
+        #For each vulnerability in the ScanResult we're looking at...
         for v in vuln_data:
-            try:
+            # if the current vulnerability is in the cache...
+            if v[1] in id_cache.keys():
+                #grab the cached index
                 c = id_cache[v[1]]
                 if ip not in [i[0] for i in vuln_list[c]['ips']]:
+                    #if the ip IS NOT in the list of ips afflicted by this vuln,
+                    #add it to the list...
                     vuln_list[c]['ips'].append( [ip, result, scan_types[result.scanrun_id]] )
                 else:
+                    #...otherwise replace the associated ScanResult
+                    #this serves to "replace if newer" since ScanResults are ordered by time
                     idx = [x for x,y,z in vuln_list[c]['ips']].index(ip)
                     vuln_list[c]['ips'][idx][1] = result
-            except KeyError, e:
+            # if the current vulnerability is NOT in the cache...
+            else:
+                #create a hash entry for each vuln and add it to the vulnerability list
                 reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result, scan_types[result.scanrun_id]],]}
                 vuln_list.append(reshash)
                 id_cache[v[1]] = len(vuln_list)-1
-                cache_misses += 1
-
 
     def vsort(x):
         return len(x['ips'])
@@ -48,9 +57,6 @@ def ips_by_vuln(request):
         vuln_list[i]['ips'].sort(lambda x,y: int(aton(x[0])-aton(y[0])))
 
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
-
-    import pprint
-    pprint.pprint(render_dict)
     return render_to_response('ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
@@ -61,21 +67,35 @@ def vulns_by_ip(request):
 
     vuln_list = []
     vuln_count = {}
+    scan_types = {}
     id_cache = {}
     for result in results:
+        if result.scanrun_id not in scan_types.keys():
+            scan_types[result.scanrun_id] = result.scanrun.scanset.type
+
         ip = ntoa(result.ip_id)
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
+        for v in vuln_data:
+            if ip in id_cache.keys():
+                c = id_cache[ip]
+                if v not in vuln_list[c]['vulns']:
+                    vuln_list[c]['vulns'].add(v)
+                    vuln_list[c]['resmap'].append( (v,result, scan_types[result.scanrun_id]) )
+            else:
+                reshash = {'ip':ip, 'vulns':set([v,]), 'resmap':[(v,result, scan_types[result.scanrun_id]),]}
+                vuln_list.append(reshash)
+                id_cache[ip] = len(vuln_list)-1
         try:
             for v in vuln_data:
                 if v not in vuln_list[id_cache[ip]]['vulns']:
                     vuln_list[id_cache[ip]]['vulns'].add(v)
-                    vuln_list[id_cache[ip]]['resmap'].append((v,result))
+                    vuln_list[id_cache[ip]]['resmap'].append((v,result,scan_types[result.scanrun_id]))
         except KeyError, e:
             reshash = {'ip':ip, 'vulns':set(), 'resmap':[]}
             for v in vuln_data:
                 if v not in reshash['vulns']:
                     reshash['vulns'].add(v)
-                    reshash['resmap'].append((v,result))
+                    reshash['resmap'].append((v,result,scan_types[result.scanrun_id]))
             else:
                 vuln_list.append(reshash)
                 id_cache[ip] = len(vuln_list)-1
