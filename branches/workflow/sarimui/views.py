@@ -6,14 +6,28 @@ from utils.bobdb import *
 from django.db import connection
 from datetime import *
 from django.core.exceptions import *
+import pprint
 
 def ips_by_vuln(request):
     render_dict = {}
     days_back = 7
+    pprint.pprint(request.GET)
+    if int(request.GET['fp']) == 1:
+        show_false_positives = False
+    else:
+        show_false_positives = True
 
     #Get all the scan results in the past week
     #Casting to list forces Django to evaluate the query and cache the results
     results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False))
+
+    false_ids = []
+    false_includes = []
+    false_excludes = []
+    for i in FalsePositive.objects.filter(active=True):
+        false_ids.append(i.nessusid_id)
+        false_includes.append(i.includes)
+        false_excludes.append(i.excludes)
 
     #Set up the structures
     vuln_list = []
@@ -31,6 +45,12 @@ def ips_by_vuln(request):
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
         #For each vulnerability in the ScanResult we're looking at...
         for v in vuln_data:
+            skip_this = False
+            if int(v[1]) in false_ids and not show_false_positives:
+                fidx = false_ids.index(int(v[1]))
+                if ip in false_includes[fidx] and ip not in false_excludes[fidx]:
+                    continue
+
             # if the current vulnerability is in the cache...
             if v[1] in id_cache.keys():
                 #grab the cached index
@@ -47,16 +67,20 @@ def ips_by_vuln(request):
             # if the current vulnerability is NOT in the cache...
             else:
                 #create a hash entry for each vuln and add it to the vulnerability list
-                reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result, scan_types[result.scanrun_id]],]}
-                vuln_list.append(reshash)
-                id_cache[v[1]] = len(vuln_list)-1
+                if not skip_this:
+                    reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result, scan_types[result.scanrun_id]],]}
+                    vuln_list.append(reshash)
+                    id_cache[v[1]] = len(vuln_list)-1
 
+    pprint.pprint(vuln_list)
     def vsort(x):
         return len(x['ips'])
     for i in range(0,len(vuln_list)):
         vuln_list[i]['ips'].sort(lambda x,y: int(aton(x[0])-aton(y[0])))
 
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
+
+    print "Queries: " + str(len(connection.queries))
     return render_to_response('ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
@@ -209,6 +233,11 @@ def ip_view_core(ip, days_back):
     except:
         return render_to_response('view.html', render_dict)
 
+    try:
+        comments = list(IpComments.objects.filter(ip=_ip))
+    except:
+        comments = []
+
     dtime = datetime.now() - timedelta(days=days_back)
     if days_back == -1:
         results = list(ScanResults.objects.filter(ip=_ip, state='up'))
@@ -227,6 +256,7 @@ def ip_view_core(ip, days_back):
         render_dict['entries'][mac]['name'] = ''
         render_dict['entries'][mac]['hr_name'] = 'Hostname'
         render_dict['entries'][mac]['alt_name'] = ''
+        render_dict['entries'][mac]['comments'] = []
 
     #nab all the mac<->ip associations for this ip
     macips = list(_ip.macip_set.all())
@@ -234,13 +264,18 @@ def ip_view_core(ip, days_back):
     #loop through each mac<->ip association and compare the time to the scan time
     for assoc in macips:
         #grab the iphostname association with the same ip and timestamps to get the hostname
-        if render_dict['entries'][assoc.mac.mac]['name'] == '':
+        #also get the comments for the entry
+        mac = assoc.mac.mac
+        
+        render_dict['entries'][mac]['comments'] += list(IpComments.objects.filter(ip=_ip, entered__gte=assoc.observed, entered__lte=assoc.entered))
+
+        if render_dict['entries'][mac]['name'] == '':
             hostnames = list(IpHostname.objects.filter(ip=_ip, observed__gte=assoc.observed, entered__lte=assoc.entered))
-            render_dict['entries'][assoc.mac.mac]['alt_name'] = assoc.mac.mac
+            render_dict['entries'][mac]['alt_name'] = mac
             if len(hostnames) > 0:
-                render_dict['entries'][assoc.mac.mac]['name'] = hostnames[0].hostname
+                render_dict['entries'][mac]['name'] = hostnames[0].hostname
             else:
-                render_dict['entries'][assoc.mac.mac]['name'] = 'NoNameAvailable'
+                render_dict['entries'][mac]['name'] = 'NoNameAvailable'
             
         for scan in results:
             #if the scan ended when this mac<->ip assoc was active, that's the mac we need
@@ -255,6 +290,7 @@ def ip_view_core(ip, days_back):
                     vulns = []
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, vulns ) )
+
 
     return render_to_response('view.html', render_dict)
 

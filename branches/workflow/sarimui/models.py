@@ -40,7 +40,7 @@ class FalsePositive(models.Model):
     includes = models.TextField()
     excludes = models.TextField()
     comment = models.TextField()
-    status = models.BooleanField()
+    active = models.BooleanField()
 
 class Hostname(models.Model):
     def __unicode__(self):
@@ -87,6 +87,8 @@ class IpAddress(models.Model):
         ordering = ['ip']
 
 class IpComments(models.Model):
+    def __unicode__(self):
+        return "%s, %s" % (self.analyst, self.entered)
     id = models.IntegerField(primary_key=True)
     ip = models.ForeignKey('IpAddress', db_column='ip')
     entered = models.DateTimeField()
