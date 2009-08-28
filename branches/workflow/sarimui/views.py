@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from sarimui.models import *
 from utils.bobdb import *
+from utils.djangolist import *
 from django.db import connection
 from datetime import *
 from django.core.exceptions import *
@@ -11,15 +12,17 @@ import pprint
 def ips_by_vuln(request):
     render_dict = {}
     days_back = 7
-    pprint.pprint(request.GET)
-    if int(request.GET['fp']) == 1:
+    if 'fp' in request.GET.keys() and int(request.GET['fp']) == 1:
         show_false_positives = False
     else:
         show_false_positives = True
 
     #Get all the scan results in the past week
     #Casting to list forces Django to evaluate the query and cache the results
-    results = list(ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False))
+    timespan = date.today()-timedelta(days=days_back)
+    results = list(ScanResults.objects.filter(end__gte=timespan, state='up', vulns__isnull=False))
+    scanruns = list(ScanRun.objects.filter(end__gte=timespan))
+    scansets = list(ScanSet.objects.filter(entered__gte=timespan))
 
     false_ids = []
     false_includes = []
@@ -37,7 +40,9 @@ def ips_by_vuln(request):
 
     for result in results:
         if result.scanrun_id not in scan_types.keys():
-            scan_types[result.scanrun_id] = result.scanrun.scanset.type
+            scanrunidx = get_index_by_attr(scanruns, "id", result.scanrun_id)
+            scansetidx = get_index_by_attr(scansets, "id", scanruns[scanrunidx].scanset_id)
+            scan_types[result.scanrun_id] = scansets[scansetidx].type
 
         ip = ntoa(result.ip_id)
         #Vulnerability lists look like this: "description (port/proto)|#####,description (port/proto)|#####"
@@ -72,7 +77,6 @@ def ips_by_vuln(request):
                     vuln_list.append(reshash)
                     id_cache[v[1]] = len(vuln_list)-1
 
-    pprint.pprint(vuln_list)
     def vsort(x):
         return len(x['ips'])
     for i in range(0,len(vuln_list)):
