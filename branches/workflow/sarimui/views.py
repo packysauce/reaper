@@ -8,14 +8,19 @@ from django.db import connection
 from datetime import *
 from django.core.exceptions import *
 import pprint
+from utils.falsepositives import FalsePositivesHelper as fphelper
+
+FLAG_FP = 1
+HIDE_FP = 0
 
 def ips_by_vuln(request):
     render_dict = {}
     days_back = 7
-    if 'fp' in request.GET.keys() and int(request.GET['fp']) == 1:
-        show_false_positives = False
-    else:
-        show_false_positives = True
+    fp = fphelper()
+    fp_option = FLAG_FP
+
+    if 'fp' in [i.lower() for i in request.GET.keys()] and int(request.GET['fp']) in [0,1]:
+        fp_option = int(request.GET['fp'])
 
     #Get all the scan results in the past week
     #Casting to list forces Django to evaluate the query and cache the results
@@ -24,21 +29,15 @@ def ips_by_vuln(request):
     scanruns = list(ScanRun.objects.filter(end__gte=timespan))
     scansets = list(ScanSet.objects.filter(entered__gte=timespan))
 
-    false_ids = []
-    false_includes = []
-    false_excludes = []
-    for i in FalsePositive.objects.filter(active=True):
-        false_ids.append(i.nessusid_id)
-        false_includes.append(i.includes)
-        false_excludes.append(i.excludes)
-
     #Set up the structures
     vuln_list = []
     scan_types = {}
     #id_cache is where we keep track of the index in vuln_list for a particular vulnerability id
     id_cache = {}
 
+    start = datetime.now()
     for result in results:
+        #This is an attempt to cache all of the scan types, as well as caching duplicate scanruns and scansets
         if result.scanrun_id not in scan_types.keys():
             scanrunidx = get_index_by_attr(scanruns, "id", result.scanrun_id)
             scansetidx = get_index_by_attr(scansets, "id", scanruns[scanrunidx].scanset_id)
@@ -50,33 +49,39 @@ def ips_by_vuln(request):
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
         #For each vulnerability in the ScanResult we're looking at...
         for v in vuln_data:
-            skip_this = False
-            if int(v[1]) in false_ids and not show_false_positives:
-                fidx = false_ids.index(int(v[1]))
-                if ip in false_includes[fidx] and ip not in false_excludes[fidx]:
+            vdesc = v[0]
+            vid = int(v[1])
+            
+            #set up the false positive flag. If this flag is set, the row will be marked as a false positive.
+            #if the flag is not set, the row will not be displayed
+            fp_flag = False
+            if fp.is_falsepositive(ip, vid):
+                if fp_option == FLAG_FP:
+                    fp_flag = True
+                else:
                     continue
 
             # if the current vulnerability is in the cache...
-            if v[1] in id_cache.keys():
+            if vid in id_cache.keys():
                 #grab the cached index
-                c = id_cache[v[1]]
+                c = id_cache[vid]
                 if ip not in [i[0] for i in vuln_list[c]['ips']]:
                     #if the ip IS NOT in the list of ips afflicted by this vuln,
                     #add it to the list...
-                    vuln_list[c]['ips'].append( [ip, result, scan_types[result.scanrun_id]] )
+                    vuln_list[c]['ips'].append( [ip, result, scan_types[result.scanrun_id], fp_flag] )
                 else:
                     #...otherwise replace the associated ScanResult
                     #this serves to "replace if newer" since ScanResults are ordered by time
-                    idx = [x for x,y,z in vuln_list[c]['ips']].index(ip)
+                    idx = [i for i,r,s,f in vuln_list[c]['ips']].index(ip)
                     vuln_list[c]['ips'][idx][1] = result
             # if the current vulnerability is NOT in the cache...
             else:
                 #create a hash entry for each vuln and add it to the vulnerability list
-                if not skip_this:
-                    reshash = {'vid':v[1], 'vname':v[0], 'ips':[[ip,result, scan_types[result.scanrun_id]],]}
-                    vuln_list.append(reshash)
-                    id_cache[v[1]] = len(vuln_list)-1
+                reshash = {'vid':vid, 'vname':vdesc, 'ips':[[ip,result, scan_types[result.scanrun_id], fp_flag],]}
+                vuln_list.append(reshash)
+                id_cache[vid] = len(vuln_list)-1
 
+    print datetime.now() - start
     def vsort(x):
         return len(x['ips'])
     for i in range(0,len(vuln_list)):
@@ -84,14 +89,21 @@ def ips_by_vuln(request):
 
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
-    print "Queries: " + str(len(connection.queries))
     return render_to_response('ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
     render_dict = {}
     days_back = 7
+    fp = fphelper()
+    fp_option = FLAG_FP
 
-    results = ScanResults.objects.filter(end__gte=date.today()-timedelta(days=days_back), state='up', vulns__isnull=False)
+    if 'fp' in [i.lower() for i in request.GET.keys()] and int(request.GET['fp']) in [0,1]:
+        fp_option = int(request.GET['fp'])
+
+    timespan = date.today()-timedelta(days=days_back)
+    results = list(ScanResults.objects.filter(end__gte=timespan, state='up', vulns__isnull=False))
+    scanruns = list(ScanRun.objects.filter(end__gte=timespan))
+    scansets = list(ScanSet.objects.filter(entered__gte=timespan))
 
     vuln_list = []
     vuln_count = {}
@@ -99,18 +111,34 @@ def vulns_by_ip(request):
     id_cache = {}
     for result in results:
         if result.scanrun_id not in scan_types.keys():
-            scan_types[result.scanrun_id] = result.scanrun.scanset.type
+            scanrunidx = get_index_by_attr(scanruns, "id", result.scanrun_id)
+            scansetidx = get_index_by_attr(scansets, "id", scanruns[scanrunidx].scanset_id)
+            scan_types[result.scanrun_id] = scansets[scansetidx].type
 
         ip = ntoa(result.ip_id)
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
+
+
         for v in vuln_data:
+            vdesc = v[0]
+            vid = int(v[1])
+                
+            #set up the false positive flag. If this flag is set, the row will be marked as a false positive.
+            #if the flag is not set, the row will not be displayed
+            fp_flag = False
+            if fp.is_falsepositive(ip, vid):
+                if fp_option == FLAG_FP:
+                    fp_flag = True
+                else:
+                    continue
+
             if ip in id_cache.keys():
                 c = id_cache[ip]
                 if v not in vuln_list[c]['vulns']:
                     vuln_list[c]['vulns'].add(v)
-                    vuln_list[c]['resmap'].append( (v,result, scan_types[result.scanrun_id]) )
+                    vuln_list[c]['resmap'].append( (v,result, scan_types[result.scanrun_id], fp_flag) )
             else:
-                reshash = {'ip':ip, 'vulns':set([v,]), 'resmap':[(v,result, scan_types[result.scanrun_id]),]}
+                reshash = {'ip':ip, 'vulns':set([v,]), 'resmap':[(v,result, scan_types[result.scanrun_id], fp_flag),]}
                 vuln_list.append(reshash)
                 id_cache[ip] = len(vuln_list)-1
 

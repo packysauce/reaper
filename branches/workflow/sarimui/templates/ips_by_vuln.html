@@ -3,6 +3,12 @@
 <html>
     <head>
         <title>SARIM - Vulnerabilites</title>
+        <style>
+            tr.falsepositive > td {
+                opacity:0.25;
+                filter:alpha(opacity=25);
+            }
+        </style>
     </head>
 
     <body>
@@ -10,10 +16,14 @@
         <table border=1>
             <tr><th>Nessus ID</th><th>IP Addresses</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
             {% for vuln in vuln_list %}
-                {% for ip, result, scantype in vuln.ips %}
-                    <tr>
+                {% for ip, result, scantype, fpflag in vuln.ips %}
                     {% if forloop.first %}
-                    <td rowspan={{ vuln.ips|length }}>
+                    {% if fpflag %}
+                    <tr class="falsepositive">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                    <th rowspan={{ vuln.ips|length }}>
                         <center>
                         {{vuln.vname}}</br>
                         <a href="{% url reaper.sarimui.views.plugin_info_view vuln.vid 'latest' %}">{{ vuln.vid }}</a></br>
@@ -21,12 +31,18 @@
                         Afflicts {{ vuln.ips|length }} devices
                         {% endif %}
                         </center>
-                    </td>
+                    </th>
+                    {% else %}
+                        {% if fpflag %}
+                        <tr class="falsepositive">
+                        {% else %}
+                        <tr>
+                        {% endif %}
                     {% endif %}
                     <td><a href="{% url reaper.sarimui.views.dashboard_ip_view ip %}">{{ ip }}</a></td>
-                        <td>{{ scantype }}</td>
-                        <td>{{ result.end|date:"F j, Y" }}</td>
-                        <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+                    <td>{{ scantype }}</td>
+                    <td>{{ result.end|date:"F j, Y" }}</td>
+                    <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
                     </tr>
                 {% endfor %}
             {% endfor %}

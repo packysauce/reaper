@@ -17,13 +17,10 @@ def get_index_by_attr(djlist, attrname, searchfor):
     if searchfor == None:
         raise ValueError("Third positional argument must be what to search for")
 
-    if len(djlist) == 1:
-        if djlist[0].__dict__[attrname] == searchfor:
-            return 0
-
-    for i in range(0,len(djlist)-1):
+    for i in range(0,len(djlist)):
         if djlist[i].__dict__[attrname] == searchfor:
             return i
+
     return -1
 
 def get_indices_by_attr(djlist, attrname, searchfor):

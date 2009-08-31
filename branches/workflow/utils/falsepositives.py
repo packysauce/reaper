@@ -40,7 +40,7 @@ class FalsePositivesHelper(object):
         if type(ip) == int or type(ip) == str:
             _ip = anytoa(ip)
         elif type(ip) == ScanResult:
-            _ip = ScanResult.ip_id
+            _ip = anytoa(ScanResult.ip_id)
         else:
             raise ValueError("Must specify IP as a number, string, or ScanResult")
 
@@ -49,8 +49,6 @@ class FalsePositivesHelper(object):
             return False
 
         curfp = self.__fplist[fpidx]
-        ip_excluded = False
-        nessusid_invalid = False
 
         #if the date's OK and the IP is in the lists, it's a false positive!
         if curfp.date_added > Plugin.objects.filter(nessusid=curfp.nessusid_id).latest().entered:
