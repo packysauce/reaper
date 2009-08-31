@@ -1,4 +1,5 @@
 from sarimui.models import *
+from datetime import *
 from utils.bobdb import *
 from utils.djangolist import *
 
@@ -51,8 +52,8 @@ class FalsePositivesHelper(object):
         curfp = self.__fplist[fpidx]
 
         #if the date's OK and the IP is in the lists, it's a false positive!
-        if curfp.date_added > Plugin.objects.filter(nessusid=curfp.nessusid_id).latest().entered:
-            if self.__in_iplist(_ip, curfp.includes) and not self.__in_iplist(_ip, curfp.excludes):
+        if self.__in_iplist(_ip, curfp.includes) and not self.__in_iplist(_ip, curfp.excludes):
+            if curfp.date_added > Plugin.objects.filter(nessusid=curfp.nessusid_id).latest().entered:
                 return True
 
         #current FP is older than the newest version of the plugin

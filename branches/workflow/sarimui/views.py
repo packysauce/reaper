@@ -35,7 +35,6 @@ def ips_by_vuln(request):
     #id_cache is where we keep track of the index in vuln_list for a particular vulnerability id
     id_cache = {}
 
-    start = datetime.now()
     for result in results:
         #This is an attempt to cache all of the scan types, as well as caching duplicate scanruns and scansets
         if result.scanrun_id not in scan_types.keys():
@@ -81,7 +80,6 @@ def ips_by_vuln(request):
                 vuln_list.append(reshash)
                 id_cache[vid] = len(vuln_list)-1
 
-    print datetime.now() - start
     def vsort(x):
         return len(x['ips'])
     for i in range(0,len(vuln_list)):
