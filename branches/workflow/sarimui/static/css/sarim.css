@@ -1,4 +1,10 @@
 tr.falsepositive > td {
-    opacity:0.25;
-    filter:alpha(opacity=25);
+    opacity:0.40;
+    filter:alpha(opacity=40);
+}
+
+li.sidenav_heading {
+    position: relative;
+    left: -15px;
+    list-style: none;
 }

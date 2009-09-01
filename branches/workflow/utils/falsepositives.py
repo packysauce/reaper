@@ -60,3 +60,4 @@ class FalsePositivesHelper(object):
         # or the ip is not included in the false positive
         # or the ip is specifically excluded from the false positive
         return False
+    

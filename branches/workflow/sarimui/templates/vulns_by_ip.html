@@ -1,10 +1,4 @@
-{% extends 'base.html' %}
-
-{% block sidebar %}
-Arrange by
-<li><a href="{% url reaper.sarimui.views.index %}">Vulnerability</a></li>
-<li><a href="{% url reaper.sarimui.views.index %}?view=ip">IP</a></li>
-{% endblock %}
+{% extends 'vuln_view.html' %}
 
 {% block main_body %}
 <h1></h1>
