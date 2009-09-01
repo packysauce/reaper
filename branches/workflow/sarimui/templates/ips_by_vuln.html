@@ -1,51 +1,49 @@
+{% extends 'base.html' %}
 {% load comparisons %}
 
-<html>
-    <head>
-        <title>SARIM - Vulnerabilites</title>
-        <style>
-            tr.falsepositive > td {
-                opacity:0.25;
-                filter:alpha(opacity=25);
-            }
-        </style>
-    </head>
+{% block sidebar %}
+Arrange by
+<li><a href="{% url reaper.sarimui.views.index %}">Vulnerability</a></li>
+<li><a href="{% url reaper.sarimui.views.index %}?view=ip">IP</a></li>
+{% endblock %}
 
-    <body>
-        <h1>Vulnerabilities<h3>by Vulnerability - <a href="{% url reaper.sarimui.views.index %}?view=ip">by IP</a></h3></h1>
-        <table border=1>
+{% block main_body %}
+<h1></h1>
+<h2>Vulnerabilities</h2>
+        <table class='block'>
             <tr><th>Nessus ID</th><th>IP Addresses</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
             {% for vuln in vuln_list %}
-                {% for ip, result, scantype, fpflag in vuln.ips %}
-                    {% if forloop.first %}
-                    {% if fpflag %}
-                    <tr class="falsepositive">
-                    {% else %}
-                    <tr>
+            {% for ip, result, scantype, fpflag in vuln.ips %}
+            {% if forloop.first %}
+            {% if fpflag %}
+            <tr class="falsepositive">
+                {% else %}
+                <tr>
                     {% endif %}
                     <th rowspan={{ vuln.ips|length }}>
                         <center>
-                        {{vuln.vname}}</br>
-                        <a href="{% url reaper.sarimui.views.plugin_info_view vuln.vid 'latest' %}">{{ vuln.vid }}</a></br>
-                        {% if vuln.ips|length_gt:4 %}
-                        Afflicts {{ vuln.ips|length }} devices
-                        {% endif %}
+                            {{vuln.vname}}</br>
+                            <div>
+                                <a href="{% url reaper.sarimui.views.plugin_info_view vuln.vid 'latest' %}">{{ vuln.vid }}</a>
+                            </div>
+                            {% if vuln.ips|length_gt:4 %}
+                            Afflicts {{ vuln.ips|length }} devices
+                            {% endif %}
                         </center>
                     </th>
                     {% else %}
-                        {% if fpflag %}
-                        <tr class="falsepositive">
+                    {% if fpflag %}
+                    <tr class="falsepositive">
                         {% else %}
                         <tr>
-                        {% endif %}
-                    {% endif %}
-                    <td><a href="{% url reaper.sarimui.views.dashboard_ip_view ip %}">{{ ip }}</a></td>
-                    <td>{{ scantype }}</td>
-                    <td>{{ result.end|date:"F j, Y" }}</td>
-                    <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
-                    </tr>
-                {% endfor %}
-            {% endfor %}
-        </table>
-    </body>
-</html>
+                            {% endif %}
+                            {% endif %}
+                            <td><a href="{% url reaper.sarimui.views.dashboard_ip_view ip %}">{{ ip }}</a></td>
+                            <td>{{ scantype }}</td>
+                            <td>{{ result.end|date:"F j, Y" }}</td>
+                            <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                    </table>
+                    {% endblock %}

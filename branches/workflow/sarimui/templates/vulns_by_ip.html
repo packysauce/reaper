@@ -1,37 +1,33 @@
-<html>
-    <head>
-        <title>SARIM - Vulnerabilities</title>
-         <style>
-            tr.falsepositive > td {
-                opacity:0.25;
-                filter:alpha(opacity=25);
-            }
-        </style>
-    </head>
+{% extends 'base.html' %}
 
-    <body>
-        <h1>Vulnerabilities<h3><a href="{% url reaper.sarimui.views.index %}?view=vuln">by Vulnerability</a> - by IP</h3></h1>
-        <table border=1>
-            <tr><th>IP Address</th><th>Vulnerability</th><th>Nessus ID</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
-            {% for ip in vuln_list %}
-                {% for vuln, result, scantype, fpflag in ip.resmap %}
-                    {% if fpflag %}
-                    <tr class="falsepositive">
-                    {% else %}
-                    <tr>
-                    {% endif %}
-                    {% if forloop.first %}
-                        <th rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.dashboard_ip_view ip.ip %}">{{ ip.ip }}</a></td>
-                    {% endif %}
-                    <td>{{ vuln.0 }}</td>
-                    <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
-                    <td>{{ scantype }}</td>
-                    <td>{{ result.end|date:"F j, Y" }}</td>
-                    <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
-                    </tr>
-                {% endfor %}
-            {% endfor %}
-        </table>
-    </body>
-</html>
-                        
+{% block sidebar %}
+Arrange by
+<li><a href="{% url reaper.sarimui.views.index %}">Vulnerability</a></li>
+<li><a href="{% url reaper.sarimui.views.index %}?view=ip">IP</a></li>
+{% endblock %}
+
+{% block main_body %}
+<h1></h1>
+<h2>Vulnerabilities</h2>
+<table class='block'>
+    <tr><th>IP Address</th><th>Vulnerability</th><th>Nessus ID</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
+    {% for ip in vuln_list %}
+    {% for vuln, result, scantype, fpflag in ip.resmap %}
+    {% if fpflag %}
+    <tr class="falsepositive">
+        {% else %}
+        <tr>
+            {% endif %}
+            {% if forloop.first %}
+            <th rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.dashboard_ip_view ip.ip %}">{{ ip.ip }}</a></td>
+            {% endif %}
+            <td>{{ vuln.0 }}</td>
+            <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
+            <td>{{ scantype }}</td>
+            <td>{{ result.end|date:"F j, Y" }}</td>
+            <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
+    {% endblock %}

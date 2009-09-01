@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from sarimui.models import *
 from sarimui import views
+import django.views.static
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -10,6 +11,8 @@ urlpatterns = patterns('',
     # Example:
     # (r'^reaper/', include('reaper.foo.urls')),
     url(r'^$', views.index),
+    url(r'^site_media/(?P<path>.*)/$', django.views.static.serve,
+        {'document_root': 'C:/users/pdwhite/desktop/reaper/sarimui/static'}),
     url(r'^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$', views.ip_view),
     url(r'^([a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2}:[a-zA-Z0-9]{2})/$', views.mac_view),
     url(r'^plugin/(\d*)/$', views.plugin_view),

@@ -14,7 +14,7 @@ FLAG_FP = 1
 HIDE_FP = 0
 
 def ips_by_vuln(request):
-    render_dict = {}
+    render_dict = {'pagetitle':'Vulnerabilities'}
     days_back = 7
     fp = fphelper()
     fp_option = FLAG_FP
