@@ -1,69 +1,65 @@
-<html>
-    <head>
-        <title>View {{category}} Details</title>
-    </head>
+{% extends 'base.html' %}
 
-    <body>
-        {% ifequal days_back -1 %}
-        <h1>Database results for {{ entry }}</h1>
+{% block sidebar %}
+<li class="sidenav_heading">History</li>
+{% url sarimui.views.device_view entry as devurl %}
+<li><a href="{{ devurl }}?days=7">1 week</a></li>
+<li><a href="{{ devurl }}?days=14">2 weeks</a></li>
+<li><a href="{{ devurl }}?days=28">4 weeks</a></li>
+<li><a href="{{ devurl }}?days=0">All data</a></li>
+
+{% endblock %}
+
+{% block main_body %}
+<h1>Database results for {{ entry }}</h1>
+{% ifequal days_back 0 %}
+<h2>All information available</h2>
+{% else %}
+<h2>{{ days_back }} days of information</h2>
+{% endifequal %}
+
+<h3>{{ entries|length }} {{category}} association{{ entries|length|pluralize }} found</h3>
+{% if entries %}
+<ul class='entry_list'>
+    {% for entry,entry_data in entries.items %}
+    <li class='entry_item'><h3>
+        {% ifequal entry_data.name 'NoNameAvailable' %}
+        No {{entry_data.hr_name}} Available
         {% else %}
-        <h1>Dashboard for {{ entry }}</h1>
-        <h3>{{ days_back }} days of information</h3>
-        <div class='details'><a href='/sarim/{{entry}}'>Detailed view</a></div>
+        <a href='{% url sarimui.views.device_view entry_data.name %}?days={{ days_back }}'>{{entry_data.name}}</a>
         {% endifequal %}
-        <div class='nav'><a href="{% url sarimui.views.index %}">Home</a></div>
-        <h2>{{ entries|length }} {{category}} association{{ entries|length|pluralize }} found</h2>
-        {% if entries %}
-        <ul class='entry_list'>
-            {% for entry,entry_data in entries.items %}
-            <li class='entry_item'><h2>
-                {% ifequal entry_data.name 'NoNameAvailable' %}
-                No {{entry_data.hr_name}} Available
-                {% else %}
-                {% ifequal days_back -1 %}
-                <a href='/sarim/{{entry_data.name}}'>{{entry_data.name}}</a>
-                {% else %}
-                <a href='/sarim/dashboard/{{entry_data.name}}'>{{entry_data.name}}</a>
-                {% endifequal %}
-                {% endifequal %}
-                {% ifequal days_back -1 %}
-                (<a href='/sarim/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
-                {% else %}
-                (<a href='/sarim/dashboard/{{ entry_data.alt_name }}'>{{ entry_data.alt_name }}</a>)
-                {% endifequal %}
-            </h2></li>
-            {% for comment in entry_data.comments %}
-            {% if forloop.first %}
-            <div class='comments'>
-                <h3>Comments</h3>
-                {% endif %}
-                <div class='comment'>
-                    <span class='author'><b>{{ comment.analyst }} on {{ comment.entered|date:"F j, Y \a\t P " }}</b></br></span>
-                    <span class='content'>{{ comment.content }}</span>
-                    {% empty %}
-                    {% endfor %}
+        (<a href='{% url sarimui.views.device_view entry_data.alt_name %}?days={{days_back}}'>{{ entry_data.alt_name }}</a>)
+    </h3></li>
+    {% for comment in entry_data.comments %}
+    {% if forloop.first %}
+    <div class='comments'>
+        <h3>Comments</h3>
+    {% endif %}
+        <div class='comment'>
+            <span class='author'><b>{{ comment.analyst }} on {{ comment.entered|date:"F j, Y \a\t P " }}</b></br></span>
+            <span class='content'>{{ comment.content }}</span>
+    {% endfor %}
 
-                    {% ifnotequal entry_data.scans|length 0 %}
-                    <ul class='scan_list'>
-                        <h3 class='scan_header'>Found {{ entry_data.vuln_total }} vulnerabilit{{ entry_data.vuln_total|pluralize:"y,ies" }} in {{ entry_data.scans|length}} scan{{ entry_data.scans|length|pluralize }}.</h3>
-                        {% for scan, vulns in entry_data.scans %}
-                        <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.scanrun.id %}'>{{scan.scanrun.id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
-                        {% if vulns %}
-                        <ul>
-                            {% for name, plugin in vulns %}
-                            <li class='vuln_item'>{{ name }} (<a href='{% url sarimui.views.plugin_view plugin %}'>{{plugin}}</a>)</a></li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <div class='empty'>No scans for this MAC</div>
-                {% endifnotequal %}
-                </li>
+            {% ifnotequal entry_data.scans|length 0 %}
+            <ul class='scan_list'>
+                <h3 class='scan_header'>Found {{ entry_data.vuln_total }} vulnerabilit{{ entry_data.vuln_total|pluralize:"y,ies" }} in {{ entry_data.scans|length}} scan{{ entry_data.scans|length|pluralize }}.</h3>
+                {% for scan, vulns in entry_data.scans %}
+                <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.scanrun_id %}'>{{scan.scanrun_id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
+                {% if vulns %}
+                <ul>
+                    {% for name, plugin in vulns %}
+                    <li class='vuln_item'>{{ name }} (<a href='{% url sarimui.views.plugin_view plugin %}'>{{plugin}}</a>)</a></li>
                 {% endfor %}
-                {% else %}
-                <h2>{{ ip }} has no scan history</h2>
-                {% endif %}
-            </body>
-        </html>
+            </ul>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class='empty'>No scans for this MAC</div>
+        {% endifnotequal %}
+        </li>
+        {% endfor %}
+        {% else %}
+        <h2>{{ ip }} has no scan history</h2>
+        {% endif %}
+        {% endblock %}

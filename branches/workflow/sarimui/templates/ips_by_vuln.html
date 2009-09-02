@@ -2,8 +2,8 @@
 {% load comparisons %}
 
 {% block main_body %}
-<h1></h1>
-<h2>Vulnerabilities</h2>
+<h1>Vulnerabilities</h1>
+<h2>All vulnerabilities within the past 7 days</h2>
         <table class='block'>
             <tr><th>Nessus ID</th><th>IP Addresses</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
             {% for vuln in vuln_list %}
@@ -32,7 +32,7 @@
                         <tr>
                             {% endif %}
                             {% endif %}
-                            <td><a href="{% url reaper.sarimui.views.dashboard_ip_view ip %}">{{ ip }}</a></td>
+                            <td><a href="{% url reaper.sarimui.views.device_view ip %}">{{ ip }}</a></td>
                             <td>{{ scantype }}</td>
                             <td>{{ result.end|date:"F j, Y" }}</td>
                             <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>

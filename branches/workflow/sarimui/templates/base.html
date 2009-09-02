@@ -6,6 +6,8 @@
         <title>JLab Networking : {{ pagetitle }}</title>
         <link rel="stylesheet" type="text/css" href="{% url django.views.static.serve 'css/defstyle.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% url django.views.static.serve 'css/sarim.css' %}"/>
+        {% block extra_head %}
+        {% endblock %}
     </head>
 
     <body>
@@ -23,7 +25,15 @@
                     {% else %}
                     <li>
                     {% endifequal %}
-                    <a href="{% url reaper.sarimui.views.index %}">Vulnerabilities</a>
+                    <a href="{% url sarimui.views.index %}">Vulnerabilities</a>
+                    </li>
+
+                    {% ifequal pagetitle 'Device Information' %}
+                    <li id="main_navigation_current">
+                    {% else %}
+                    <li>
+                    {% endifequal %}
+                    <a href="{% url sarimui.views.device_search %}">Device Information</a>
                     </li>
 
                     {% ifequal pagetitle 'False Positives' %}
@@ -31,8 +41,9 @@
                     {% else %}
                     <li>
                     {% endifequal %}
-                    <a href="{% url reaper.sarimui.views.index %}">False Positives</a>
+                    <a href="{% url sarimui.views.index %}">False Positives</a>
                     </li>
+
                 </ul>
             </div>
 

@@ -90,7 +90,7 @@ def ips_by_vuln(request):
     return render_to_response('ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
-    render_dict = {}
+    render_dict = {'pagetitle':'Vulnerabilities'}
     days_back = 7
     fp = fphelper()
     fp_option = FLAG_FP
@@ -252,26 +252,25 @@ def plugin_info_view(request, plugin, version):
     return render_to_response('plugin/plugin_info.html', render_dict)
 
 def ip_view_core(ip, days_back):
-    render_dict = dict()
+    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'IP'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = ip
-    render_dict['days_back'] = days_back
 
     #Grab the IP object and all the scanresults for it
     try:
         _ip = IpAddress.objects.get(ip=aton(ip))
     except:
-        return render_to_response('view.html', render_dict)
+        return -1
 
     try:
         comments = list(IpComments.objects.filter(ip=_ip))
     except:
         comments = []
 
-    dtime = datetime.now() - timedelta(days=days_back)
-    if days_back == -1:
+    if days_back == 0:
         results = list(ScanResults.objects.filter(ip=_ip, state='up'))
     else:
+        dtime = datetime.now() - timedelta(days=days_back)
         results = list(ScanResults.objects.filter(ip=_ip, state='up', end__gte=dtime))
 
     #setup for the data structure to pass to the template
@@ -322,18 +321,17 @@ def ip_view_core(ip, days_back):
                 render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, vulns ) )
 
 
-    return render_to_response('view.html', render_dict)
+    return render_dict
 
 def host_view_core(hostname, days_back):
-    render_dict = dict()
+    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'Hostname'}
     render_dict['entry'] = hostname
     render_dict['category'] = 'MAC'
-    render_dict['days_back'] = days_back
 
     try:
         hostobj = Hostname.objects.get(hostname=hostname)
     except:
-        return render_to_response('view.html', render_dict)
+        return -1
 
     addresses = hostobj.ipaddress_set.all()
     iphosts = hostobj.iphostname_set.all()
@@ -342,12 +340,12 @@ def host_view_core(hostname, days_back):
 
     render_dict['entries'] = dict()
 
-    dtime = datetime.now()-timedelta(days=days_back)
     for ip in set(addresses):
         render_dict['entries'][ip] = dict()
         render_dict['entries'][ip]['scans'] = []
         render_dict['entries'][ip]['vuln_total'] = 0
-        if days_back != -1:
+        if days_back != 0:
+            dtime = datetime.now()-timedelta(days=days_back)
             results += ScanResults.objects.filter(ip=ip.ip, end__gte=dtime)
         else:
             results += ScanResults.objects.filter(ip=ip.ip)
@@ -373,18 +371,17 @@ def host_view_core(hostname, days_back):
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['entries'][iphost.ip]['scans'].append( ( scan, vulns ) )
 
-    return render_to_response('view.html', render_dict)
+    return render_dict
 
 def mac_view_core(mac, days_back):
-    render_dict = dict()
+    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'MAC Address'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = mac
-    render_dict['days_back'] = days_back
 
     try:
         macobj = Mac.objects.get(mac=mac)
     except:
-        return render_to_response('view.html', render_dict)
+        return -1
 
     addresses = list(macobj.ipaddresses.all())
     macips = list(macobj.macip_set.all())
@@ -408,12 +405,12 @@ def mac_view_core(mac, days_back):
 
     render_dict['entries'] = dict()
 
-    dtime = datetime.now() - timedelta(days=days_back)
     for ip in set(addresses):
         aip = ntoa(ip.ip)
-        if days_back == -1:
+        if days_back == 0:
             results = list(ScanResults.objects.filter(ip=ip.ip))
         else:
+            dtime = datetime.now() - timedelta(days=days_back)
             results = list(ScanResults.objects.filter(ip=ip.ip, end__gte=dtime))
         for scan in results:
             try:
@@ -444,7 +441,7 @@ def mac_view_core(mac, days_back):
                 if hfirst == ifirst and hlast == ilast:
                     render_dict['entries'][ip]['alt_name'] = hostname
     
-    return render_to_response('view.html', render_dict)
+    return render_dict
 
 def scan_view(request, scan):
     render_dict = dict()
@@ -479,32 +476,36 @@ def scan_view(request, scan):
 
     return render_to_response('scan_view.html', render_dict)
 
-def mac_view(request, mac):
-    return mac_view_core(mac, -1)
+def device_search(request):
+    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'Search'}
 
-def dashboard_mac_view(request, mac):
-    try:
-        days = int(request.GET['days'])
-    except:
-        days = 7
-    return mac_view_core(mac, days)
+    return render_to_response('device_search.html', render_dict)
 
-def hostname_view(request, hostname):
-    return host_view_core(hostname, -1)
+def device_view(request, what):
+    days_back = 7
+    if what == 'search':
+        what = request.GET['q']
 
-def dashboard_host_view(request, hostname):
-    try:
-        days = int(request.GET['days'])
-    except:
-        days = 7
-    return host_view_core(hostname, days)
+    for i in request.GET.keys():
+        if 'days' == i.lower():
+            days_back = int(request.GET[i])
 
-def ip_view(request, ip):
-    return ip_view_core(ip, -1)
+    return device_view_core(what, days_back)
 
-def dashboard_ip_view(request, ip):
-    try:
-        days = int(request.GET['days'])
-    except:
-        days = 7
-    return ip_view_core(ip, days)
+def device_view_core(what, days_back):
+    import re
+
+    ip_re = re.compile("(\d{1,3}\.){3}\d{1,3}")
+    mac_re = re.compile("([a-fA-F0-9]{2}:){5}[a-fA-F0-9]")
+
+
+    if ip_re.match(what):
+        render_dict = ip_view_core(what, days_back)
+    elif mac_re.match(what):
+        render_dict = mac_view_core(what, days_back)
+    else:
+        render_dict = hostname_view_Core(what, days_back)
+
+    render_dict['days_back'] = days_back
+
+    return render_to_response('view.html', render_dict)

@@ -1,8 +1,8 @@
 {% extends 'vuln_view.html' %}
 
 {% block main_body %}
-<h1></h1>
-<h2>Vulnerabilities</h2>
+<h1>Vulnerabilities</h1>
+<h2>All vulnerabilities within the past 7 days</h2>
 <table class='block'>
     <tr><th>IP Address</th><th>Vulnerability</th><th>Nessus ID</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
     {% for ip in vuln_list %}
@@ -13,7 +13,7 @@
         <tr>
             {% endif %}
             {% if forloop.first %}
-            <th rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.dashboard_ip_view ip.ip %}">{{ ip.ip }}</a></td>
+            <th rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.device_view ip.ip %}">{{ ip.ip }}</a></td>
             {% endif %}
             <td>{{ vuln.0 }}</td>
             <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
