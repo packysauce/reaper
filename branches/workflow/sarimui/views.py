@@ -1,14 +1,15 @@
 # Create your views here.
-from django.http import HttpResponse
+from datetime import *
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.db import connection
+from django.core.exceptions import *
+from django.core.urlresolvers import reverse
 from sarimui.models import *
+from utils.falsepositives import FalsePositivesHelper as fphelper
 from utils.bobdb import *
 from utils.djangolist import *
-from django.db import connection
-from datetime import *
-from django.core.exceptions import *
 import pprint
-from utils.falsepositives import FalsePositivesHelper as fphelper
 
 FLAG_FP = 1
 HIDE_FP = 0
@@ -501,13 +502,16 @@ def device_search(request):
         if search_results == -1:
             render_dict['errors'] = ['No results found']
     else:
-        render_dict['result_height'] = len(results)/4*19
-        if len(results) > 3:
-            render_dict['result_width'] = 1000
+        if len(results) > 1:
+            render_dict['result_height'] = len(results)/4*19
+            if len(results) > 3:
+                render_dict['result_width'] = 1000
+            else:
+                render_dict['result_width'] = [250,500,750][len(results)-1]
+            if render_dict['result_height'] == 0:
+                render_dict['result_height'] = 25
         else:
-            render_dict['result_width'] = [250,500,750][len(results)-1]
-        if render_dict['result_height'] == 0:
-            render_dict['result_height'] = 25
+            return HttpResponseRedirect(reverse('device',args=[what]))
 
         render_dict['search_term'] = unicode(what)
         render_dict['results'] = results
