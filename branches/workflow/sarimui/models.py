@@ -44,12 +44,13 @@ class FalsePositive(models.Model):
 
 class Hostname(models.Model):
     def __unicode__(self):
-        return self.hostname
+        return unicode(self.hostname)
 
     id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=384)
     class Meta:
         managed = False
+        ordering = ['hostname']
         db_table = u'hostname'
 
 class HostSet(models.Model):

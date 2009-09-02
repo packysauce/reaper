@@ -8,3 +8,38 @@ li.sidenav_heading {
     left: -15px;
     list-style: none;
 }
+
+ul#results {
+    margin:auto;
+    text-align:center;
+    max-width:1024px;
+    padding-left:0px;
+}
+
+ul#results > li {
+    float:left;
+    list-style-type:none;
+    text-align:center;
+    width:250px;
+}
+
+ul#messages {
+    padding-left: 0px;
+    min-width: 750px;
+    margin: auto;
+}
+
+ul#messages > li.error {
+    color:black;
+    list-style-image:url('/site_media/images/bullet-red-14x14.gif');
+    text-align:center;
+    background:pink;
+}
+
+ul#message > li.warning {
+    color:black;
+    list-style-image:url('/site_media/images/bullet-yellow-14x14.gif');
+    text-align:center;
+    background:lightYellow;
+}
+

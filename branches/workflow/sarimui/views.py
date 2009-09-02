@@ -478,6 +478,39 @@ def scan_view(request, scan):
 
 def device_search(request):
     render_dict = {'pagetitle': 'Device Information', 'subtitle': 'Search'}
+    what = ''
+    for i in request.GET.keys():
+        if i.lower() == 'q':
+            what = request.GET[i]
+            break
+    else:
+        return render_to_response('device_search.html',render_dict)
+
+    import re
+    ip_re = re.compile("(\d{1,3}\.){3}\d{1,3}")
+    mac_re = re.compile("([a-fA-F0-9]{2}:){1,}")
+
+    if ip_re.match(what):
+        results = list(IpAddress.objects.filter(ip=aton(what)))
+    elif mac_re.match(what):
+        results = list(Mac.objects.filter(mac__icontains=what))
+    else:
+        results = list(Hostname.objects.filter(hostname__icontains=what))
+
+    if type(results) == int:
+        if search_results == -1:
+            render_dict['errors'] = ['No results found']
+    else:
+        render_dict['result_height'] = len(results)/4*19
+        if len(results) > 3:
+            render_dict['result_width'] = 1000
+        else:
+            render_dict['result_width'] = [250,500,750][len(results)-1]
+        if render_dict['result_height'] == 0:
+            render_dict['result_height'] = 25
+
+        render_dict['search_term'] = unicode(what)
+        render_dict['results'] = results
 
     return render_to_response('device_search.html', render_dict)
 
@@ -498,13 +531,12 @@ def device_view_core(what, days_back):
     ip_re = re.compile("(\d{1,3}\.){3}\d{1,3}")
     mac_re = re.compile("([a-fA-F0-9]{2}:){5}[a-fA-F0-9]")
 
-
     if ip_re.match(what):
         render_dict = ip_view_core(what, days_back)
     elif mac_re.match(what):
         render_dict = mac_view_core(what, days_back)
     else:
-        render_dict = hostname_view_Core(what, days_back)
+        render_dict = host_view_core(what, days_back)
 
     render_dict['days_back'] = days_back
 
