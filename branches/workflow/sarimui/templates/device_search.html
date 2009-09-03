@@ -4,9 +4,6 @@
 <script language="javascript" type="text/javascript">
    function GoToURL() {
         var url = document.getElementById('searchText').value;
-        var btn = document.getElementById('searchButton');
-        btn.value = "Searching...";
-        document.getElementById('searchText').disabled = true;
         location.href = '{% url sarimui.views.device_search %}?q=' + url;
     } 
 

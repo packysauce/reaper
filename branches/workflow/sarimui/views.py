@@ -488,10 +488,14 @@ def device_search(request):
         return render_to_response('device_search.html',render_dict)
 
     import re
-    ip_re = re.compile("(\d{1,3}\.){3}\d{1,3}")
-    mac_re = re.compile("([a-fA-F0-9]{2}:){1,}")
+    short_ip_re = re.compile(r"\d{1,3}\.\d{1,3}")
+    ip_re = re.compile(r"(\d{1,3}\.){3}\d{1,3}")
+    mac_re = re.compile(r"([a-fA-F0-9]{2}:){1,}")
 
     if ip_re.match(what):
+        results = list(IpAddress.objects.filter(ip=aton(what)))
+    elif short_ip_re.match(what):
+        what = '129.57.' + what
         results = list(IpAddress.objects.filter(ip=aton(what)))
     elif mac_re.match(what):
         results = list(Mac.objects.filter(mac__icontains=what))
@@ -510,8 +514,10 @@ def device_search(request):
                 render_dict['result_width'] = [250,500,750][len(results)-1]
             if render_dict['result_height'] == 0:
                 render_dict['result_height'] = 25
-        else:
+        elif len(results) == 1:
             return HttpResponseRedirect(reverse('device',args=[what]))
+        else:
+            render_dict['errors'] = ['No results found']
 
         render_dict['search_term'] = unicode(what)
         render_dict['results'] = results
