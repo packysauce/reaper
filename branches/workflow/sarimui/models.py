@@ -102,6 +102,7 @@ class IpComments(models.Model):
         db_table = u'ipcomments'
 
 class IpHostname(models.Model):
+    ip_id = models.IntegerField(db_column = 'ip')
     ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
     hostname = models.ForeignKey('Hostname', db_column='hostnameid', primary_key=True)
     observed = models.DateTimeField(primary_key=True)
@@ -111,6 +112,7 @@ class IpHostname(models.Model):
         ordering = ["ip", "-observed"]
         managed = False
         db_table = u'iphostname'
+        get_latest_by = u'observed'
 
 class Log(models.Model):
     id = models.IntegerField(primary_key=True)

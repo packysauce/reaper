@@ -26,9 +26,9 @@
         {% ifequal entry_data.name 'NoNameAvailable' %}
         No {{entry_data.hr_name}} Available
         {% else %}
-        <a href='{% url sarimui.views.device_view entry_data.name %}?days={{ days_back }}'>{{entry_data.name}}</a>
+        <a href='{% url device entry_data.name %}?days={{ days_back }}'>{{entry_data.name}}</a>
         {% endifequal %}
-        (<a href='{% url sarimui.views.device_view entry_data.alt_name %}?days={{days_back}}'>{{ entry_data.alt_name }}</a>)
+        (<a href='{% url device entry_data.alt_name %}?days={{days_back}}'>{{ entry_data.alt_name }}</a>)
     </h3></li>
     {% for comment in entry_data.comments %}
     {% if forloop.first %}
@@ -44,11 +44,11 @@
             <ul class='scan_list'>
                 <h3 class='scan_header'>Found {{ entry_data.vuln_total }} vulnerabilit{{ entry_data.vuln_total|pluralize:"y,ies" }} in {{ entry_data.scans|length}} scan{{ entry_data.scans|length|pluralize }}.</h3>
                 {% for scan, vulns in entry_data.scans %}
-                <li class='scan_item'>Scan ID <a href='{% url sarimui.views.scan_view scan.scanrun_id %}'>{{scan.scanrun_id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
+                <li class='scan_item'>Scan ID <a href='{% url scan scan.scanrun_id %}'>{{scan.scanrun_id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
                 {% if vulns %}
                 <ul>
                     {% for name, plugin in vulns %}
-                    <li class='vuln_item'>{{ name }} (<a href='{% url sarimui.views.plugin_view plugin %}'>{{plugin}}</a>)</a></li>
+                    <li class='vuln_item'>{{ name }} (<a href='{% url plugin plugin 'latest' %}'>{{plugin}}</a>)</a></li>
                 {% endfor %}
             </ul>
             {% endif %}

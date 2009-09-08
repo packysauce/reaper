@@ -14,6 +14,7 @@ import pprint
 FLAG_FP = 1
 HIDE_FP = 0
 
+#Default view, sorted by vulnerability and spread
 def ips_by_vuln(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
     days_back = 7
@@ -86,6 +87,13 @@ def ips_by_vuln(request):
     for i in range(0,len(vuln_list)):
         vuln_list[i]['ips'].sort(lambda x,y: int(aton(x[0])-aton(y[0])))
 
+    #plugin_list = {}
+
+    #for v in vuln_list:
+    #    if v['vid'] not in plugin_list.keys():
+    #        plugin_list[v['vid']] = Plugin.objects.filter(nessusid = v['vid']).latest()
+
+    #render_dict['plugin_list'] = plugin_list
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
     return render_to_response('ips_by_vuln.html', render_dict)
@@ -154,17 +162,15 @@ def index(request):
     except KeyError, e:
         return handlers['vulns'](request)
 
-def plugin_view(request, plugin):
+def plugin_view(request, plugin, version):
     render_dict = {}
     render_dict['plugin'] = plugin
-    try:
-        render_dict['version'] = request.GET['v']
-    except KeyError:
-        p_all = Plugin.objects.filter(nessusid=plugin)
-        p = p_all.latest()
+
+    if version == 'latest':
+        p = Plugin.objects.filter(nessusid=plugin).latest()
         render_dict['version'] = p.version
-    except ObjectDoesNotExist:
-        render_dict['version'] = Plugin.objects.filter(nessusid=plugin).latest().version
+    else:
+        render_dict['version'] = Plugin.objects.get(nessusid=plugin, version=version).latest().version
 
     return render_to_response("plugin.html", render_dict)
 
@@ -515,7 +521,8 @@ def device_search(request):
             if render_dict['result_height'] == 0:
                 render_dict['result_height'] = 25
         elif len(results) == 1:
-            return HttpResponseRedirect(reverse('device',args=[Hostname.objects.get(hostname__icontains=what).hostname]))
+            return HttpResponseRedirect(reverse('device',args=[what]))
+            #[Hostname.objects.get(hostname__icontains=what).hostname]))
         else:
             render_dict['errors'] = ['No results found']
 

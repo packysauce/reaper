@@ -1,5 +1,7 @@
 {% extends 'vuln_view.html' %}
 {% load comparisons %}
+{% load utils %}
+{% load sarimutils %}
 
 {% block main_body %}
 <h1>Vulnerabilities</h1>
@@ -18,7 +20,7 @@
                         <center>
                             {{vuln.vname}}</br>
                             <div>
-                                <a href="{% url reaper.sarimui.views.plugin_info_view vuln.vid 'latest' %}">{{ vuln.vid }}</a>
+                                <a href="{% url plugin vuln.vid 'latest' %}">{{ vuln.vid }}</a>
                             </div>
                             {% if vuln.ips|length_gt:4 %}
                             Afflicts {{ vuln.ips|length }} devices
@@ -32,10 +34,10 @@
                         <tr>
                             {% endif %}
                             {% endif %}
-                            <td><a href="{% url reaper.sarimui.views.device_view ip %}">{{ ip }}</a></td>
+                            <td><a href="{% url device ip %}">{{ ip }}</a></td>
                             <td>{{ scantype }}</td>
                             <td>{{ result.end|date:"F j, Y" }}</td>
-                            <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+                            <td><a href="{% url scan result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
                         </tr>
                         {% endfor %}
                         {% endfor %}

@@ -1,5 +1,8 @@
 import re
 
+SARIMUI_IP_RE = re.compile(r"(\d{1,3}\.){3}\d{1,3}")
+SARIMUI_MAC_RE = re.compile(r"([a-fA-F0-9]{2}:){5}([a-fA-F0-9]){2}")
+
 def aton(address):
     """Support function to convert an IP address in dotted quad notation to a 32-bit integer
     """
