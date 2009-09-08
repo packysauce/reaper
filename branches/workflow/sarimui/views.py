@@ -515,7 +515,7 @@ def device_search(request):
             if render_dict['result_height'] == 0:
                 render_dict['result_height'] = 25
         elif len(results) == 1:
-            return HttpResponseRedirect(reverse('device',args=[what]))
+            return HttpResponseRedirect(reverse('device',args=[Hostname.objects.get(hostname__icontains=what).hostname]))
         else:
             render_dict['errors'] = ['No results found']
 
@@ -551,3 +551,33 @@ def device_view_core(what, days_back):
     render_dict['days_back'] = days_back
 
     return render_to_response('view.html', render_dict)
+
+def fp_view(request, fp_id):
+    render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Details'}
+
+    fp = FalsePositive.objects.get(id=fp_id)
+    plugin = Plugin.objects.get(nessusid=fp.nessusid, version=fp.version)
+    
+    render_dict['fp'] = fp
+    render_dict['plugin'] = plugin
+    (render_dict['fp_includes'], render_dict['fp_excludes']) = fphelper.get_lists_from_fp(fp)
+
+    return render_to_response('false_positive.html', render_dict)
+
+def fp_search(request):
+    render_dict = {'pagetitle':'False Positives', 'subtitle':'Search'}
+
+    if 'q' in request.GET.keys():
+        search_term = request.GET['q']
+
+        if 'in' in request.GET.keys():
+            if request.GET['in'].lower() == 'ex':
+                search_in = 'excludes'
+        else:
+            search_in = 'includes'
+
+        fplist = get_false_positives_by_ip(**{search_in: search_term})
+
+        render_dict['fp_results'] = fplist
+
+    return render_to_response('fp_search.html', render_dict)

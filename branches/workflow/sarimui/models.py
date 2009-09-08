@@ -33,7 +33,7 @@ class ConfigList(models.Model):
         db_table = u'configlist'
 
 class FalsePositive(models.Model):
-    nessusid = models.ForeignKey('Plugin', to_field='nessusid')
+    nessusid = models.IntegerField()
     version = models.CharField(max_length=5)
     added_by = models.CharField(max_length=20)
     date_added = models.DateTimeField(auto_now_add=True, auto_now=True)

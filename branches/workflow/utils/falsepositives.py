@@ -23,6 +23,30 @@ class FalsePositivesHelper(object):
 
         return
 
+    @staticmethod
+    def get_lists_from_fp(fp):
+        """Returns a 2-tuple of lists containing the included and excluded IPs
+        from a given False Positive object"""
+        includes = list(fp.includes.split(','))
+        excludes = list(fp.excludes.split(','))
+
+        from pprint import pprint as p
+
+        if includes == 'ALL':
+            return (includes, excludes)
+        else:
+            inc_set = set()
+            for i in includes:
+                inc_set.add(i)
+            for e in excludes:
+                try:
+                    inc_set.remove(e)
+                except KeyError, e:
+                    pass
+
+            return (list(inc_set), excludes)
+
+
     def __in_iplist(self, ip, fplist):
         fplistlower = fplist.lower()
         if "all" in fplistlower:
@@ -45,7 +69,7 @@ class FalsePositivesHelper(object):
         else:
             raise ValueError("Must specify IP as a number, string, or ScanResult")
 
-        fpidx = get_index_by_attr(self.__fplist, "nessusid_id", long(nessusid))
+        fpidx = get_index_by_attr(self.__fplist, "nessusid", long(nessusid))
         if fpidx == -1:
             return False
 
@@ -53,7 +77,7 @@ class FalsePositivesHelper(object):
 
         #if the date's OK and the IP is in the lists, it's a false positive!
         if self.__in_iplist(_ip, curfp.includes) and not self.__in_iplist(_ip, curfp.excludes):
-            if curfp.date_added > Plugin.objects.filter(nessusid=curfp.nessusid_id).latest().entered:
+            if curfp.date_added > Plugin.objects.filter(nessusid=curfp.nessusid).latest().entered:
                 return True
 
         #current FP is older than the newest version of the plugin

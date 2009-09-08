@@ -1,3 +1,13 @@
+div#search {
+    width:100%;
+    min-height:250px;
+    text-align:center;
+}
+
+div#search p {
+    margin-bottom:0;
+}
+
 tr.falsepositive > td {
     opacity:0.40;
     filter:alpha(opacity=40);

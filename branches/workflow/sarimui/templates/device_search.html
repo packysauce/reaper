@@ -18,12 +18,13 @@
 {% endblock %}
 
 {% block main_body %}
-<div id="search" style="width:100%;min-height:250px;text-align:center;">
+<h1>Search for Devices</h1>
+<div id="search">
     <div id="searchBox">
-    <p>Enter an IP Address, MAC address, or hostname</p>
-    <input type='text' id='searchText' size=64 onKeyDown="keyDownHandler(event,document.getElementById('searchButton'));">
-    <input type='button' id='searchButton' onClick="javscript:GoToURL();" value="Search">
-</div>
+        <p>Enter an IP Address, MAC address, or hostname</p>
+        <input type='text' id='searchText' size=64 onKeyDown="keyDownHandler(event,document.getElementById('searchButton'));">
+        <input type='button' id='searchButton' onClick="javscript:GoToURL();" value="Search">
+    </div>
     {% for r in results %}
     {% if forloop.first %}
     {{ results|length }} result{{ results|length|pluralize}}

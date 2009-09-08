@@ -25,7 +25,7 @@
                     {% else %}
                     <li>
                     {% endifequal %}
-                    <a href="{% url sarimui.views.index %}">Vulnerabilities</a>
+                    <a href="{% url index %}">Vulnerabilities</a>
                     </li>
 
                     {% ifequal pagetitle 'Device Information' %}
@@ -33,7 +33,7 @@
                     {% else %}
                     <li>
                     {% endifequal %}
-                    <a href="{% url sarimui.views.device_search %}">Device Information</a>
+                    <a href="{% url device_search %}">Device Information</a>
                     </li>
 
                     {% ifequal pagetitle 'False Positives' %}
@@ -41,7 +41,7 @@
                     {% else %}
                     <li>
                     {% endifequal %}
-                    <a href="{% url sarimui.views.index %}">False Positives</a>
+                    <a href="{% url fp_search %}">False Positives</a>
                     </li>
 
                 </ul>

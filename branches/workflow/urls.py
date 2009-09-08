@@ -10,7 +10,7 @@ import django.views.static
 urlpatterns = patterns('',
     # Example:
     # (r'^reaper/', include('reaper.foo.urls')),
-    url(r'^$', views.index),
+    url(r'^$', views.index, name='index'),
     url(r'^site_media/(?P<path>.*)/$', django.views.static.serve,
         {'document_root': 'C:/users/pdwhite/desktop/reaper/sarimui/static'}, name='static'),
     url(r'^devices/$', views.device_search, name='device_search'),
@@ -19,6 +19,8 @@ urlpatterns = patterns('',
     url(r'^plugin_list/(\d*)/$', views.plugin_list_view),
     url(r'^vulns_by_ip/$', views.vulns_by_ip, name='vulns_by_ip'),
     url(r'^scan/(\d*)/$', views.scan_view, name='scan'),
+    url(r'^false_positive/(\d*)/$', views.fp_view, name='fp_detail'),
+    url(r'^false_positive/search/$', views.fp_search, name='fp_search'),
     url(r'^(.+)/$', views.device_view, name='device'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
