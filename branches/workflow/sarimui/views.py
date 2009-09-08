@@ -570,13 +570,26 @@ def fp_search(request):
     if 'q' in request.GET.keys():
         search_term = request.GET['q']
 
+        search_in = 'includes'
         if 'in' in request.GET.keys():
             if request.GET['in'].lower() == 'ex':
                 search_in = 'excludes'
-        else:
-            search_in = 'includes'
 
-        fplist = get_false_positives_by_ip(**{search_in: search_term})
+        print search_in, search_term
+        fplist = fphelper.get_false_positives_by_ip(**{search_in: search_term})
+
+        if len(fplist) > 1:
+            for f in fplist:
+                f.plugin = Plugin.objects.get(nessusid=f.nessusid, version=f.version)
+            render_dict['result_height'] = len(fplist)/4*19
+            if len(fplist) > 3:
+                render_dict['result_width'] = 1000
+            else:
+                render_dict['result_width'] = [250,500,750][len(fplist)-1]
+            if render_dict['result_height'] == 0:
+                render_dict['result_height'] = 25
+        elif len(fplist) == 1:
+            return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
 
         render_dict['fp_results'] = fplist
 

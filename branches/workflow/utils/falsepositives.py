@@ -2,6 +2,7 @@ from sarimui.models import *
 from datetime import *
 from utils.bobdb import *
 from utils.djangolist import *
+from django.db.models import Q
 
 class FalsePositivesHelper(object):
     def __init__(self, ip=None, plugin=None):
@@ -22,6 +23,17 @@ class FalsePositivesHelper(object):
             self.__fplist = list(FalsePositive.objects.filter(ip=anyton(ip), nessusid=int(plugin),active=True))
 
         return
+
+    @staticmethod
+    def get_false_positives_by_ip(*args, **kwargs):
+        if 'includes' in kwargs.keys():
+            query = Q(includes__contains=kwargs['includes']) | Q(includes='ALL')
+        elif 'excludes' in kwargs.keys():
+            query = Q(excludes__contains=kwargs['excludes'])
+        else:
+            return []
+
+        return list(FalsePositive.objects.filter(query | Q(active=True)))
 
     @staticmethod
     def get_lists_from_fp(fp):
