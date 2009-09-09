@@ -390,68 +390,80 @@ def mac_view_core(mac, days_back):
     except:
         return -1
 
-    addresses = list(macobj.ipaddresses.all())
-    macips = list(macobj.macip_set.all())
+    dtime = datetime.now() - timedelta(days=days_back)
+    if days_back == 0:
+        addresses = list(macobj.ipaddresses.all())
+        macips = list(macobj.macip_set.all())
+    else:
+        addresses = list(macobj.ipaddresses.filter(macip__entered__gte=dtime))
+        macips = list(macobj.macip_set.filter(entered__gte=dtime))
 
     results = []
-    timestamps = dict()
-    iphtimes = dict()
+    timestamps = {}
+    iphtimes = {}
 
+    #for every macip association, get the IP of it and get all the hostname associations
     for i in macips:
-        for j in IpHostname.objects.filter(ip=i.ip):
-            try:
-                iphtimes[ntoa(i.ip.ip)].append( ( j.observed, j.entered, j.hostname ) )
-            except:
-                iphtimes[ntoa(i.ip.ip)] = []
-                iphtimes[ntoa(i.ip.ip)].append( ( j.observed, j.entered, j.hostname ) )
-        try:
-            timestamps[ntoa(i.ip.ip)].append( ( i.observed, i.entered ) )
-        except:
-            timestamps[ntoa(i.ip.ip)] = []
-            timestamps[ntoa(i.ip.ip)].append( ( i.observed, i.entered ) )
-
-    render_dict['entries'] = dict()
-
-    for ip in set(addresses):
-        aip = ntoa(ip.ip)
-        if days_back == 0:
-            results = list(ScanResults.objects.filter(ip=ip.ip))
+        nice_ip = ntoa(i.ip_id)
+        for j in IpHostname.objects.filter(ip=i.ip_id):
+            #Throw it in the ip<->hostname association table
+            if nice_ip in iphtimes.keys():
+                iphtimes[nice_ip] += [( j.observed, j.entered, j.hostname )]
+            else:
+                iphtimes[nice_ip] = [( j.observed, j.entered, j.hostname )]
+        # then go through and add all the start and stop dates of ip assocations
+        # to the timestamp dict
+        if nice_ip in timestamps.keys():
+            timestamps[nice_ip] += [( i.observed, i.entered )]
         else:
-            dtime = datetime.now() - timedelta(days=days_back)
-            results = list(ScanResults.objects.filter(ip=ip.ip, end__gte=dtime))
-        for scan in results:
-            try:
-                render_dict['entries'][aip]
-                render_dict['entries'][aip]['scans']
-                render_dict['entries'][aip]['vuln_total']
-            except:
-                render_dict['entries'][aip] = dict()
-                render_dict['entries'][aip]['scans'] = []
-                render_dict['entries'][aip]['vuln_total'] = 0
-                render_dict['entries'][aip]['name'] = aip
+            timestamps[nice_ip] = [( i.observed, i.entered )]
 
+    render_dict['entries'] = {}
+
+    #Converting to a set eliminates all of the duplicates
+    #for each unique IP address
+    #get the scan results for all the spans of time its associated
+    for ip in set(addresses):
+        num_ip = ip.ip
+        nice_ip = ntoa(ip.ip)
+        if days_back == 0:
+            results = list(ScanResults.objects.filter(ip=num_ip))
+        else:
+            results = list(ScanResults.objects.filter(ip=num_ip, end__gte=dtime))
+
+        for scan in results:
+            if nice_ip not in render_dict['entries'].keys():
+                render_dict['entries'][nice_ip] = {'scans': [], 'vuln_total': 0, 'name': nice_ip}
             if scan.vulns:
                 vulns = scan.vulns.split(',')
-                render_dict['entries'][aip]['vuln_total'] += len(vulns)
+                render_dict['entries'][nice_ip]['vuln_total'] += len(vulns)
                 vulns = [i.split('|') for i in vulns]
             else:
                 vulns = []
 
-            for first, last in timestamps[aip]:
+            for first, last in timestamps[nice_ip]:
                 if (scan.end <= last) and (scan.start >= first):
-                    render_dict['entries'][aip]['scans'].append( ( scan, vulns) )
+                    render_dict['entries'][nice_ip]['scans'].append( ( scan, vulns) )
 
+    # iphtimes is a hash of { ip: (start association, end association, hostname) }
     for ip in iphtimes:
         htimes = iphtimes[ip]
+        #Grab the ip association times for this MAC
         for ifirst, ilast in timestamps[ip]:
+            #Grab the hostname associations for this IP
             for hfirst, hlast, hostname in htimes:
+                #if the hostname and ip associations match up, that's the hostname
                 if hfirst == ifirst and hlast == ilast:
-                    render_dict['entries'][ip]['alt_name'] = hostname
+                    try:
+                        render_dict['entries'][ip]['alt_name'] = hostname
+                    except:
+                        pass #really really weird
     
+    pprint.pprint(render_dict['entries'])
     return render_dict
 
 def scan_view(request, scan):
-    render_dict = dict()
+    render_dict = {'pagetitle': 'Scan Information', 'subtitle': 'Details'}
     render_dict['id'] = scan
     try:
         scanobj = ScanRun.objects.get(id=scan)
@@ -592,22 +604,23 @@ def fp_search(request):
             if request.GET['in'].lower() == 'ex':
                 search_in = 'excludes'
 
-        print search_in, search_term
         fplist = fphelper.get_false_positives_by_ip(**{search_in: search_term})
+    else:
+        fplist = list(FalsePositive.objects.filter(active=True))
 
-        if len(fplist) > 1:
-            for f in fplist:
-                f.plugin = Plugin.objects.get(nessusid=f.nessusid, version=f.version)
-            render_dict['result_height'] = len(fplist)/4*19
-            if len(fplist) > 3:
-                render_dict['result_width'] = 1000
-            else:
-                render_dict['result_width'] = [250,500,750][len(fplist)-1]
-            if render_dict['result_height'] == 0:
-                render_dict['result_height'] = 25
-        elif len(fplist) == 1:
-            return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
+    if len(fplist) > 1:
+        for f in fplist:
+            f.plugin = Plugin.objects.get(nessusid=f.nessusid, version=f.version)
+        render_dict['result_height'] = len(fplist)/4*19
+        if len(fplist) > 3:
+            render_dict['result_width'] = 1000
+        else:
+            render_dict['result_width'] = [250,500,750][len(fplist)-1]
+        if render_dict['result_height'] == 0:
+            render_dict['result_height'] = 25
+    elif len(fplist) == 1:
+        return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
 
-        render_dict['fp_results'] = fplist
+    render_dict['fp_results'] = fplist
 
     return render_to_response('fp_search.html', render_dict)

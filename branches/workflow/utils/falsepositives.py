@@ -33,14 +33,18 @@ class FalsePositivesHelper(object):
         else:
             return []
 
-        return list(FalsePositive.objects.filter(query | Q(active=True)))
+        l = list(FalsePositive.objects.filter(query & Q(active=True)))
+        return l
 
     @staticmethod
     def get_lists_from_fp(fp):
         """Returns a 2-tuple of lists containing the included and excluded IPs
         from a given False Positive object"""
         includes = list(fp.includes.split(','))
-        excludes = list(fp.excludes.split(','))
+        if fp.excludes == '':
+            excludes = []
+        else:
+            excludes = list(fp.excludes.split(','))
 
         from pprint import pprint as p
 

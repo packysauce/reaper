@@ -28,7 +28,9 @@
         {% else %}
         <a href='{% url device entry_data.name %}?days={{ days_back }}'>{{entry_data.name}}</a>
         {% endifequal %}
+        {% if entry_data.alt_name %}
         (<a href='{% url device entry_data.alt_name %}?days={{days_back}}'>{{ entry_data.alt_name }}</a>)
+        {% endif %}
     </h3></li>
     {% for comment in entry_data.comments %}
     {% if forloop.first %}

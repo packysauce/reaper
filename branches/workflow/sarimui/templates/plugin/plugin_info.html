@@ -1,11 +1,10 @@
-<html>
-    <head>
-        <title>Nessus plugin {{plugin.nessusid}}</title>
-    </head>
-    <body>
-        <h1>Plugin {{plugin.nessusid}}</h1>
+{% extends 'base.html' %}
+
+{% block main_body %}
+        <h1>Plugin Information</h1>
+        <h2>Nessus ID {{plugin.nessusid}}</h2>
         {% if errormessage %}
-        <h2 class="error">{{ errormessage }}</h2>
+        <ul id="messages"><li class='error'>{{ errormessage }}</li></ul>
         {% endif %}
         <table>
             <tr><td>Name</td><td>{{plugin.name}}</td></tr>
@@ -61,7 +60,7 @@
         </table>
         {% if plugin.summary %}
         <div id="summary">
-            <h2>Summary</h2>
+            <h3>Summary</h3>
             {% autoescape off %}
             {{plugin.summary}}
             {% endautoescape %}
@@ -69,7 +68,7 @@
         {% endif %}
         {% if synopsis %}
         <div id="synopsis">
-            <h2>Synopsis</h2>
+            <h3>Synopsis</h3>
             {% autoescape off %}
             {{synopsis}}
             {% endautoescape %}
@@ -77,7 +76,7 @@
         {% endif %}
         {% if description %}
         <div id="description">
-            <h2>Description</h2>
+            <h3>Description</h3>
             {% autoescape off %}
             {{description}}
             {% endautoescape %}
@@ -85,7 +84,7 @@
         {% endif %}
         {% if solution %}
         <div id="solution">
-            <h2>Solution</h2>
+            <h3>Solution</h3>
             {% autoescape off %}
             {{solution}}
             {% endautoescape %}
@@ -93,11 +92,10 @@
         {% endif %}
         {% if riskfactor %}
         <div id="riskfactor">
-            <h2>Risk Factor</h2>
+            <h3>Risk Factor</h3>
             {% autoescape off %}
             {{riskfactor}}
             {% endautoescape %}
         </div>
         {% endif %}
-    </body>
-</html>
+{% endblock %}
