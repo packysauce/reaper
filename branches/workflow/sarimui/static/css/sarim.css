@@ -1,3 +1,11 @@
+li.state-up {
+    background-color:#CDFECD;
+}
+
+li.state-down {
+    background-color:pink;
+}
+
 div#search {
     width:100%;
     min-height:250px;
@@ -37,6 +45,13 @@ ul#messages {
     padding-left: 0px;
     width: 1000px;
     margin: auto;
+    text-align:center;
+}
+
+ul#messages > li.floatmsg {
+    list-style-image: none;
+    display: inline;
+    margin:auto;
 }
 
 ul#messages > li.error {
@@ -46,10 +61,13 @@ ul#messages > li.error {
     background:pink;
 }
 
-ul#message > li.warning {
+ul#messages > li.warning {
     color:black;
     list-style-image:url('/site_media/images/bullet-yellow-14x14.gif');
     text-align:center;
     background:lightYellow;
 }
 
+th {
+    text-align:left;
+}

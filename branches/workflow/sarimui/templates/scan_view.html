@@ -1,47 +1,49 @@
+{% extends 'base.html' %}
 {% load comparisons %}
 
-<html>
-    <head>
-        <title>View Scan: {{ scan.id }}</title>
-        <style>
-            .state-up {
-                color: black;
-                background-color: green;
-            }
-            .state-down {
-                color: black;
-                background-color: red;
-            }
-        </style>
-    </head>
-
+{% block main_body %}
     {% if scan %}
-    <body>
-        <h1>Details for Scan {{ scan.id }}</h1>
+        <h1>Scan Information</h1>
+        <h2>Details for Scan {{ scan.id }}</h2>
         {% if repairs|gte:1 %}
-        <div class='warning'>
-            <h2>Encountered {{ repairs }} broken IP links, fixed.</h2>
-            <p>{{ broken_ips }}</p>
-        </div>
-        {% endif %}
-        <div class='status'>Status: {{ scan.status }}</div>
-        <div class='scanset'>Scanset {{ scan.scanset.id }}</div>
-        <div class='info'>
-            <p>Started {{scan.start|date:"l, F j, Y \a\t g:i:s A "}}, finished {{scan.end|date:"l, F j, Y \a\t g:i:s A "}}</p>
-            <p>State during scan: <span class='state-up'>UP</span> <span class='state-down'>DOWN</span></p>
-        </div>
-        <div class='hosts'>
-            <ul>
-            {% for host, state in hosts %}
-            <li><a class={% ifequal state 'up' %}'state-up'{%else%}'state-down'{% endifequal %} href='{% url sarimui.views.dashboard_ip_view host %}'>{{host}}</a></li>
+        <ul id='messages'>
+            <li class='warning'>Encountered {{ repairs }} broken IP links, fixed.</h2>
+            {% for ip in broken_ips %}
+                {% if forloop.last %}
+                <li class='floatmsg'>{{ ip }}</li> 
+                {% else %}
+                <li class='floatmsg'>{{ ip }}</li> | 
+                {% endif %}
             {% endfor %}
-            </ul>
-        </div>
+        </ul>
+        {% endif %}
+        <center>
+        <table>
+            <tr>
+                <th style='width:80px'>Status</th><td>{{ scan.status }}</td>
+            </tr>
+            <tr>
+                <th>Scan Set</th><td>{{scan.scanset.id}}</td>
+            </tr>
+            <tr>
+                <th>Started</th><td>{{ scan.start|date:"l, F j, Y \a\t P" }}</td>
+            </tr>
+            <tr>
+                <th>Finished</th><td>{{ scan.end|date:"l, F j, Y \a\t P" }}</td>
+            </tr>
+        </table>
+        </center>
 
-    </body>
+        <ul id='results' style="width:{{result_width}}px;height:{{ result_height }}px;">
+            {% for host, state in hosts %}
+            <li class={% ifequal state 'up' %}'state-up'{%else%}'state-down'{% endifequal %}><a href='{% url device host %}'>{{host}}</a></li>
+            {% endfor %}
+        </ul>
+
     {% else %}
-    <body>
-        <h1>Scan {{id}} Found</h1>
-    </body>
+        <h1>Scan Information</h1>
+        <ul id='messages'>
+            <li class='error'>Scan {{id}} Not Found</li>
+        </ul>
     {% endif %}
-</html>
+{% endblock %}

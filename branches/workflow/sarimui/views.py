@@ -481,6 +481,16 @@ def scan_view(request, scan):
         else:
             render_dict['hosts'].append( (ntoa(i), 'down') )
 
+    hostlen = len(render_dict['hosts'])
+    if hostlen > 1:
+        render_dict['result_height'] = hostlen/4*19
+        if hostlen > 3:
+            render_dict['result_width'] = 1000
+        else:
+            render_dict['result_width'] = [250,500,750][hostlen-1]
+        if render_dict['result_height'] == 0:
+            render_dict['result_height'] = 25
+
     return render_to_response('scan_view.html', render_dict)
 
 def device_search(request):
