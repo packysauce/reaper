@@ -7,7 +7,7 @@
 <h1>Vulnerabilities</h1>
 <h2>All vulnerabilities within the past 7 days</h2>
         <table class='block'>
-            <tr><th>Nessus ID</th><th>IP Addresses</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
+            <tr><th>Nessus ID</th><th>IP Address</th><th>Hostname</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
             {% for vuln in vuln_list %}
             {% for ip, result, scantype, fpflag in vuln.ips %}
             {% if forloop.first %}
@@ -20,7 +20,9 @@
                         <center>
                             {{vuln.vname}}</br>
                             <div>
-                                <a href="{% url plugin vuln.vid 'latest' %}">{{ vuln.vid }}</a>
+                                {% with plugin_list|hash:vuln.vid as plug %}
+                                <a title="{{ plug.summary }}" href="{% url plugin vuln.vid 'latest' %}">{{ vuln.vid }}</a>
+                                {% endwith %}
                             </div>
                             {% if vuln.ips|length_gt:4 %}
                             Afflicts {{ vuln.ips|length }} devices
@@ -35,6 +37,9 @@
                             {% endif %}
                             {% endif %}
                             <td><a href="{% url device ip %}">{{ ip }}</a></td>
+                            {% with hostname_list|hash:ip as hname %}
+                            <td>{% ifequal hname 'NA' %}N/A{%else%}<a href="{% url device hname %}">{{ hname }}</a>{% endifequal %}</td>
+                            {% endwith %}
                             <td>{{ scantype }}</td>
                             <td>{{ result.end|date:"F j, Y" }}</td>
                             <td><a href="{% url scan result.scanrun_id %}">{{ result.scanrun_id }}</a></td>

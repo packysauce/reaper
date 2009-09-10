@@ -8,7 +8,7 @@
         {% endif %}
         <table>
             <tr><td>Name</td><td>{{plugin.name}}</td></tr>
-            <tr><td>Date Added</td><td>{{plugin.entered|date:"F j, Y"}}</td></tr>
+            <tr><td>Date Added</td><td>{{plugin.entered|date:"F j, Y \a\t P"}}</td></tr>
             <tr><td>Version{{ versions|length|pluralize }}</td>
                 <td>
                     {% for v in versions %}

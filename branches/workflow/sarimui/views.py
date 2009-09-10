@@ -87,13 +87,25 @@ def ips_by_vuln(request):
     for i in range(0,len(vuln_list)):
         vuln_list[i]['ips'].sort(lambda x,y: int(aton(x[0])-aton(y[0])))
 
-    #plugin_list = {}
+    hostname_list = {}
 
-    #for v in vuln_list:
-    #    if v['vid'] not in plugin_list.keys():
-    #        plugin_list[v['vid']] = Plugin.objects.filter(nessusid = v['vid']).latest()
+    for v in vuln_list:
+        for ip in v['ips']:
+            if ip not in hostname_list.keys():
+                try:
+                    hostname_list[ip[0]] = IpHostname.objects.filter(ip=aton(ip[0])).latest().hostname.hostname
+                except:
+                    hostname_list[ip[0]] = "NA"
 
-    #render_dict['plugin_list'] = plugin_list
+    render_dict['hostname_list'] = hostname_list
+
+    plugin_list = {}
+
+    for v in vuln_list:
+        if v['vid'] not in plugin_list.keys():
+            plugin_list[v['vid']] = Plugin.objects.filter(nessusid = v['vid']).latest()
+
+    render_dict['plugin_list'] = plugin_list
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
     return render_to_response('ips_by_vuln.html', render_dict)
@@ -459,7 +471,6 @@ def mac_view_core(mac, days_back):
                     except:
                         pass #really really weird
     
-    pprint.pprint(render_dict['entries'])
     return render_dict
 
 def scan_view(request, scan):
