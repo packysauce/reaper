@@ -1,29 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'search.html' %}
 
-{% block main_body %}
-
-<h1>False Positive Search</h1>
-
-<div id='search'>
-    <form method='get'>
-        <p>Enter an IP address</p>
-        <input type='text' name='q' /><input type='submit' value='Search' /><br />
+{% block search_options %}
         <label for='in'>Included</label><input type='radio' name='in' value='in' id='in' checked='true' />
         <label for='ex'>Excluded</label><input type='radio' name='in' value='ex' id='ex' />
         in/from false positive
-    </form>
-
-    {% for fp in fp_results %}
-        {% if forloop.first %}
-            <ul id='results' style="width:{{result_width}}px;height:{{ result_height }}px;">
-        {% endif %}
-
-        <li><a href="{% url fp_detail fp.id %}" title='{{ fp.plugin.name }} - {{ fp.plugin.summary }} '>Nessus ID {{ fp.nessusid }} - v{{ fp.version }}</a></li>
-        
-        {% if forloop.last %}
-            </ul>
-        {% endif %}
-    {% endfor %}
-</div>
-
 {% endblock %}

@@ -17,7 +17,10 @@ HIDE_FP = 0
 #Default view, sorted by vulnerability and spread
 def ips_by_vuln(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
-    days_back = 7
+    if 'days' in request.GET.keys():
+        days_back = int(request.GET['days'])
+    else:
+        days_back = 7
     fp = fphelper()
     fp_option = FLAG_FP
 
@@ -108,6 +111,7 @@ def ips_by_vuln(request):
     render_dict['plugin_list'] = plugin_list
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
+    pprint.pprint(render_dict)
     return render_to_response('ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
@@ -190,7 +194,7 @@ def plugin_list_view(request, plugin):
     return HttpResponse("List of things with this vulnerability found, part of the scan, etc goes here")
 
 def plugin_info_view(request, plugin, version):
-    render_dict = {}
+    render_dict = {'pagetitle': 'Plugins', 'subtitle': 'Details'}
     render_dict['versions'] = []
 
     p_all = Plugin.objects.filter(nessusid=plugin)
@@ -271,7 +275,7 @@ def plugin_info_view(request, plugin, version):
     return render_to_response('plugin/plugin_info.html', render_dict)
 
 def ip_view_core(ip, days_back):
-    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'IP'}
+    render_dict = {'pagetitle': 'Devices', 'subtitle': 'IP'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = ip
 
@@ -343,7 +347,7 @@ def ip_view_core(ip, days_back):
     return render_dict
 
 def host_view_core(hostname, days_back):
-    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'Hostname'}
+    render_dict = {'pagetitle': 'Devices', 'subtitle': 'Hostname'}
     render_dict['entry'] = hostname
     render_dict['category'] = 'MAC'
 
@@ -393,7 +397,7 @@ def host_view_core(hostname, days_back):
     return render_dict
 
 def mac_view_core(mac, days_back):
-    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'MAC Address'}
+    render_dict = {'pagetitle': 'Devices', 'subtitle': 'MAC Address'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = mac
 
@@ -474,7 +478,7 @@ def mac_view_core(mac, days_back):
     return render_dict
 
 def scan_view(request, scan):
-    render_dict = {'pagetitle': 'Scan Information', 'subtitle': 'Details'}
+    render_dict = {'pagetitle': 'Scans', 'subtitle': 'Details'}
     render_dict['id'] = scan
     try:
         scanobj = ScanRun.objects.get(id=scan)
@@ -517,14 +521,16 @@ def scan_view(request, scan):
     return render_to_response('scan_view.html', render_dict)
 
 def device_search(request):
-    render_dict = {'pagetitle': 'Device Information', 'subtitle': 'Search'}
+    render_dict = {'pagetitle': 'Devices', 'subtitle': 'Search'}
+    render_dict['category'] = "Device"
+    render_dict['search_header'] = "Enter an IP or MAC address, or hostname"
     what = ''
     for i in request.GET.keys():
         if i.lower() == 'q':
             what = request.GET[i]
             break
     else:
-        return render_to_response('device_search.html',render_dict)
+        return render_to_response('search.html',render_dict)
 
     import re
     short_ip_re = re.compile(r"\d{1,3}\.\d{1,3}")
@@ -545,24 +551,23 @@ def device_search(request):
         if search_results == -1:
             render_dict['errors'] = ['No results found']
     else:
+        fixed_results = []
         if len(results) > 1:
-            render_dict['result_height'] = len(results)/4*19
-            if len(results) > 3:
-                render_dict['result_width'] = 1000
-            else:
-                render_dict['result_width'] = [250,500,750][len(results)-1]
-            if render_dict['result_height'] == 0:
-                render_dict['result_height'] = 25
+            for r in results:
+                fixed_results.append( {
+                    'url': reverse('device', args=[r]),
+                    'summary': '',
+                    'description': r,
+                    } )
         elif len(results) == 1:
             return HttpResponseRedirect(reverse('device',args=[what]))
             #[Hostname.objects.get(hostname__icontains=what).hostname]))
         else:
             render_dict['errors'] = ['No results found']
 
-        render_dict['search_term'] = unicode(what)
-        render_dict['results'] = results
+        render_dict['results'] = fixed_results
 
-    return render_to_response('device_search.html', render_dict)
+    return render_to_response('search.html', render_dict)
 
 def device_view(request, what):
     days_back = 7
@@ -606,6 +611,7 @@ def fp_view(request, fp_id):
 
 def fp_search(request):
     render_dict = {'pagetitle':'False Positives', 'subtitle':'Search'}
+    render_dict['category'] = "False Positive"
 
     if 'q' in request.GET.keys():
         search_term = request.GET['q']
@@ -619,19 +625,59 @@ def fp_search(request):
     else:
         fplist = list(FalsePositive.objects.filter(active=True))
 
+    result_list = []
+
     if len(fplist) > 1:
         for f in fplist:
-            f.plugin = Plugin.objects.get(nessusid=f.nessusid, version=f.version)
-        render_dict['result_height'] = len(fplist)/4*19
-        if len(fplist) > 3:
-            render_dict['result_width'] = 1000
-        else:
-            render_dict['result_width'] = [250,500,750][len(fplist)-1]
-        if render_dict['result_height'] == 0:
-            render_dict['result_height'] = 25
+            p = Plugin.objects.get(nessusid = f.nessusid, version = f.version)
+            result_list.append( {
+                'url': reverse('fp_detail', args=[f.id]),
+                'summary': p.name + ' - ' + p.summary,
+                'description': 'Nessus ID ' + p.nessusid
+                } )
     elif len(fplist) == 1:
         return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
 
-    render_dict['fp_results'] = fplist
+    render_dict['results'] = result_list
 
     return render_to_response('fp_search.html', render_dict)
+
+def scan_search(request):
+    render_dict = {'pagetitle': 'Scans', 'subtitle': 'Search'}
+    render_dict['category'] = "Scan"
+    render_dict['search_header'] = "Enter a Scan ID"
+    what = ''
+    for i in request.GET.keys():
+        if i.lower() == 'q':
+            what = request.GET[i]
+            break
+    else:
+        return render_to_response('search.html',render_dict)
+
+    try:
+        ScanRun.objects.get(id=what)
+    except:
+        render_dict['errors'] = ["No scan with ID " + str(what) + " found.",]
+        return render_to_response('search.html', render_dict)
+
+    return HttpResponseRedirect(reverse('scan', args=[what]))
+
+def plugin_search(request):
+    render_dict = {'pagetitle': 'Plugins', 'subtitle': 'Search'}
+    render_dict['category'] = "Plugin"
+    render_dict['search_header'] = "Enter a Nessus ID"
+    what = ''
+    for i in request.GET.keys():
+        if i.lower() == 'q':
+            what = request.GET[i]
+            break
+    else:
+        return render_to_response('search.html',render_dict)
+
+    try:
+        Plugin.objects.get(nessusid=what)
+    except:
+        render_dict['errors'] = ["No plugin with Nessus ID " + str(what) + " found.",]
+        return render_to_response('search.html', render_dict)
+
+    return HttpResponseRedirect(reverse('plugin', args=[what, 'latest']))

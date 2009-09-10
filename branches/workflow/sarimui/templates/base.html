@@ -28,12 +28,28 @@
                     <a href="{% url index %}">Vulnerabilities</a>
                     </li>
 
-                    {% ifequal pagetitle 'Device Information' %}
+                    {% ifequal pagetitle 'Devices' %}
                     <li id="main_navigation_current">
                     {% else %}
                     <li>
                     {% endifequal %}
-                    <a href="{% url device_search %}">Device Information</a>
+                    <a href="{% url device_search %}">Devices</a>
+                    </li>
+
+                    {% ifequal pagetitle 'Scans' %}
+                    <li id="main_navigation_current">
+                    {% else %}
+                    <li>
+                    {% endifequal %}
+                    <a href="{% url scan_search %}">Scans</a>
+                    </li>
+
+                    {% ifequal pagetitle 'Plugins' %}
+                    <li id="main_navigation_current">
+                    {% else %}
+                    <li>
+                    {% endifequal %}
+                    <a href="{% url plugin_search %}">Plugins</a>
                     </li>
 
                     {% ifequal pagetitle 'False Positives' %}
