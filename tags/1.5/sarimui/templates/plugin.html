@@ -1,0 +1,9 @@
+<html>
+    <head>
+        <title>Nessus plugin {{ plugin }}</title>
+    </head>
+    <frameset cols="50%, 50%">
+        <frame src="{% url reaper.sarimui.views.plugin_info_view plugin, version %}">
+        <frame src="{% url reaper.sarimui.views.plugin_list_view plugin %}">
+    </frameset>
+</html>

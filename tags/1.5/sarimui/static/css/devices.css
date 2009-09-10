@@ -1,0 +1,93 @@
+/* style information for: devices.php */
+
+.device_search {
+	margin-left: 10px;
+	margin-top: 25px;
+	padding-left: 20px;
+	padding-top: 0px;
+}
+
+.device_search h3 {
+	font-size: 14px;
+	margin-left: -20px;
+}
+
+.device_search hr {
+	margin-left: -14px;
+}
+
+.boxtitle {
+	font-weight: bold;
+	font-size: 12px;
+	text-align: left;
+}
+
+.box {
+	width: 244px;
+	height: 291px;
+	margin-right: 15px;
+	margin-left: 0px;
+	margin-top: 10px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #D4BFA9;
+	border-right-color: #D4BFA9;
+	border-bottom-color: #D4BFA9;
+	border-left-color: #D4BFA9;
+	font-size: 88%;
+	overflow: auto;
+}
+
+.list {
+	cursor: pointer;
+}
+
+.listtext {
+	font-size: 12px;
+	margin-left: 5px;
+}
+
+.listtext a:link { color: black; text-decoration: none; }
+.listtext a:visited { color: black; text-decoration: none; }
+.listtext a:active { color: black; text-decoration: underline; }
+.listtext a:hover { color: #99334A; text-decoration: underline; }
+
+div.autocomplete {
+	margin: 0px;
+	padding: 0px;
+	width: 250px;
+	max-height: 250px;
+	background: #fff;
+	border: 1px solid #888;
+	position: absolute;
+	overflow: auto;
+}
+
+div.autocomplete ul {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+
+div.autocomplete ul li.selected {
+	background-color: #CAE1FF;
+}
+
+div.autocomplete ul li {
+	margin: 0;
+	padding: 0px;
+	height: 25px;
+	display: block;
+	list-style-type: none;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+
+

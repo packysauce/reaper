@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Vulnerabilities</title>
+    </head>
+
+
+    <body>
+        <h1>Recent Vulnerabilities</h1>
+        <table border=1>
+            <tr>
+                {% for title in vuln_head %}
+                {% ifequal title "Vulnerabilities"%}
+                <th colspan=2>
+                {% else %}
+                <th>
+                {% endifequal %}
+                {{title}}
+                </th>
+                {% endfor %}
+            </tr>
+            {% for ip, vlist in vulns.items %}
+            {% for desc, id in vlist %}
+            <tr>
+                {% if forloop.first %}
+                <th rowspan={{vlist|length}}>
+                    <a href="{% url sarimui.views.dashboard_ip_view ip %}">{{ip}}</a>
+                </th>
+                {% endif %}
+                <td>{{desc}}</td><td><a href="{% url sarimui.views.plugin_view id %}">{{id}}</a></td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </table>
+    </body>
+</html>
