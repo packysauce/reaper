@@ -4,7 +4,7 @@
 <script language="javascript" type="text/javascript">
    function GoToURL() {
         var url = document.getElementById('searchText').value;
-        location.href = '{% url sarimui.views.device_search %}?q=' + url;
+        location.href = '{% url device_search %}?q=' + url;
     } 
 
     function keyDownHandler(e,btn) {
@@ -30,7 +30,7 @@
     {{ results|length }} result{{ results|length|pluralize}}
     <ul id="results" style="width:{{result_width}}px;height:{{ result_height }}px;">
         {% endif %}
-        <li><a href="{% url sarimui.views.device_view r%}">{{ r }}</a></li>
+        <li><a href="{% url device r%}">{{ r }}</a></li>
         {% if forloop.last %}
     </ul>
     {% endif %}

@@ -13,13 +13,13 @@
         <tr>
             {% endif %}
             {% if forloop.first %}
-            <th rowspan={{ip.resmap|length}}><a href="{% url reaper.sarimui.views.device_view ip.ip %}">{{ ip.ip }}</a></td>
+            <th rowspan={{ip.resmap|length}}><a href="{% url device ip.ip %}">{{ ip.ip }}</a></td>
             {% endif %}
             <td>{{ vuln.0 }}</td>
-            <td><a href="{% url reaper.sarimui.views.plugin_info_view vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
+            <td><a href="{% url plugin vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
             <td>{{ scantype }}</td>
             <td>{{ result.end|date:"F j, Y" }}</td>
-            <td><a href="{% url reaper.sarimui.views.scan_view result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+            <td><a href="{% url scan result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
         </tr>
         {% endfor %}
         {% endfor %}

@@ -2,7 +2,7 @@
 
 {% block sidebar %}
 <li class="sidenav_heading">History</li>
-{% url sarimui.views.device_view entry as devurl %}
+{% url device entry as devurl %}
 <li><a href="{{ devurl }}?days=7">1 week</a></li>
 <li><a href="{{ devurl }}?days=14">2 weeks</a></li>
 <li><a href="{{ devurl }}?days=28">4 weeks</a></li>
