@@ -8,11 +8,13 @@
        nessusid = this.parentNode.nessusid.value;
        $.post('{% url fp_create %}', {'include':include, 'nessusid':nessusid},
            function(data, textStatus) {
-                if(textStatus == "success") {
+                if(textStatus == "success" && data.result == "success") {
                     var formobj = $("#fp_create_"+data.nessusid);
                     var row = formobj.parent();
                     row.addClass(' falsepositive');
                     formobj.remove();
+                } else {
+                    alert(data.error);
                 }
            },
            "json"
@@ -77,7 +79,7 @@
                     <form id='fp_create_{{plugin}}' class='fp_create' method='POST'>
                         <input type='hidden' value='{{ entry_data.name }}' name='include'>
                         <input type='hidden' value='{{ plugin }}' name='nessusid'>
-                        [<a id="{{plugin}}" href="#" class='fp_create'>Flag</a>]
+                        [<a id="{{plugin}}" href="#" class='fp_create'>Flag as False Positive</a>]
                     </form>
                     {% endif %}
                     </li>

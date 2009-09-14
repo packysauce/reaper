@@ -51,8 +51,6 @@ class FalsePositivesHelper(object):
         else:
             excludes = list(fp.excludes.split(','))
 
-        from pprint import pprint as p
-
         if includes == 'ALL':
             return (includes, excludes)
         else:
@@ -83,7 +81,6 @@ class FalsePositivesHelper(object):
     def is_falsepositive(self, ip, nessusid):
         """Checks the ip and nessusid combination against the data loaded to see if it is a false positive.
         """
-        print ip, nessusid
         if type(ip) == int or isinstance(ip, basestring):
             _ip = anytoa(ip)
         elif type(ip) == ScanResults:

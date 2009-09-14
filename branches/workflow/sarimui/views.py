@@ -1,6 +1,6 @@
 # Create your views here.
 from datetime import *
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import *
 from django.shortcuts import render_to_response
 from django.db import connection
 from django.core.exceptions import *
@@ -378,7 +378,6 @@ def host_view_core(hostname, days_back):
     for iphost in iphosts:
         macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
         render_dict['entries'][iphost.ip]['hr_name'] = 'MAC'
-        print iphost.ip
         false_positives = fphelper(ip=iphost.ip)
         if len(macs) > 0:
             render_dict['entries'][iphost.ip]['name'] = macs[0].ip
@@ -642,7 +641,7 @@ def fp_search(request):
             result_list.append( {
                 'url': reverse('fp_detail', args=[f.id]),
                 'summary': p.name + ' - ' + p.summary,
-                'description': 'Nessus ID ' + p.nessusid
+                'description': 'Nessus ID %d' % p.nessusid
                 } )
     elif len(fplist) == 1:
         return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
@@ -693,7 +692,37 @@ def plugin_search(request):
 
 def fp_create(request):
     import json
+
+    inc = request.POST['include']
+    if not SARIMUI_IP_RE.match(inc):
+        #Include must be an ip, so if its not an IP, go get one
+        if SARIMUI_MAC_RE.match(inc):
+            #It's a MAC, grab the most recent macip association
+            inc = ntoa(MacIp.objects.filter(mac__mac=inc).latest().ip_id)
+        else:
+            #assume it's a hostname
+            inc = ntoa(IpHostname.objects.filter(hostname__hostname=inc).latest().ip_id)
+
     try:
-        return HttpResponse(json.dumps( {'nessusid':request.POST['nessusid'], 'include':request.POST['include']}))
+        try:
+            fp = FalsePositive.objects.get(nessusid=request.POST['nessusid'])
+            if inc not in fp.includes:
+                fp.includes += "," + inc
+                fp.save()
+        except ObjectDoesNotExist, e:
+            newfp = FalsePositive()
+            plug = Plugin.objects.filter(nessusid=request.POST['nessusid']).latest()
+            newfp.nessusid = plug.nessusid
+            newfp.version = plug.version
+            newfp.added_by = 'user'
+            newfp.includes = inc
+            newfp.comment = 'comment'
+            newfp.active = True
+            newfp.save()
+        except Exception, e:
+            return HttpResponse( json.dumps( { 'result': 'failure', 'error': str(e), } ) )
+
+        return HttpResponse( json.dumps( { 'result': 'success', 'nessusid':request.POST['nessusid']}))
     except Exception, e:
-        pprint.pprint(e)
+        return HttpResponse( json.dumps( { 'result': 'failure', 'error': str(e), } ) )
+

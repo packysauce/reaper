@@ -7,7 +7,7 @@ def search_width(l):
     if l > 3:
         return 1000
     else:
-        return [250,500,750][len(l)-1]
+        return [250,500,750][l-1]
 
 @register.filter
 def search_height(l):

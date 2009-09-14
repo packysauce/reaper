@@ -36,7 +36,8 @@ class FalsePositive(models.Model):
     nessusid = models.IntegerField()
     version = models.CharField(max_length=5)
     added_by = models.CharField(max_length=20)
-    date_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
     includes = models.TextField()
     excludes = models.TextField()
     comment = models.TextField()
@@ -102,7 +103,6 @@ class IpComments(models.Model):
         db_table = u'ipcomments'
 
 class IpHostname(models.Model):
-    ip_id = models.IntegerField(db_column = 'ip')
     ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
     hostname = models.ForeignKey('Hostname', db_column='hostnameid', primary_key=True)
     observed = models.DateTimeField(primary_key=True)

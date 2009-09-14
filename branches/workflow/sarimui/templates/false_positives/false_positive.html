@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% block sidebar %}
+<li class='sidenav_heading'>Manage</li>
+<li><a href="#">Delete</a></li>
+{% endblock %}
+
 {% block main_body %}
 <h1>False Positive Information</h1>
 <h2>{{ plugin.summary }} - Nessus ID {{ plugin.nessusid }}</h2>
@@ -9,6 +14,9 @@
     </tr>
     <tr>
         <th>Added on</th><td>{{ fp.date_added|date:"F j, Y \a\t P" }}</td>
+    </tr>
+    <tr>
+        <th>Last modified</th><td>{{ fp.last_modified|date:"F j, Y \a\t P" }}</td>
     </tr>
     <tr>
         <th>Version affected</th><td>{{ fp.version }}</td>
@@ -24,7 +32,7 @@
 {% else %}
     {% for ip in fp_includes %}
         {% if forloop.first %}
-        <h2>IPs Included</h2>
+        <h2>IPs Included <a width=40px href="#">[+]</a></h2>
         <ul id='fp_includes'>
         {% endif %}
             <li><a href="{% url device ip %}">{{ ip }}</a></li>
@@ -34,15 +42,17 @@
     {% endfor %}
 {% endifequal %}
 
+<h2>IPs Specifically Excluded <a href="#">[+]</a></h2>
 {% for ip in fp_excludes %}
     {% if forloop.first %}
-    <h2>IPs Specifically Excluded</h2>
     <ul id='fp_excludes'>
     {% endif %}
         <li><a href="{% url device ip %}">{{ ip }}</a></li>
     {% if forloop.last %}
     </ul>
     {% endif %}
+    {% empty %}
+    <h3>No IPs are excluded</h3>
 {% endfor %}
 
 {% endblock %}
