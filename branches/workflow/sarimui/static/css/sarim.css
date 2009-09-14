@@ -1,3 +1,12 @@
+.falsepositive {
+    opacity:0.40;
+    filter:alpha(opacity=40);
+}
+
+form.fp_create {
+    display: inline;
+}
+
 li.state-up {
     background-color:#CDFECD;
 }
@@ -16,9 +25,9 @@ div#search p {
     margin-bottom:0;
 }
 
-tr.falsepositive > td {
-    opacity:0.40;
-    filter:alpha(opacity=40);
+.falsepositive > th {
+    opacity:1.0;
+    filter:alpha(opacity=100);
 }
 
 li.sidenav_heading {

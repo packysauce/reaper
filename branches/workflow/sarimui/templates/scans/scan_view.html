@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load comparisons %}
+
+{% block main_body %}
+    {% if scan %}
+        <h1>Scan Information</h1>
+        <h2>Details for Scan {{ scan.id }}</h2>
+        {% if repairs|gte:1 %}
+        <ul id='messages'>
+            <li class='warning'>Encountered {{ repairs }} broken IP links, fixed.</h2>
+            {% for ip in broken_ips %}
+                {% if forloop.last %}
+                <li class='floatmsg'>{{ ip }}</li> 
+                {% else %}
+                <li class='floatmsg'>{{ ip }}</li> | 
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <center>
+        <table>
+            <tr>
+                <th style='width:80px'>Status</th><td>{{ scan.status }}</td>
+            </tr>
+            <tr>
+                <th>Scan Set</th><td>{{scan.scanset.id}}</td>
+            </tr>
+            <tr>
+                <th>Started</th><td>{{ scan.start|date:"l, F j, Y \a\t P" }}</td>
+            </tr>
+            <tr>
+                <th>Finished</th><td>{{ scan.end|date:"l, F j, Y \a\t P" }}</td>
+            </tr>
+        </table>
+        </center>
+
+        <ul id='results' style="width:{{result_width}}px;height:{{ result_height }}px;">
+            {% for host, state in hosts %}
+            <li class={% ifequal state 'up' %}'state-up'{%else%}'state-down'{% endifequal %}><a href='{% url device host %}'>{{host}}</a></li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+        <h1>Scan Information</h1>
+        <ul id='messages'>
+            <li class='error'>Scan {{id}} Not Found</li>
+        </ul>
+    {% endif %}
+{% endblock %}

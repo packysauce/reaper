@@ -24,15 +24,15 @@ def ntoa(value):
 def anyton(value):
     """Takes a string or int IP and returns the int IP form
     """
-    if type(value) == int:
+    if type(value) == long:
         return value
-    if type(value) == str:
+    if isinstance(value, basestring):
         return aton(value)
 
 def anytoa(value):
     """Takes a string or int IP and returns the str IP form
     """
-    if type(value) == str:
+    if isinstance(value, basestring):
         return value
-    if type(value) == int:
+    if type(value) == long:
         return ntoa(value)

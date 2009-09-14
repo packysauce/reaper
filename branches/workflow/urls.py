@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^scan/(\d*)/$', views.scan_view, name='scan'),
     url(r'^scan/search/$', views.scan_search, name='scan_search'),
     url(r'^false_positive/(\d*)/$', views.fp_view, name='fp_detail'),
+    url(r'^false_positive/new/$', views.fp_create, name='fp_create'),
     url(r'^false_positive/search/$', views.fp_search, name='fp_search'),
     url(r'^(.+)/$', views.device_view, name='device'),
 

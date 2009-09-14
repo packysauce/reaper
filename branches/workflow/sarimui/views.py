@@ -111,8 +111,7 @@ def ips_by_vuln(request):
     render_dict['plugin_list'] = plugin_list
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
-    pprint.pprint(render_dict)
-    return render_to_response('ips_by_vuln.html', render_dict)
+    return render_to_response('vulnerabilities/ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
@@ -169,7 +168,7 @@ def vulns_by_ip(request):
         return aton(x['ip'])
     render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
 
-    return render_to_response('vulns_by_ip.html', render_dict)
+    return render_to_response('vulnerabilities/vulns_by_ip.html', render_dict)
 
 def index(request):
     handlers = {'ip': vulns_by_ip, 'vulns':ips_by_vuln}
@@ -188,7 +187,7 @@ def plugin_view(request, plugin, version):
     else:
         render_dict['version'] = Plugin.objects.get(nessusid=plugin, version=version).latest().version
 
-    return render_to_response("plugin.html", render_dict)
+    return render_to_response("plugins/plugin.html", render_dict)
 
 def plugin_list_view(request, plugin):
     return HttpResponse("List of things with this vulnerability found, part of the scan, etc goes here")
@@ -272,7 +271,7 @@ def plugin_info_view(request, plugin, version):
         #Take care of dictionary names with spaces in them
         render_dict[word.replace(' ', '')] = s
 
-    return render_to_response('plugin/plugin_info.html', render_dict)
+    return render_to_response('plugins/plugin_info.html', render_dict)
 
 def ip_view_core(ip, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'IP'}
@@ -284,6 +283,8 @@ def ip_view_core(ip, days_back):
         _ip = IpAddress.objects.get(ip=aton(ip))
     except:
         return -1
+
+    false_positives = fphelper(ip = anytoa(ip))
 
     try:
         comments = list(IpComments.objects.filter(ip=_ip))
@@ -325,7 +326,7 @@ def ip_view_core(ip, days_back):
             hostnames = list(IpHostname.objects.filter(ip=_ip, observed__gte=assoc.observed, entered__lte=assoc.entered))
             render_dict['entries'][mac]['alt_name'] = mac
             if len(hostnames) > 0:
-                render_dict['entries'][mac]['name'] = hostnames[0].hostname
+                render_dict['entries'][mac]['name'] = hostnames[0].hostname.hostname
             else:
                 render_dict['entries'][mac]['name'] = 'NoNameAvailable'
             
@@ -341,7 +342,8 @@ def ip_view_core(ip, days_back):
                 except:
                     vulns = []
                 #add the scan and its vulnerabilities to the rendering structure
-                render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, vulns ) )
+                fpvulns = [ (x,y,false_positives.is_falsepositive(ip,y)) for (x,y) in vulns ]
+                render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, fpvulns ) )
 
 
     return render_dict
@@ -376,6 +378,8 @@ def host_view_core(hostname, days_back):
     for iphost in iphosts:
         macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
         render_dict['entries'][iphost.ip]['hr_name'] = 'MAC'
+        print iphost.ip
+        false_positives = fphelper(ip=iphost.ip)
         if len(macs) > 0:
             render_dict['entries'][iphost.ip]['name'] = macs[0].ip
             render_dict['entries'][iphost.ip]['alt_name'] = macs[0].mac
@@ -391,8 +395,10 @@ def host_view_core(hostname, days_back):
                     vulns = [i.split('|') for i in vulns]
                 except:
                     vulns = []
+                fpvulns = [ (x,y,false_positives.is_falsepositive(iphost.ip,y)) for (x,y) in vulns ]
+
                 #add the scan and its vulnerabilities to the rendering structure
-                render_dict['entries'][iphost.ip]['scans'].append( ( scan, vulns ) )
+                render_dict['entries'][iphost.ip]['scans'].append( ( scan, fpvulns ) )
 
     return render_dict
 
@@ -442,6 +448,7 @@ def mac_view_core(mac, days_back):
     for ip in set(addresses):
         num_ip = ip.ip
         nice_ip = ntoa(ip.ip)
+        false_positives = fphelper(ip=nice_ip)
         if days_back == 0:
             results = list(ScanResults.objects.filter(ip=num_ip))
         else:
@@ -457,9 +464,11 @@ def mac_view_core(mac, days_back):
             else:
                 vulns = []
 
+            fpvulns = [ (x,y,false_positives.is_falsepositive(nice_ip,y)) for (x,y) in vulns ]
+
             for first, last in timestamps[nice_ip]:
                 if (scan.end <= last) and (scan.start >= first):
-                    render_dict['entries'][nice_ip]['scans'].append( ( scan, vulns) )
+                    render_dict['entries'][nice_ip]['scans'].append( ( scan, fpvulns) )
 
     # iphtimes is a hash of { ip: (start association, end association, hostname) }
     for ip in iphtimes:
@@ -483,7 +492,7 @@ def scan_view(request, scan):
     try:
         scanobj = ScanRun.objects.get(id=scan)
     except:
-        return render_to_response('scan_view.html', render_dict)
+        return render_to_response('scans/scan_view.html', render_dict)
 
     render_dict['scan'] = scanobj
     render_dict['hosts'] = []
@@ -518,7 +527,7 @@ def scan_view(request, scan):
         if render_dict['result_height'] == 0:
             render_dict['result_height'] = 25
 
-    return render_to_response('scan_view.html', render_dict)
+    return render_to_response('scans/scan_view.html', render_dict)
 
 def device_search(request):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'Search'}
@@ -595,7 +604,7 @@ def device_view_core(what, days_back):
 
     render_dict['days_back'] = days_back
 
-    return render_to_response('view.html', render_dict)
+    return render_to_response('devices/view.html', render_dict)
 
 def fp_view(request, fp_id):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Details'}
@@ -607,7 +616,7 @@ def fp_view(request, fp_id):
     render_dict['plugin'] = plugin
     (render_dict['fp_includes'], render_dict['fp_excludes']) = fphelper.get_lists_from_fp(fp)
 
-    return render_to_response('false_positive.html', render_dict)
+    return render_to_response('false_positives/false_positive.html', render_dict)
 
 def fp_search(request):
     render_dict = {'pagetitle':'False Positives', 'subtitle':'Search'}
@@ -640,7 +649,7 @@ def fp_search(request):
 
     render_dict['results'] = result_list
 
-    return render_to_response('fp_search.html', render_dict)
+    return render_to_response('false_positives/fp_search.html', render_dict)
 
 def scan_search(request):
     render_dict = {'pagetitle': 'Scans', 'subtitle': 'Search'}
@@ -681,3 +690,10 @@ def plugin_search(request):
         return render_to_response('search.html', render_dict)
 
     return HttpResponseRedirect(reverse('plugin', args=[what, 'latest']))
+
+def fp_create(request):
+    import json
+    try:
+        return HttpResponse(json.dumps( {'nessusid':request.POST['nessusid'], 'include':request.POST['include']}))
+    except Exception, e:
+        pprint.pprint(e)

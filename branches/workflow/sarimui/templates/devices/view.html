@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script type="text/javascript">
+ $(document).ready(function() {
+   $("a.fp_create").click(function() {
+       include = this.parentNode.include.value;
+       nessusid = this.parentNode.nessusid.value;
+       $.post('{% url fp_create %}', {'include':include, 'nessusid':nessusid},
+           function(data, textStatus) {
+                if(textStatus == "success") {
+                    var formobj = $("#fp_create_"+data.nessusid);
+                    var row = formobj.parent();
+                    row.addClass(' falsepositive');
+                    formobj.remove();
+                }
+           },
+           "json"
+           );
+   });
+ });
+</script>    
+{% endblock %}
+
+{% block sidebar %}
+<li class="sidenav_heading">History</li>
+{% url device entry as devurl %}
+<li><a href="{{ devurl }}?days=7">1 week</a></li>
+<li><a href="{{ devurl }}?days=14">2 weeks</a></li>
+<li><a href="{{ devurl }}?days=28">4 weeks</a></li>
+<li><a href="{{ devurl }}?days=0">All data</a></li>
+
+{% endblock %}
+
+{% block main_body %}
+<h1>Database results for {{ entry }}</h1>
+{% ifequal days_back 0 %}
+<h2>All information available</h2>
+{% else %}
+<h2>{{ days_back }} days of information</h2>
+{% endifequal %}
+
+<h3>{{ entries|length }} {{category}} association{{ entries|length|pluralize }} found</h3>
+{% if entries %}
+<ul class='entry_list'>
+    {% for entry,entry_data in entries.items %}
+    <li class='entry_item'><h3>
+        {% ifequal entry_data.name 'NoNameAvailable' %}
+        No {{entry_data.hr_name}} Available
+        {% else %}
+        <a href='{% url device entry_data.name %}?days={{ days_back }}'>{{entry_data.name}}</a>
+        {% endifequal %}
+        {% if entry_data.alt_name %}
+        (<a href='{% url device entry_data.alt_name %}?days={{days_back}}'>{{ entry_data.alt_name }}</a>)
+        {% endif %}
+    </h3></li>
+    {% for comment in entry_data.comments %}
+    {% if forloop.first %}
+    <div class='comments'>
+        <h3>Comments</h3>
+    {% endif %}
+        <div class='comment'>
+            <span class='author'><b>{{ comment.analyst }} on {{ comment.entered|date:"F j, Y \a\t P " }}</b></br></span>
+            <span class='content'>{{ comment.content }}</span>
+    {% endfor %}
+
+            {% ifnotequal entry_data.scans|length 0 %}
+            <ul class='scan_list'>
+                <h3 class='scan_header'>Found {{ entry_data.vuln_total }} vulnerabilit{{ entry_data.vuln_total|pluralize:"y,ies" }} in {{ entry_data.scans|length}} scan{{ entry_data.scans|length|pluralize }}.</h3>
+                {% for scan, vulns in entry_data.scans %}
+                <li class='scan_item'>Scan ID <a href='{% url scan scan.scanrun_id %}'>{{scan.scanrun_id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
+                {% if vulns %}
+                <ul>
+                    {% for name, plugin, fpflag in vulns %}
+                    <li class='vuln_item {% if fpflag %}falsepositive{% endif %}'>{{ name }} (<a href='{% url plugin plugin 'latest' %}'>{{plugin}}</a>)
+                    {% if not fpflag  %}
+                    <form id='fp_create_{{plugin}}' class='fp_create' method='POST'>
+                        <input type='hidden' value='{{ entry_data.name }}' name='include'>
+                        <input type='hidden' value='{{ plugin }}' name='nessusid'>
+                        [<a id="{{plugin}}" href="#" class='fp_create'>Flag</a>]
+                    </form>
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class='empty'>No scans for this MAC</div>
+        {% endifnotequal %}
+        </li>
+        {% endfor %}
+        {% else %}
+        <h2>{{ ip }} has no scan history</h2>
+        {% endif %}
+        {% endblock %}

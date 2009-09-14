@@ -12,15 +12,20 @@ class FalsePositivesHelper(object):
         """
         self.__fplist = []
 
+        if type(ip) == IpAddress:
+            _ip = ip.ip
+        else:
+            _ip = ip
+
         #grab all of the false positives for the required criteria
-        if ip == None and plugin == None:
+        if _ip == None and plugin == None:
             self.__fplist = list(FalsePositive.objects.filter(active=True))
         elif plugin != None and ip == None:
             self.__fplist = list(FalsePositive.objects.filter(nessusid=int(plugin),active=True))
-        elif ip != None and plugin == None:
-            self.__fplist = list(FalsePositive.objects.filter(ip=anyton(ip),active=True))
+        elif _ip != None and plugin == None:
+            self.__fplist = list(FalsePositive.objects.filter(includes__contains=anytoa(_ip),active=True))
         else:
-            self.__fplist = list(FalsePositive.objects.filter(ip=anyton(ip), nessusid=int(plugin),active=True))
+            self.__fplist = list(FalsePositive.objects.filter(includes__contains=anytoa(_ip), nessusid=int(plugin),active=True))
 
         return
 
@@ -78,10 +83,13 @@ class FalsePositivesHelper(object):
     def is_falsepositive(self, ip, nessusid):
         """Checks the ip and nessusid combination against the data loaded to see if it is a false positive.
         """
-        if type(ip) == int or type(ip) == str:
+        print ip, nessusid
+        if type(ip) == int or isinstance(ip, basestring):
             _ip = anytoa(ip)
-        elif type(ip) == ScanResult:
-            _ip = anytoa(ScanResult.ip_id)
+        elif type(ip) == ScanResults:
+            _ip = anytoa(ScanResults.ip_id)
+        elif type(ip) == IpAddress:
+            _ip = ntoa(ip.ip)
         else:
             raise ValueError("Must specify IP as a number, string, or ScanResult")
 
@@ -90,6 +98,7 @@ class FalsePositivesHelper(object):
             return False
 
         curfp = self.__fplist[fpidx]
+
 
         #if the date's OK and the IP is in the lists, it's a false positive!
         if self.__in_iplist(_ip, curfp.includes) and not self.__in_iplist(_ip, curfp.excludes):
