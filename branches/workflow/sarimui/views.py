@@ -17,12 +17,14 @@ HIDE_FP = 0
 #Default view, sorted by vulnerability and spread
 def ips_by_vuln(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
-    if 'days' in request.GET.keys():
+    try:
         days_back = int(request.GET['days'])
-    else:
+    except:
         days_back = 7
     fp = fphelper()
     fp_option = FLAG_FP
+
+    render_dict['days_back'] = days_back
 
     if 'fp' in [i.lower() for i in request.GET.keys()] and int(request.GET['fp']) in [0,1]:
         fp_option = int(request.GET['fp'])
@@ -114,10 +116,15 @@ def ips_by_vuln(request):
     return render_to_response('vulnerabilities/ips_by_vuln.html', render_dict)
 
 def vulns_by_ip(request):
-    render_dict = {'pagetitle':'Vulnerabilities'}
-    days_back = 7
+    render_dict = {'pagetitle':'Vulnerabilities', 'subtitle': 'By IP'}
+    try:
+        days_back = int(request.GET['days'])
+    except:
+        days_back = 7
     fp = fphelper()
     fp_option = FLAG_FP
+
+    render_dict['days_back'] = days_back
 
     if 'fp' in [i.lower() for i in request.GET.keys()] and int(request.GET['fp']) in [0,1]:
         fp_option = int(request.GET['fp'])
@@ -139,7 +146,6 @@ def vulns_by_ip(request):
 
         ip = ntoa(result.ip_id)
         vuln_data = [tuple(i.split('|')) for i in result.vulns.split(',')]
-
 
         for v in vuln_data:
             vdesc = v[0]
@@ -163,7 +169,19 @@ def vulns_by_ip(request):
                 reshash = {'ip':ip, 'vulns':set([v,]), 'resmap':[(v,result, scan_types[result.scanrun_id], fp_flag),]}
                 vuln_list.append(reshash)
                 id_cache[ip] = len(vuln_list)-1
+    
+    hostname_list = {}
+    for v in vuln_list:
+        ip = v['ip']
+        if ip not in hostname_list.keys():
+            try:
+                hostname_list[ip] = IpHostname.objects.filter(ip=aton(ip)).latest().hostname.hostname
+            except:
+                hostname_list[ip] = "NA"
 
+    render_dict['hostname_list'] = hostname_list
+
+    pprint.pprint(hostname_list)
     def ipsort(x):
         return aton(x['ip'])
     render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
@@ -600,6 +618,9 @@ def device_view_core(what, days_back):
         render_dict = mac_view_core(what, days_back)
     else:
         render_dict = host_view_core(what, days_back)
+
+    if type(render_dict) == int:
+        return HttpResponseRedirect(reverse('device_search'))
 
     render_dict['days_back'] = days_back
 

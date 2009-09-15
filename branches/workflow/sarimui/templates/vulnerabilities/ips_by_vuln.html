@@ -4,8 +4,7 @@
 {% load sarimutils %}
 
 {% block main_body %}
-<h1>Vulnerabilities</h1>
-<h2>All vulnerabilities within the past 7 days</h2>
+{{ block.super }}
         <table class='block'>
             <tr><th>Nessus ID</th><th>IP Address</th><th>Hostname</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
             {% for vuln in vuln_list %}
