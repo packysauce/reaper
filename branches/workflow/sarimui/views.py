@@ -630,10 +630,9 @@ def fp_view(request, fp_id):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Details'}
 
     fp = FalsePositive.objects.get(id=fp_id)
-    plugin = Plugin.objects.get(nessusid=fp.nessusid, version=fp.version)
     
     render_dict['fp'] = fp
-    render_dict['plugin'] = plugin
+    render_dict['plugin'] = fp.plugin
     (render_dict['fp_includes'], render_dict['fp_excludes']) = fphelper.get_lists_from_fp(fp)
 
     return render_to_response('false_positives/false_positive.html', render_dict)
@@ -658,7 +657,7 @@ def fp_search(request):
 
     if len(fplist) > 1:
         for f in fplist:
-            p = Plugin.objects.get(nessusid = f.nessusid, version = f.version)
+            p = f.plugin
             result_list.append( {
                 'url': reverse('fp_detail', args=[f.id]),
                 'summary': p.name + ' - ' + p.summary,

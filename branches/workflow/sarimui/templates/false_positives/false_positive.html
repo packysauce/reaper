@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
 {% block sidebar %}
-<li class='sidenav_heading'>Manage</li>
-<li><a href="#">Delete</a></li>
+{% include 'false_positives/fp_sidebar.html' %}
 {% endblock %}
 
 {% block main_body %}
 <h1>False Positive Information</h1>
-<h2>{{ plugin.summary }} - Nessus ID {{ plugin.nessusid }}</h2>
+<h2>{{ plugin.summary }} - Nessus ID <a href="{% url plugin plugin.nessusid 'latest' %}">{{ plugin.nessusid }}</a></h2>
 <table>
     <tr>
         <th>Entered by</th><td>{{ fp.added_by }}</td>
@@ -32,7 +31,7 @@
 {% else %}
     {% for ip in fp_includes %}
         {% if forloop.first %}
-        <h2>IPs Included <a width=40px href="#">[+]</a></h2>
+        <h2>IPs Included</h2>
         <ul id='fp_includes'>
         {% endif %}
             <li><a href="{% url device ip %}">{{ ip }}</a></li>
@@ -42,7 +41,7 @@
     {% endfor %}
 {% endifequal %}
 
-<h2>IPs Specifically Excluded <a href="#">[+]</a></h2>
+<h2>IPs Specifically Excluded</h2>
 {% for ip in fp_excludes %}
     {% if forloop.first %}
     <ul id='fp_excludes'>

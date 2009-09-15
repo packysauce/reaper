@@ -1,0 +1,12 @@
+<li class='sidenav_heading'>Manage</li>
+{% ifequal subtitle 'Modify' %}
+<li>Modify</li>
+{% else %}
+<li><a href="#">Modify</a></li>
+{% endifequal %}
+
+{% ifequal subtitle 'Delete' %}
+<li>Delete</li>
+{% else %}
+<li><a href="#">Delete</a></li>
+{% endifequal %}

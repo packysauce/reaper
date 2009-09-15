@@ -42,6 +42,9 @@ class FalsePositive(models.Model):
     excludes = models.TextField()
     comment = models.TextField()
     active = models.BooleanField()
+    plugin = models.ForeignKey('Plugin')
+    class Meta:
+        get_latest_by = 'last_modified'
 
 class Hostname(models.Model):
     def __unicode__(self):
