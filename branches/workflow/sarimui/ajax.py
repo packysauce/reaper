@@ -2,9 +2,41 @@ from django.http import *
 from utils.bobdb import *
 from sarimui.models import *
 from django.core.exceptions import *
+import json
+import re
+
+def fp_modify(request):
+    fpid = request.POST['fp']
+    action = request.POST['action']
+    data = request.POST['data']
+    try:
+        fp = FalsePositive.objects.get(id=fpid)
+    except:
+        return HttpResponseBadRequest("Inavlid False Positive ID")
+
+    if action == 'add_inc':
+        try:
+            if SARIMUI_IP_RE.match(data):
+                fp.includes.add(IpAddress.objects.get(ip=aton(data)))
+                return HttpResponse( json.dumps({'ip': data }) )
+            elif SARIMUI_SHORT_IP_RE.match(data):
+                fp.includes.add(IpAddress.objects.get(ip=aton('129.57.'+data)))
+                return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
+        except Exception, e:
+            return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+    elif action == 'add_exc':
+        if SARIMUI_IP_RE.match(data):
+            fp.excludes.add(IpAddress.objects.get(ip=aton(data)))
+            return HttpResponse( json.dumps({'ip': data }) )
+        elif SARIMUI_SHORT_IP_RE.match(data):
+            fp.excludes.add(IpAddress.objects.get(ip=aton('129.57.'+data)))
+            return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
+        else:
+            return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+    else:
+        return HttpResponseBadRequest( json.dumps({'message': 'invalid action'}) )
 
 def fp_create(request):
-    import json
 
     inc = request.POST['include']
     if not SARIMUI_IP_RE.match(inc):

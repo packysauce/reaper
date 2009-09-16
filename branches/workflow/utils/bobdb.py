@@ -1,6 +1,7 @@
 import re
 
 SARIMUI_IP_RE = re.compile(r"(\d{1,3}\.){3}\d{1,3}")
+SARIMUI_SHORT_IP_RE = re.compile(r"\d{1,3}\.\d{1,3}")
 SARIMUI_MAC_RE = re.compile(r"([a-fA-F0-9]{2}:){5}([a-fA-F0-9]){2}")
 
 def aton(address):

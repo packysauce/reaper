@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from sarimui.models import *
 from sarimui import views
+from sarimui import ajax
 import django.views.static
 
 # Uncomment the next two lines to enable the admin:
@@ -20,7 +21,9 @@ urlpatterns = patterns('',
     url(r'^scan/(\d*)/$', views.scan_view, name='scan'),
     url(r'^scan/search/$', views.scan_search, name='scan_search'),
     url(r'^false_positive/(\d*)/$', views.fp_view, name='fp_detail'),
-    url(r'^false_positive/new/$', views.fp_create, name='fp_create'),
+    url(r'^false_positive/(\d*)/modify/$', views.fp_modify, name='fp_modify'),
+    url(r'^false_positive/modify/$', ajax.fp_modify, name="fp_modify_ajax"),
+    url(r'^false_positive/new/$', ajax.fp_create, name='fp_create'),
     url(r'^false_positive/search/$', views.fp_search, name='fp_search'),
     url(r'^(.+)/$', views.device_view, name='device'),
 

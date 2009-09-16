@@ -640,6 +640,16 @@ def fp_view(request, fp_id):
 
     return render_to_response('false_positives/false_positive.html', render_dict)
 
+def fp_modify(request, fp_id):
+    render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Modify'}
+
+    fp = FalsePositive.objects.get(id=fp_id)
+
+    render_dict['fp'] = fp
+    render_dict['plugin'] = fp.plugin
+
+    return render_to_response('false_positives/fp_modify.html', render_dict)
+
 def fp_search(request):
     render_dict = {'pagetitle':'False Positives', 'subtitle':'Search'}
     render_dict['category'] = "False Positive"

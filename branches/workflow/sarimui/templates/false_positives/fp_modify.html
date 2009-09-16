@@ -4,10 +4,51 @@
 {% include 'false_positives/fp_sidebar.html' %}
 {% endblock %}
 
+{% block extra_head %}
+<script type="text/javascript">
+    var addNewInc = function(event) {
+        if(event.which == 13) {
+            $.ajax( {
+                url: '{% url fp_modify_ajax %}',
+                type: 'POST',
+                error: function(xhr, txtStatus, error) { $('#new_inc').animate({ backgroundColor: 'red'}).effect('pulsate',{},'fast'); },
+                success: function(data, txtStatus) {
+                    $('#new_inc').replaceWith(data.ip);
+                    $('#add_inc').get().disabled = false;
+                    },
+                dataType: "json",
+                data: { fp: '{{fp.id}}',
+                        action: 'add_inc',
+                        data: $('#new_inc').val()
+                        }
+            });
+        }
+    }
+
+    var addNewExc = function() {
+        alert(this.value);
+    }
+
+    $(document).ready(function() {
+        $(':button').click(function() {
+            $('#add_inc').get().disabled = true;
+            if (this.id == "add_inc") {
+                $(this).parent().before("<li><input id='new_inc' type='text'/></li>");
+                $("#new_inc").keypress(addNewInc);
+            } else if (this.id == "add_exc") {
+                    alert("Excluding IP");
+            }
+
+        })
+    });
+</script>
+{% endblock %}
+
+
 {% block main_body %}
-<h1>False Positive Information</h1>
+<h1>False Positive - Modify</h1>
 <h2>{{ plugin.summary }} - Nessus ID <a href="{% url plugin plugin.nessusid 'latest' %}">{{ plugin.nessusid }}</a></h2>
-<form name="fp_edit">
+<form name="fp_edit" method="POST">
 <table>
     <tr>
         <th><label for="id_added_by">Entered by</label></th><td><input name="added_by" id="id_added_by" type='text' value='{{ fp.added_by }}'/></td>
@@ -25,6 +66,8 @@
         <th><label for="id_comments">Comments</label></th><td><textarea name="comments" id="id_comments">{{ fp.comment }}</textarea></td>
     </tr>
 </table>
+<input type='submit' value='Save Changes'></button>
+</form>
 
 <h2>IPs Included</h2>
 {% if fp.includes_all %}
@@ -34,24 +77,20 @@
         {% if forloop.first %}
         <ul id='fp_includes'>
         {% endif %}
-            <li><a href="{% url device ip %}">{{ ip }}</a></li>
+            <li>{{ ip }}</li>
         {% if forloop.last %}
+            <li><button id="add_inc">Add New IP</button></li>
         </ul>
         {% endif %}
     {% endfor %}
 {% endif %}
 
 <h2>IPs Specifically Excluded</h2>
+<ul id='fp_excludes'>
 {% for ip in fp.excludes.all %}
-    {% if forloop.first %}
-    <ul id='fp_excludes'>
-    {% endif %}
-        <li><a href="{% url device ip %}">{{ ip }}</a></li>
-    {% if forloop.last %}
-    </ul>
-    {% endif %}
-    {% empty %}
-    <h3>No IPs are excluded</h3>
+    <li>{{ ip }}</li>
 {% endfor %}
+    <li><button id="add_exc">Add New IP</button></li>
+</ul>
 
 {% endblock %}
