@@ -2,7 +2,7 @@
 {% ifequal subtitle 'Modify' %}
 <li>Modify</li>
 {% else %}
-<li><a href="#">Modify</a></li>
+<li><a href="{% url fp_modify fp %}">Modify</a></li>
 {% endifequal %}
 
 {% ifequal subtitle 'Delete' %}

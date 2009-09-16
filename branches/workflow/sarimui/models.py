@@ -83,7 +83,7 @@ class ImapLoginList(models.Model):
 class IpAddress(models.Model):
     def __unicode__(self):
         return ntoa(self.ip)
-    ip = models.IntegerField()
+    ip = models.IntegerField(primary_key=True)
     hostnames = models.ManyToManyField('Hostname', through='IpHostname')
     macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
 

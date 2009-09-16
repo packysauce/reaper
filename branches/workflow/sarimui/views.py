@@ -22,7 +22,6 @@ def ips_by_vuln(request):
         days_back = int(request.GET['days'])
     except:
         days_back = 7
-    fp = fphelper()
     fp_option = FLAG_FP
 
     render_dict['days_back'] = days_back
@@ -64,7 +63,6 @@ def ips_by_vuln(request):
             fp_flag = False
 
             fp_list = list(FalsePositive.objects.filter(plugin__nessusid=vid, includes=result.ip))
-            pprint.pprint(connection.queries[-1])
             if len(fp_list) > 0:
                 fp_flag = True
 
@@ -105,7 +103,6 @@ def ips_by_vuln(request):
 
     render_dict['hostname_list'] = hostname_list
 
-
     plugin_list = {}
 
     for v in vuln_list:
@@ -123,7 +120,6 @@ def vulns_by_ip(request):
         days_back = int(request.GET['days'])
     except:
         days_back = 7
-    fp = fphelper()
     fp_option = FLAG_FP
 
     render_dict['days_back'] = days_back
@@ -156,11 +152,9 @@ def vulns_by_ip(request):
             #set up the false positive flag. If this flag is set, the row will be marked as a false positive.
             #if the flag is not set, the row will not be displayed
             fp_flag = False
-            if fp.is_falsepositive(ip, vid):
-                if fp_option == FLAG_FP:
-                    fp_flag = True
-                else:
-                    continue
+            fp_list = list(FalsePositive.objects.filter(plugin__nessusid=vid, includes=result.ip))
+            if len(fp_list) > 0:
+                fp_flag = True
 
             if ip in id_cache.keys():
                 c = id_cache[ip]
@@ -183,7 +177,6 @@ def vulns_by_ip(request):
 
     render_dict['hostname_list'] = hostname_list
 
-    pprint.pprint(hostname_list)
     def ipsort(x):
         return aton(x['ip'])
     render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
@@ -228,7 +221,6 @@ def plugin_info_view(request, plugin, version):
         render_dict['errormessage'] = "Invalid version selected, defaulting to latest"
         p = Plugin.objects.filter(nessusid=plugin).latest()
 
-    render_dict['selected_version'] = p.version
     render_dict['plugin'] = p
     render_dict['cve_list'] = [i.strip() for i in p.cveid.split(',')]
     render_dict['bid_list'] = [i.strip() for i in p.bugtraqid.split(',')]
@@ -304,8 +296,6 @@ def ip_view_core(ip, days_back):
     except:
         return -1
 
-    false_positives = fphelper(ip = anytoa(ip))
-
     try:
         comments = list(IpComments.objects.filter(ip=_ip))
     except:
@@ -362,9 +352,14 @@ def ip_view_core(ip, days_back):
                 except:
                     vulns = []
                 #add the scan and its vulnerabilities to the rendering structure
-                fpvulns = [ (x,y,false_positives.is_falsepositive(ip,y)) for (x,y) in vulns ]
+                fpvulns = []
+                for (x,y) in vulns:
+                    z = False
+                    r = FalsePositive.objects.filter(includes=_ip, plugin__nessusid = y)
+                    if len(FalsePositive.objects.filter(includes=_ip, plugin__nessusid = y)) > 0:
+                        z = True
+                    fpvulns.append( (x,y,z) )
                 render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, fpvulns ) )
-
 
     return render_dict
 
@@ -398,7 +393,6 @@ def host_view_core(hostname, days_back):
     for iphost in iphosts:
         macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
         render_dict['entries'][iphost.ip]['hr_name'] = 'MAC'
-        false_positives = fphelper(ip=iphost.ip)
         if len(macs) > 0:
             render_dict['entries'][iphost.ip]['name'] = macs[0].ip
             render_dict['entries'][iphost.ip]['alt_name'] = macs[0].mac
@@ -414,7 +408,13 @@ def host_view_core(hostname, days_back):
                     vulns = [i.split('|') for i in vulns]
                 except:
                     vulns = []
-                fpvulns = [ (x,y,false_positives.is_falsepositive(iphost.ip,y)) for (x,y) in vulns ]
+
+                fpvulns = []
+                for (x,y) in vulns:
+                    z = False
+                    if len(FalsePositive.objects.filter(includes=iphost.ip, plugin__nessusid = y)) > 0:
+                        z = True
+                    fpvulns.append( (x,y,z) )
 
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['entries'][iphost.ip]['scans'].append( ( scan, fpvulns ) )
@@ -465,13 +465,10 @@ def mac_view_core(mac, days_back):
     #for each unique IP address
     #get the scan results for all the spans of time its associated
     for ip in set(addresses):
-        num_ip = ip.ip
-        nice_ip = ntoa(ip.ip)
-        false_positives = fphelper(ip=nice_ip)
         if days_back == 0:
-            results = list(ScanResults.objects.filter(ip=num_ip))
+            results = list(ScanResults.objects.filter(ip=ip))
         else:
-            results = list(ScanResults.objects.filter(ip=num_ip, end__gte=dtime))
+            results = list(ScanResults.objects.filter(ip=ip, end__gte=dtime))
 
         for scan in results:
             if nice_ip not in render_dict['entries'].keys():
@@ -483,7 +480,12 @@ def mac_view_core(mac, days_back):
             else:
                 vulns = []
 
-            fpvulns = [ (x,y,false_positives.is_falsepositive(nice_ip,y)) for (x,y) in vulns ]
+            fpvulns = []
+            for (x,y) in vulns:
+                z = False
+                if len(FalsePositive.objects.filter(includes=ip, plugin__nessusid = y)) > 0:
+                    z = True
+                fpvulns.append( (x,y,z) )
 
             for first, last in timestamps[nice_ip]:
                 if (scan.end <= last) and (scan.start >= first):
@@ -710,40 +712,3 @@ def plugin_search(request):
         return render_to_response('search.html', render_dict)
 
     return HttpResponseRedirect(reverse('plugin', args=[what, 'latest']))
-
-def fp_create(request):
-    import json
-
-    inc = request.POST['include']
-    if not SARIMUI_IP_RE.match(inc):
-        #Include must be an ip, so if its not an IP, go get one
-        if SARIMUI_MAC_RE.match(inc):
-            #It's a MAC, grab the most recent macip association
-            inc = ntoa(MacIp.objects.filter(mac__mac=inc).latest().ip_id)
-        else:
-            #assume it's a hostname
-            inc = ntoa(IpHostname.objects.filter(hostname__hostname=inc).latest().ip_id)
-
-    try:
-        try:
-            fp = FalsePositive.objects.get(nessusid=request.POST['nessusid'])
-            if inc not in fp.includes:
-                fp.includes += "," + inc
-                fp.save()
-        except ObjectDoesNotExist, e:
-            newfp = FalsePositive()
-            plug = Plugin.objects.filter(nessusid=request.POST['nessusid']).latest()
-            newfp.nessusid = plug.nessusid
-            newfp.version = plug.version
-            newfp.added_by = 'user'
-            newfp.includes = inc
-            newfp.comment = 'comment'
-            newfp.active = True
-            newfp.save()
-        except Exception, e:
-            return HttpResponse( json.dumps( { 'result': 'failure', 'error': str(e), } ) )
-
-        return HttpResponse( json.dumps( { 'result': 'success', 'nessusid':request.POST['nessusid']}))
-    except Exception, e:
-        return HttpResponse( json.dumps( { 'result': 'failure', 'error': str(e), } ) )
-
