@@ -7,7 +7,7 @@
         {% if errormessage %}
             <li class='error'>{{ errormessage }}</li>
         {% endif %}
-        {% if plugin.falsepositive_set %}
+        {% if plugin.falsepositive_set.all|length %}
             <li class='warning'>
                 <a href="{% url fp_detail plugin.falsepositive_set.all.0.id %}">This plugin is marked as being a false positive. Click here for details</a>
             </li>
@@ -19,7 +19,7 @@
             <tr><td>Version{{ versions|length|pluralize }}</td>
                 <td>
                     {% for v in versions %}
-                    {% ifequal v selected_version %}
+                    {% ifequal v plugin.version %}
                     {{v}}
                     {% else %}
                     <a href="{% url reaper.sarimui.views.plugin_info_view plugin.nessusid, v %}">{{v}}</a>
