@@ -33,13 +33,12 @@ class ConfigList(models.Model):
         db_table = u'configlist'
 
 class FalsePositive(models.Model):
-    nessusid = models.IntegerField()
-    version = models.CharField(max_length=5)
     added_by = models.CharField(max_length=20)
     date_added = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
-    includes = models.TextField()
-    excludes = models.TextField()
+    include_all = models.BooleanField()
+    includes = models.ManyToManyField('IpAddress', related_name='included_fp')
+    excludes = models.ManyToManyField('IpAddress', related_name='excluded_fp')
     comment = models.TextField()
     active = models.BooleanField()
     plugin = models.ForeignKey('Plugin')
@@ -84,7 +83,7 @@ class ImapLoginList(models.Model):
 class IpAddress(models.Model):
     def __unicode__(self):
         return ntoa(self.ip)
-    ip = models.IntegerField(primary_key=True)
+    ip = models.IntegerField()
     hostnames = models.ManyToManyField('Hostname', through='IpHostname')
     macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
 
@@ -218,7 +217,7 @@ class ScanResults(models.Model):
         return "{0}".format(self.id)
     id = models.IntegerField(primary_key=True)
     scanrun = models.ForeignKey('ScanRun', db_column='scanrunid')
-    ip = models.ForeignKey('IpAddress', db_column='ip')
+    ip = models.ForeignKey('IpAddress', db_column='ip', to_field='ip')
     state = models.CharField(max_length=12)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)

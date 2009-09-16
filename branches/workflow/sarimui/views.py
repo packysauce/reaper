@@ -17,6 +17,7 @@ HIDE_FP = 0
 #Default view, sorted by vulnerability and spread
 def ips_by_vuln(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
+    start_time = datetime.now()
     try:
         days_back = int(request.GET['days'])
     except:
@@ -61,11 +62,11 @@ def ips_by_vuln(request):
             #set up the false positive flag. If this flag is set, the row will be marked as a false positive.
             #if the flag is not set, the row will not be displayed
             fp_flag = False
-            if fp.is_falsepositive(ip, vid):
-                if fp_option == FLAG_FP:
-                    fp_flag = True
-                else:
-                    continue
+
+            fp_list = list(FalsePositive.objects.filter(plugin__nessusid=vid, includes=result.ip))
+            pprint.pprint(connection.queries[-1])
+            if len(fp_list) > 0:
+                fp_flag = True
 
             # if the current vulnerability is in the cache...
             if vid in id_cache.keys():
@@ -103,6 +104,7 @@ def ips_by_vuln(request):
                     hostname_list[ip[0]] = "NA"
 
     render_dict['hostname_list'] = hostname_list
+
 
     plugin_list = {}
 
@@ -633,7 +635,6 @@ def fp_view(request, fp_id):
     
     render_dict['fp'] = fp
     render_dict['plugin'] = fp.plugin
-    (render_dict['fp_includes'], render_dict['fp_excludes']) = fphelper.get_lists_from_fp(fp)
 
     return render_to_response('false_positives/false_positive.html', render_dict)
 

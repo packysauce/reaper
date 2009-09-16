@@ -18,20 +18,19 @@
         <th>Last modified</th><td>{{ fp.last_modified|date:"F j, Y \a\t P" }}</td>
     </tr>
     <tr>
-        <th>Version affected</th><td>{{ fp.version }}</td>
+        <th>Version affected</th><td>{{ plugin.version }}</td>
     </tr>
     <tr>
         <th>Comments</th><td>{{ fp.comment }}</td>
     </tr>
 </table>
 
-{% ifequal fp_includes.0 'ALL' %}
 <h2>IPs Included</h2>
+{% if fp.includes_all %}
 <h3>All IPs are marked as false positives</h3>
 {% else %}
-    {% for ip in fp_includes %}
+    {% for ip in fp.includes.all %}
         {% if forloop.first %}
-        <h2>IPs Included</h2>
         <ul id='fp_includes'>
         {% endif %}
             <li><a href="{% url device ip %}">{{ ip }}</a></li>
@@ -39,10 +38,10 @@
         </ul>
         {% endif %}
     {% endfor %}
-{% endifequal %}
+{% endif %}
 
 <h2>IPs Specifically Excluded</h2>
-{% for ip in fp_excludes %}
+{% for ip in fp.excludes.all %}
     {% if forloop.first %}
     <ul id='fp_excludes'>
     {% endif %}
