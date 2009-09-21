@@ -26,7 +26,7 @@
 </table>
 
 <h2>IPs Included</h2>
-{% if fp.includes_all %}
+{% if fp.include_all %}
 <h3>All IPs are marked as false positives</h3>
 {% else %}
     {% for ip in fp.includes.all %}

@@ -67,6 +67,8 @@
                     $('#new_inc').animate({ backgroundColor: 'red'}).effect('pulsate',{},'fast'); 
                     },
                 success: function(data, txtStatus) {
+                    $("#allips").hide();
+                    $("#add_all").show();
                     $(thisObj).parent().addClass('include');
                     $(thisObj).replaceWith(data.ip);
                     enableButton("#add_inc");
@@ -103,20 +105,41 @@
         }
     }
 
+    var addAllIps = function() {
+        $.ajax( {
+            url: '{% url fp_modify_ajax %}',
+            type: 'POST',
+            error: function(xhr, txtStatus, error) { 
+                $('#add_all').animate({ backgroundColor: 'red'}).effect('pulsate',{},'fast'); 
+                },
+            success: function(data, txtStatus) {
+                $('#allips').show();
+                $('#add_all').hide();
+                $('#add_all').parent().siblings('.include').remove();
+                },
+            dataType: "json",
+            data: { fp: '{{fp.id}}',
+                    action: 'add_all',
+                    data: ''
+                    }
+        });
+    }
+
     $(document).ready(function() {
         $('li.include').live('click',removeInc);
         $('li.exclude').live('click',removeExc);
         $(':button').click(function() {
             if (this.id == "add_inc") {
                 $(this).parent().before("<li><input id='new_inc' type='text'/></li>");
-                $("#new_inc").keypress(addNewInc);
+                $("#new_inc").keypress(addNewInc).focus();
                 disableButton("#add_inc");
             } else if (this.id == "add_exc") {
                 $(this).parent().before("<li><input id='new_exc' type='text'/></li>");
-                $("#new_exc").keypress(addNewExc);
+                $("#new_exc").keypress(addNewExc).focus();
                 disableButton("#add_exc");
+            } else if (this.id == "add_all") {
+                addAllIps();
             }
-
         })
     });
 </script>
@@ -144,31 +167,27 @@
         <th><label for="id_comments">Comments</label></th><td><textarea name="comments" id="id_comments">{{ fp.comment }}</textarea></td>
     </tr>
 </table>
-<input type='submit' value='Save Changes'></button>
+<input type='submit' value='Save Changes'>
 </form>
 
 <h2>IPs Included</h2>
-{% if fp.includes_all %}
-<h3>All IPs are marked as false positives</h3>
-{% else %}
-    {% for ip in fp.includes.all %}
-        {% if forloop.first %}
-        <ul id='fp_includes'>
-        {% endif %}
-            <li class='include'>{{ ip }}</li>
-        {% if forloop.last %}
-            <li class='button_holder'><button id="add_inc">Add New IP</button></li>
-        </ul>
-        {% endif %}
-    {% endfor %}
-{% endif %}
+
+<h3 id="allips" {% if not fp.include_all %}style="display: none;"{% endif %}>All IPs are marked as false positives</h3>
+<ul id='fp_includes'>
+{% for ip in fp.includes.all %}
+    <li class='include'>{{ ip }}</li>
+{% endfor %}
+<li class='button_holder'><button id="add_inc">Add New IP</button>
+<button id="add_all" {% if fp.include_all %}style="display:none;"{% endif %}>Add All IPs</button>
+</li>
+</ul>
 
 <h2>IPs Specifically Excluded</h2>
 <ul id='fp_excludes'>
 {% for ip in fp.excludes.all %}
     <li class='exclude'>{{ ip }}</li>
 {% endfor %}
-    <li class='button_holder'><button id="add_exc">Add New IP</button></li>
+<li class='button_holder'><button id="add_exc">Add New IP</button></li>
 </ul>
 
 {% endblock %}

@@ -8,5 +8,5 @@
 {% ifequal subtitle 'Delete' %}
 <li>Delete</li>
 {% else %}
-<li><a href="#">Delete</a></li>
+<li><a href="{% url fp_delete fp.id %}">Delete</a></li>
 {% endifequal %}

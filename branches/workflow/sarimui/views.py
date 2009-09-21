@@ -2,7 +2,8 @@
 from datetime import *
 from django.http import *
 from django.shortcuts import render_to_response
-from django.db import connection
+from django.db import *
+from django.db.models import Q
 from django.core.exceptions import *
 from django.core.urlresolvers import reverse
 from sarimui.models import *
@@ -62,7 +63,11 @@ def ips_by_vuln(request):
             #if the flag is not set, the row will not be displayed
             fp_flag = False
 
-            fp_list = list(FalsePositive.objects.filter(plugin__nessusid=vid, includes=result.ip))
+            fp_list = FalsePositive.objects.filter(
+                    Q(includes=result.ip) | Q(include_all=True),
+                    ~Q(excludes=result.ip),
+                    plugin__nessusid=vid
+                    )
             if len(fp_list) > 0:
                 fp_flag = True
 
@@ -152,7 +157,11 @@ def vulns_by_ip(request):
             #set up the false positive flag. If this flag is set, the row will be marked as a false positive.
             #if the flag is not set, the row will not be displayed
             fp_flag = False
-            fp_list = list(FalsePositive.objects.filter(plugin__nessusid=vid, includes=result.ip))
+            fp_list = FalsePositive.objects.filter(
+                    Q(includes=result.ip) | Q(include_all=True),
+                    ~Q(excludes=result.ip),
+                    plugin__nessusid=vid
+                    )
             if len(fp_list) > 0:
                 fp_flag = True
 
@@ -355,8 +364,12 @@ def ip_view_core(ip, days_back):
                 fpvulns = []
                 for (x,y) in vulns:
                     z = False
-                    r = FalsePositive.objects.filter(includes=_ip, plugin__nessusid = y)
-                    if len(FalsePositive.objects.filter(includes=_ip, plugin__nessusid = y)) > 0:
+                    r = FalsePositive.objects.filter(
+                            Q(includes=_ip) | Q(include_all=True),
+                            ~Q(excludes=_ip),
+                            plugin__nessusid = y
+                            )
+                    if len(r) > 0:
                         z = True
                     fpvulns.append( (x,y,z) )
                 render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, fpvulns ) )
@@ -412,7 +425,12 @@ def host_view_core(hostname, days_back):
                 fpvulns = []
                 for (x,y) in vulns:
                     z = False
-                    if len(FalsePositive.objects.filter(includes=iphost.ip, plugin__nessusid = y)) > 0:
+                    r = FalsePositive.objects.filter(
+                            Q(includes=_ip) | Q(include_all=True),
+                            ~Q(excludes=_ip),
+                            plugin__nessusid = y
+                            )
+                    if len(r) > 0:
                         z = True
                     fpvulns.append( (x,y,z) )
 
@@ -483,7 +501,12 @@ def mac_view_core(mac, days_back):
             fpvulns = []
             for (x,y) in vulns:
                 z = False
-                if len(FalsePositive.objects.filter(includes=ip, plugin__nessusid = y)) > 0:
+                r = FalsePositive.objects.filter(
+                        Q(includes=_ip) | Q(include_all=True),
+                        ~Q(excludes=_ip),
+                        plugin__nessusid = y
+                        )
+                if len(r) > 0:
                     z = True
                 fpvulns.append( (x,y,z) )
 
@@ -640,6 +663,11 @@ def fp_view(request, fp_id):
 
     return render_to_response('false_positives/false_positive.html', render_dict)
 
+def fp_delete(request, fp):
+    print "Deleting fpid %d" % int(fp)
+    FalsePositive.objects.get(id=int(fp)).delete()
+    return HttpResponseRedirect(reverse('fp_search'))
+
 def fp_modify(request, fp_id):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Modify'}
 
@@ -722,3 +750,4 @@ def plugin_search(request):
         return render_to_response('search.html', render_dict)
 
     return HttpResponseRedirect(reverse('plugin', args=[what, 'latest']))
+
