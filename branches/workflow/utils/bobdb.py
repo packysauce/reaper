@@ -1,15 +1,15 @@
 import re
 
-SARIMUI_IP_RE = re.compile(r"(\d{1,3}\.){3}\d{1,3}")
-SARIMUI_SHORT_IP_RE = re.compile(r"\d{1,3}\.\d{1,3}")
-SARIMUI_MAC_RE = re.compile(r"([a-fA-F0-9]{2}:){5}([a-fA-F0-9]){2}")
+SARIMUI_IP_RE = re.compile(r"^(\d{1,3}\.){3}\d{1,3}$")
+SARIMUI_SHORT_IP_RE = re.compile(r"^\d{1,3}\.\d{1,3}$")
+SARIMUI_MAC_RE = re.compile(r"^([a-fA-F0-9]{2}:){5}([a-fA-F0-9]){2}$")
 
 def aton(address):
     """Support function to convert an IP address in dotted quad notation to a 32-bit integer
     """
     if not isinstance(address, basestring):
         raise ValueError("Argument must be of type string or unicode")
-    if not re.match("(\d{1,3}\.){3}\d{1,3}", address):
+    if not re.match("^(\d{1,3}\.){3}\d{1,3}$", address):
         raise ValueError("Argument must be in the format 'xxx.xxx.xxx.xxx'. IPv6 not supported")
     bits = [int(i) for i in address.split('.')]
     return int("%02x%02x%02x%02x" % (bits[0],bits[1],bits[2],bits[3]),16)

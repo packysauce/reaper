@@ -13,26 +13,63 @@ def fp_modify(request):
         fp = FalsePositive.objects.get(id=fpid)
     except:
         return HttpResponseBadRequest("Inavlid False Positive ID")
-
+    
+    # Add an inclusion
     if action == 'add_inc':
         try:
             if SARIMUI_IP_RE.match(data):
-                fp.includes.add(IpAddress.objects.get(ip=aton(data)))
+                fp.includes.add(IpAddress.objects.get_or_create(ip=aton(data))[0])
                 return HttpResponse( json.dumps({'ip': data }) )
             elif SARIMUI_SHORT_IP_RE.match(data):
-                fp.includes.add(IpAddress.objects.get(ip=aton('129.57.'+data)))
+                fp.includes.add(IpAddress.objects.get_or_create(ip=aton('129.57.'+data))[0])
                 return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
+            else:
+                return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
         except Exception, e:
-            return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+            return HttpResponseBadRequest(json.dumps( {'message': 'exception', 'error': str(e)}))
+
+    # Add an exclusion (basically the same as adding an inclusion
     elif action == 'add_exc':
-        if SARIMUI_IP_RE.match(data):
-            fp.excludes.add(IpAddress.objects.get(ip=aton(data)))
-            return HttpResponse( json.dumps({'ip': data }) )
-        elif SARIMUI_SHORT_IP_RE.match(data):
-            fp.excludes.add(IpAddress.objects.get(ip=aton('129.57.'+data)))
-            return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
-        else:
-            return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+        try:
+            if SARIMUI_IP_RE.match(data):
+                fp.excludes.add(IpAddress.objects.get_or_create(ip=aton(data))[0])
+                return HttpResponse( json.dumps({'ip': data }) )
+            elif SARIMUI_SHORT_IP_RE.match(data):
+                fp.excludes.add(IpAddress.objects.get_or_create(ip=aton('129.57.'+data))[0])
+                return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
+            else:
+                return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+        except Exception, e:
+            return HttpResponseBadRequest(json.dumps( {'message': 'exception', 'error': str(e)}))
+
+    # Remove an inclusion
+    elif action == 'remove_inc':
+        try:
+            if SARIMUI_IP_RE.match(data):
+                fp.includes.remove(IpAddress.objects.get_or_create(ip=aton(data))[0])
+                return HttpResponse( json.dumps({'ip': data }) )
+            elif SARIMUI_SHORT_IP_RE.match(data):
+                fp.includes.remove(IpAddress.objects.get_or_create(ip=aton('129.57.'+data))[0])
+                return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
+            else:
+                return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+        except Exception, e:
+            return HttpResponseBadRequest(json.dumps( {'message': 'exception', 'error': str(e)}))
+    
+    # remove an exclusion
+    elif action == 'remove_exc':
+        try:
+            if SARIMUI_IP_RE.match(data):
+                fp.excludes.remove(IpAddress.objects.get_or_create(ip=aton(data))[0])
+                return HttpResponse( json.dumps({'ip': data }) )
+            elif SARIMUI_SHORT_IP_RE.match(data):
+                fp.excludes.remove(IpAddress.objects.get_or_create(ip=aton('129.57.'+data))[0])
+                return HttpResponse( json.dumps({'ip': '129.57.'+data }) )
+            else:
+                return HttpResponseBadRequest(json.dumps( {'message': 'invalid ip'}))
+        except Exception, e:
+            return HttpResponseBadRequest(json.dumps( {'message': 'exception', 'error': str(e)}))
+
     else:
         return HttpResponseBadRequest( json.dumps({'message': 'invalid action'}) )
 

@@ -3,6 +3,11 @@
 {% block extra_head %}
 <script type="text/javascript">
     $(document).ready(function() {
+        {% ifequal view 'by_vuln' %}
+        $("#main_body").load('{% url ips_by_vuln %}?{{ url }}'
+        {% endifequal %}
+
+
         var replaceSpanWithTextbox = function () {
             $("#dayselect").unbind('click');
             this.innerHTML = "<input id='txtDay' type='text' style='width: 10px;'></input>";
