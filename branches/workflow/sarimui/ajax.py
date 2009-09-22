@@ -27,7 +27,7 @@ def add_to_fp(fp, what, data):
         fp.save()
         return HttpResponse( json.dumps({'ip': _ip }) )
     except Exception, e:
-        return HttpResponseBadRequest(json.dumps( {'message': 'exception', 'error': str(e)}))
+        return HttpResponseBadRequest(json.dumps( {'message': str(e)}))
 
 def remove_from_fp(fp, what, data):
     if what == "inc":
@@ -48,18 +48,28 @@ def remove_from_fp(fp, what, data):
         iplist.remove(IpAddress.objects.get(ip=aton(_ip)))
         return HttpResponse( json.dumps( {'ip': _ip} ) )
     except Exception, e:
-        return HttpResponseBadRequest(json.dumps( {'message': 'exception', 'error': str(e)}))
+        return HttpResponseBadRequest(json.dumps( {'message':  str(e)}))
+
+def change_fp_details(fp, user, comment):
+    try:
+        fp.added_by = user
+        fp.comment = comment
+        fp.save()
+        return HttpResponse( json.dumps( {'message': 'Success'} ) )
+    except:
+        return HttpResponseBadRequest( json.dumps( {'message': str(e)} ) )
 
 def fp_modify(request):
     fpid = request.POST['fp']
     action = request.POST['action']
-    data = request.POST['data']
+
     try:
         fp = FalsePositive.objects.get(id=fpid)
     except:
         return HttpResponseBadRequest( json.dumps( { 'message': "Inavlid False Positive ID" } ) )
     
     if action.startswith('add_'):
+        data = request.POST['data']
         last_three = action[-3:]
         if last_three == 'all':
             fp.include_all = True
@@ -68,7 +78,12 @@ def fp_modify(request):
         else:
             return add_to_fp(fp, action[-3:], data)
     elif action.startswith('remove_'):
+        data = request.POST['data']
         return remove_from_fp(fp, action[-3:], data)
+    elif action == "change_details":
+        user = request.POST['user']
+        comments = request.POST['comments']
+        return change_fp_details(fp, user, comments)
     else:
         return HttpResponseBadRequest( json.dumps( { 'message': "Invalid Action" } ) )
 
@@ -102,6 +117,4 @@ def fp_create(request):
     except Exception, e:
         return HttpResponse( json.dumps( { 'result': 'failure', 'error': str(e), } ) )
 
-def fp_delete(request, fp):
-    FalsePositives.objects.get(id=fp).delete()
-    return HttpResponseRedirect(reverse('fp_search'))
+

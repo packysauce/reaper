@@ -125,6 +125,27 @@
         });
     }
 
+    var saveChanges = function() {
+        $.ajax( {
+            url: '{% url fp_modify_ajax %}',
+            type: 'POST',
+            error: function(xhr, txtStatus, error) { 
+                var jsonobj = eval( '(' + xhr.responseText + ')' );
+                $("#messages").hide().html("<li class='error'>Change Unsuccessful! "+jsonobj.message+"</li>").fadeIn(1000);
+                },
+            success: function(data, txtStatus) {
+                $("#messages").hide().html("<li class='success'>Changes Successfully Saved!</li>").fadeIn(1000);
+                },
+            dataType: "json",
+            data: { fp: '{{fp.id}}',
+                    action: 'change_details',
+                    user: $("#id_added_by").val(),
+                    comments: $("#id_comments").val()
+                  }
+        });
+    }
+
+
     $(document).ready(function() {
         $('li.include').live('click',removeInc);
         $('li.exclude').live('click',removeExc);
@@ -139,6 +160,8 @@
                 disableButton("#add_exc");
             } else if (this.id == "add_all") {
                 addAllIps();
+            } else if (this.id == "save_changes") {
+                saveChanges();
             }
         })
     });
@@ -149,7 +172,8 @@
 {% block main_body %}
 <h1>False Positive - Modify</h1>
 <h2>{{ plugin.summary }} - Nessus ID <a href="{% url plugin plugin.nessusid 'latest' %}">{{ plugin.nessusid }}</a></h2>
-<form name="fp_edit" method="POST">
+<ul id="messages">
+</ul>
 <table>
     <tr>
         <th><label for="id_added_by">Entered by</label></th><td><input name="added_by" id="id_added_by" type='text' value='{{ fp.added_by }}'/></td>
@@ -167,8 +191,7 @@
         <th><label for="id_comments">Comments</label></th><td><textarea name="comments" id="id_comments">{{ fp.comment }}</textarea></td>
     </tr>
 </table>
-<input type='submit' value='Save Changes'>
-</form>
+<button id="save_changes">Save Changes</button>
 
 <h2>IPs Included</h2>
 

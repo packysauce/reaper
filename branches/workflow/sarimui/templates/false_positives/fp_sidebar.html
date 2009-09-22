@@ -1,4 +1,10 @@
 <li class='sidenav_heading'>Manage</li>
+{% ifequal subtitle 'Details' %}
+<li>View</li>
+{% else %}
+<li><a href="{% url fp_detail fp.id %}">View</a></li>
+{% endifequal %}
+
 {% ifequal subtitle 'Modify' %}
 <li>Modify</li>
 {% else %}
@@ -8,5 +14,5 @@
 {% ifequal subtitle 'Delete' %}
 <li>Delete</li>
 {% else %}
-<li><a href="{% url fp_delete fp.id %}">Delete</a></li>
+<li><a href="{% url fp_delete fp.id %}" onclick="javascript:return confirm('Delete this false positive?');">Delete</a></li>
 {% endifequal %}

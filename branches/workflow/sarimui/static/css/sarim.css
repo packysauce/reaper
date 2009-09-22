@@ -77,6 +77,13 @@ ul#messages > li.warning {
     background:lightYellow;
 }
 
+ul#messages > li.success {
+    color:black;
+    list-style-image:url('/site_media/images/bullet-green-14x14.gif');
+    text-align:center;
+    background:lightGreen;
+}
+
 th {
     text-align:left;
 }

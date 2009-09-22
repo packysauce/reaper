@@ -10,7 +10,7 @@
     <form method='get'>
         {% block search_header %} {{search_header}} {% endblock %}
         <br />
-        <input type='text' name='q' /><input type='submit' value='Search' /><br />
+        <input type='text' onclick='javascript:this.value = "";' name='q' value='{{search_term}}'/><input type='submit' value='Search' /><br />
         {% block search_options %}{% endblock %}
     </form>
 

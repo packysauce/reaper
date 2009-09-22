@@ -64,7 +64,7 @@ def ips_by_vuln(request):
             fp_flag = False
 
             fp_list = FalsePositive.objects.filter(
-                    Q(includes=result.ip) | Q(include_all=True),
+                    Q(includes=IpAddress.objects.get_or_create(ip=result.ip_id)[0]) | Q(include_all=True),
                     ~Q(excludes=result.ip),
                     plugin__nessusid=vid
                     )
@@ -690,9 +690,21 @@ def fp_search(request):
             if request.GET['in'].lower() == 'ex':
                 search_in = 'excludes'
 
-        fplist = fphelper.get_false_positives_by_ip(**{search_in: search_term})
+        ipobj = None
+        if SARIMUI_SHORT_IP_RE.match(search_term):
+            ipobj = IpAddress.objects.get(ip = aton('129.57.' + search_term))
+        elif SARIMUI_IP_RE.match(search_term):
+            ipobj = IpAddress.objects.get(ip = aton(search_term))
+        else:
+            fplist = FalsePositive.objects.all()
+
+        if ipobj:
+            if search_in == 'includes':
+                fplist = ipobj.included_fp.all()
+            elif search_in == 'excludes':
+                fplist = ipobj.excluded_fp.all()
     else:
-        fplist = list(FalsePositive.objects.filter(active=True))
+        fplist = FalsePositive.objects.all()
 
     result_list = []
 
@@ -708,6 +720,7 @@ def fp_search(request):
         return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
 
     render_dict['results'] = result_list
+    render_dict['search_term'] = search_term
 
     return render_to_response('false_positives/fp_search.html', render_dict)
 
