@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block sidebar %}
+{% if not plugin.falsepositive_set.all|length %}
+<li><a href="{% url fp_create plugin.id %}">Flag as False Positive</a></li>
+{% endif %}
+{% endblock %}
+
 {% block main_body %}
         <h1>Plugin Information</h1>
         <h2>Nessus ID {{plugin.nessusid}}</h2>

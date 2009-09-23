@@ -663,6 +663,20 @@ def fp_view(request, fp_id):
 
     return render_to_response('false_positives/false_positive.html', render_dict)
 
+def fp_create(request, pid):
+    #Not using a render dict here because this will return a redirect to the modify page
+    newfp = FalsePositive()
+    newfp.added_by = 'user'
+    newfp.comment = 'Added from Plugin page'
+    newfp.active = True
+    newfp.plugin = Plugin.objects.get(id=pid)
+    newfp.save()
+    return HttpResponseRedirect( reverse( 'fp_modify', args=[newfp.id] ) )
+
+def fp_create_help(request):
+    render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Create'}
+    return render_to_response('false_positives/fp_create_help.html', render_dict)
+
 def fp_delete(request, fp):
     print "Deleting fpid %d" % int(fp)
     FalsePositive.objects.get(id=int(fp)).delete()
@@ -684,6 +698,7 @@ def fp_search(request):
 
     if 'q' in request.GET.keys():
         search_term = request.GET['q']
+        render_dict['search_term'] = search_term
 
         search_in = 'includes'
         if 'in' in request.GET.keys():
@@ -720,7 +735,6 @@ def fp_search(request):
         return HttpResponseRedirect(reverse('fp_detail',args=[fplist[0].id]))
 
     render_dict['results'] = result_list
-    render_dict['search_term'] = search_term
 
     return render_to_response('false_positives/fp_search.html', render_dict)
 

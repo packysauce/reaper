@@ -6,7 +6,7 @@
    $("a.fp_create").click(function() {
        include = this.parentNode.include.value;
        nessusid = this.parentNode.nessusid.value;
-       $.post('{% url fp_create %}', {'include':include, 'nessusid':nessusid},
+       $.post('{% url fp_create_ajax %}', {'include':include, 'nessusid':nessusid},
            function(data, textStatus) {
                 if(textStatus == "success" && data.result == "success") {
                     var formobj = $("#fp_create_"+data.nessusid);
