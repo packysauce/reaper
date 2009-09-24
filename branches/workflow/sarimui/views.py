@@ -7,7 +7,6 @@ from django.db.models import Q
 from django.core.exceptions import *
 from django.core.urlresolvers import reverse
 from sarimui.models import *
-from utils.falsepositives import FalsePositivesHelper as fphelper
 from utils.bobdb import *
 from utils.djangolist import *
 import pprint
@@ -33,22 +32,23 @@ def ips_by_vuln(request):
     #Get all the scan results in the past week
     #Casting to list forces Django to evaluate the query and cache the results
     timespan = date.today()-timedelta(days=days_back)
-    results = list(ScanResults.objects.filter(end__gte=timespan, state='up', vulns__isnull=False))
-    scanruns = list(ScanRun.objects.filter(end__gte=timespan))
-    scansets = list(ScanSet.objects.filter(entered__gte=timespan))
+    results = ScanResults.objects.filter(end__range=(timespan, datetime.now()), state='up', vulns__isnull=False)
+
+    run_set_map = set([ (i.scanrun_id, i.scanrun.scanset_id) for i in results])
+    sets = zip(*run_set_map)[1]
+    scansets = ScanSet.objects.filter(id__in = set(sets))
+
+    scan_types = {}
+    for irun, iset in run_set_map:
+        scan_types[irun] = scansets.get(id=iset).type
 
     #Set up the structures
     vuln_list = []
-    scan_types = {}
     #id_cache is where we keep track of the index in vuln_list for a particular vulnerability id
     id_cache = {}
 
+    allfps = FalsePositive.objects.all()
     for result in results:
-        #This is an attempt to cache all of the scan types, as well as caching duplicate scanruns and scansets
-        if result.scanrun_id not in scan_types.keys():
-            scanrunidx = get_index_by_attr(scanruns, "id", result.scanrun_id)
-            scansetidx = get_index_by_attr(scansets, "id", scanruns[scanrunidx].scanset_id)
-            scan_types[result.scanrun_id] = scansets[scansetidx].type
 
         ip = ntoa(result.ip_id)
         #Vulnerability lists look like this: "description (port/proto)|#####,description (port/proto)|#####"
@@ -63,13 +63,16 @@ def ips_by_vuln(request):
             #if the flag is not set, the row will not be displayed
             fp_flag = False
 
-            fp_list = FalsePositive.objects.filter(
-                    Q(includes=IpAddress.objects.get_or_create(ip=result.ip_id)[0]) | Q(include_all=True),
+            try:
+                allfps.objects.get(
+                    Q(includes=result.ip) | Q(include_all=True),
                     ~Q(excludes=result.ip),
                     plugin__nessusid=vid
                     )
-            if len(fp_list) > 0:
                 fp_flag = True
+            except:
+                fp_flag = False
+
 
             # if the current vulnerability is in the cache...
             if vid in id_cache.keys():

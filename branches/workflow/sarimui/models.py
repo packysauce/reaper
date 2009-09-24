@@ -249,7 +249,7 @@ class ScanSet(models.Model):
     digest = models.CharField(unique=True, max_length=192)
     plugindump = models.ForeignKey('PluginDump', db_column='plugindumpid')
     type = models.CharField(max_length=96)
-    pluginlist = SparseField(blank=True)
+    pluginlist = models.TextField()
     source = models.ForeignKey('Source', db_column='sourceid')
     entered = models.DateTimeField()
     class Meta:
