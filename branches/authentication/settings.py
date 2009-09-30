@@ -1,5 +1,4 @@
 # Django settings for reaper project.
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -61,7 +60,13 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'reaper.sarimui.middleware.DummyUsernameMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = ( 
+   'django.contrib.auth.backends.RemoteUserBackend',
 )
 
 ROOT_URLCONF = 'reaper.urls'
@@ -77,8 +82,8 @@ INSTALLED_APPS = (
     'django.contrib.databrowse',
     'reaper.sarimui',
  #   'django.contrib.admin',
-  #  'django.contrib.auth',
-   # 'django.contrib.contenttypes',
-    #'django.contrib.sessions',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
     #'django.contrib.sites',
 )

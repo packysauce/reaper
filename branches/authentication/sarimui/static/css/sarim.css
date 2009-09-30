@@ -1,3 +1,13 @@
+.righth {
+    float: right;
+    color: white;
+    padding-right: 5px;
+}
+
+body, html {
+    padding: 0;
+}
+
 .falsepositive {
     opacity:0.40;
     filter:alpha(opacity=40);

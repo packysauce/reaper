@@ -6,6 +6,8 @@ from django.db import *
 from django.db.models import Q
 from django.core.exceptions import *
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 from sarimui.models import *
 from utils.bobdb import *
 from utils.djangolist import *
@@ -15,6 +17,7 @@ FLAG_FP = 1
 HIDE_FP = 0
 
 #Default view, sorted by vulnerability and spread
+@login_required
 def ips_by_vuln(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
     start_time = datetime.now()
@@ -120,7 +123,7 @@ def ips_by_vuln(request):
     render_dict['plugin_list'] = plugin_list
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
-    return render_to_response('vulnerabilities/ips_by_vuln.html', render_dict)
+    return render_to_response('vulnerabilities/ips_by_vuln.html', render_dict, context_instance=RequestContext(request))
 
 def vulns_by_ip(request):
     render_dict = {'pagetitle':'Vulnerabilities', 'subtitle': 'By IP'}
@@ -576,6 +579,7 @@ def scan_view(request, scan):
 
     return render_to_response('scans/scan_view.html', render_dict)
 
+@login_required
 def device_search(request):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'Search'}
     render_dict['category'] = "Device"

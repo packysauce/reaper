@@ -19,6 +19,14 @@
                 <a href="{% url index %}"><img src="{% url django.views.static.serve '/images/logospy.jpg' %}" alt="Jefferson Lab Cyber Security" border="0" height="85" width="565" /></a>
             </div>
 
+            <div class="righth">
+                {% if user.is_authenticated %}
+                    Logged in as {{ user }} [ <a href="#">logout</a> ]
+                {% else %}
+                    <a href="#">Log In</a>
+                {% endif %}
+            </div>
+
             <!-- Main Tab Navigation.  -->
             <div class="clear">
                 <ul id="main_navigation">
