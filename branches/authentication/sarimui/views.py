@@ -196,7 +196,7 @@ def vulns_by_ip(request):
         return aton(x['ip'])
     render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
 
-    return render_to_response('vulnerabilities/vulns_by_ip.html', render_dict)
+    return render_to_response('vulnerabilities/vulns_by_ip.html', render_dict, context_instance=RequestContext(request))
 
 def index(request):
     handlers = {'ip': vulns_by_ip, 'vulns':ips_by_vuln}
@@ -215,7 +215,7 @@ def plugin_view(request, plugin, version):
     else:
         render_dict['version'] = Plugin.objects.get(nessusid=plugin, version=version).latest().version
 
-    return render_to_response("plugins/plugin.html", render_dict)
+    return render_to_response("plugins/plugin.html", render_dict, context_instance=RequestContext(request))
 
 def plugin_list_view(request, plugin):
     return HttpResponse("List of things with this vulnerability found, part of the scan, etc goes here")
@@ -298,7 +298,7 @@ def plugin_info_view(request, plugin, version):
         #Take care of dictionary names with spaces in them
         render_dict[word.replace(' ', '')] = s
 
-    return render_to_response('plugins/plugin_info.html', render_dict)
+    return render_to_response('plugins/plugin_info.html', render_dict, context_instance=RequestContext(request))
 
 def ip_view_core(ip, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'IP'}
@@ -410,6 +410,7 @@ def host_view_core(hostname, days_back):
             results += ScanResults.objects.filter(ip=ip.ip)
 
     for iphost in iphosts:
+        _ip = iphost.ip
         macs = MacIp.objects.filter(ip = iphost.ip, observed=iphost.observed, entered=iphost.entered)
         render_dict['entries'][iphost.ip]['hr_name'] = 'MAC'
         if len(macs) > 0:
@@ -577,7 +578,7 @@ def scan_view(request, scan):
         if render_dict['result_height'] == 0:
             render_dict['result_height'] = 25
 
-    return render_to_response('scans/scan_view.html', render_dict)
+    return render_to_response('scans/scan_view.html', render_dict, context_instance=RequestContext(request))
 
 @login_required
 def device_search(request):
@@ -627,7 +628,7 @@ def device_search(request):
 
         render_dict['results'] = fixed_results
 
-    return render_to_response('search.html', render_dict)
+    return render_to_response('search.html', render_dict, context_instance=RequestContext(request))
 
 def device_view(request, what):
     days_back = 7
@@ -638,9 +639,9 @@ def device_view(request, what):
         if 'days' == i.lower():
             days_back = int(request.GET[i])
 
-    return device_view_core(what, days_back)
+    return device_view_core(request, what, days_back)
 
-def device_view_core(what, days_back):
+def device_view_core(request, what, days_back):
     import re
 
     ip_re = re.compile("(\d{1,3}\.){3}\d{1,3}")
@@ -658,7 +659,7 @@ def device_view_core(what, days_back):
 
     render_dict['days_back'] = days_back
 
-    return render_to_response('devices/view.html', render_dict)
+    return render_to_response('devices/view.html', render_dict, context_instance=RequestContext(request))
 
 def fp_view(request, fp_id):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Details'}
@@ -668,7 +669,7 @@ def fp_view(request, fp_id):
     render_dict['fp'] = fp
     render_dict['plugin'] = fp.plugin
 
-    return render_to_response('false_positives/false_positive.html', render_dict)
+    return render_to_response('false_positives/false_positive.html', render_dict, context_instance=RequestContext(request))
 
 def fp_create(request, pid):
     #Not using a render dict here because this will return a redirect to the modify page
@@ -682,7 +683,7 @@ def fp_create(request, pid):
 
 def fp_create_help(request):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Create'}
-    return render_to_response('false_positives/fp_create_help.html', render_dict)
+    return render_to_response('false_positives/fp_create_help.html', render_dict, context_instance=RequestContext(request))
 
 def fp_delete(request, fp):
     print "Deleting fpid %d" % int(fp)
@@ -697,7 +698,7 @@ def fp_modify(request, fp_id):
     render_dict['fp'] = fp
     render_dict['plugin'] = fp.plugin
 
-    return render_to_response('false_positives/fp_modify.html', render_dict)
+    return render_to_response('false_positives/fp_modify.html', render_dict, context_instance=RequestContext(request))
 
 def fp_search(request):
     render_dict = {'pagetitle':'False Positives', 'subtitle':'Search'}
@@ -743,7 +744,7 @@ def fp_search(request):
 
     render_dict['results'] = result_list
 
-    return render_to_response('false_positives/fp_search.html', render_dict)
+    return render_to_response('false_positives/fp_search.html', render_dict, context_instance=RequestContext(request))
 
 def scan_search(request):
     render_dict = {'pagetitle': 'Scans', 'subtitle': 'Search'}
@@ -755,7 +756,7 @@ def scan_search(request):
             what = request.GET[i]
             break
     else:
-        return render_to_response('search.html',render_dict)
+        return render_to_response('search.html',render_dict, context_instance=RequestContext(request))
 
     try:
         ScanRun.objects.get(id=what)
@@ -775,7 +776,7 @@ def plugin_search(request):
             what = request.GET[i]
             break
     else:
-        return render_to_response('search.html',render_dict)
+        return render_to_response('search.html',render_dict, context_instance=RequestContext(request))
 
     try:
         Plugin.objects.get(nessusid=what)

@@ -81,7 +81,7 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
     'django.contrib.databrowse',
     'reaper.sarimui',
- #   'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

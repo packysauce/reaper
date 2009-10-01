@@ -3,10 +3,11 @@ from sarimui.models import *
 from sarimui import views
 from sarimui import ajax
 import django.views.static
+from django.views.generic.simple import direct_to_template
 
 # Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
@@ -20,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^vulns_by_ip/$', views.vulns_by_ip, name='vulns_by_ip'),
     url(r'^scan/(\d*)/$', views.scan_view, name='scan'),
     url(r'^scan/search/$', views.scan_search, name='scan_search'),
+    url(r'^loginrequired/$', direct_to_template, { 'template': 'access_denied.html'}),
     url(r'^false_positive/(\d*)/$', views.fp_view, name='fp_detail'),
     url(r'^false_positive/(\d*)/modify/$', views.fp_modify, name='fp_modify'),
     url(r'^false_positive/(\d*)/delete/$', views.fp_delete, name='fp_delete'),
@@ -28,12 +30,12 @@ urlpatterns = patterns('',
     url(r'^false_positive/modify/$', ajax.fp_modify, name="fp_modify_ajax"),
     url(r'^false_positive/new/$', ajax.fp_create, name='fp_create_ajax'),
     url(r'^false_positive/search/$', views.fp_search, name='fp_search'),
-    url(r'^(.+)/$', views.device_view, name='device'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # (r'^admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.site.urls)),
+    url(r'^(.+)/$', views.device_view, name='device'),
 )
