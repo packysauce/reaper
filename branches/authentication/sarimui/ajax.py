@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 import json
 import re
 
+@permission_required('sarimui.change_falsepositive')
 def add_to_fp(fp, what, data):
     if what == "inc":
         iplist = fp.includes
@@ -29,6 +30,7 @@ def add_to_fp(fp, what, data):
     except Exception, e:
         return HttpResponseBadRequest(json.dumps( {'message': str(e)}))
 
+@permission_required('sarimui.change_falsepositive')
 def remove_from_fp(fp, what, data):
     if what == "inc":
         iplist = fp.includes
@@ -50,6 +52,7 @@ def remove_from_fp(fp, what, data):
     except Exception, e:
         return HttpResponseBadRequest(json.dumps( {'message':  str(e)}))
 
+@permission_required('sarimui.change_falsepositive')
 def change_fp_details(fp, user, comment):
     try:
         fp.added_by = user
@@ -59,6 +62,7 @@ def change_fp_details(fp, user, comment):
     except:
         return HttpResponseBadRequest( json.dumps( {'message': str(e)} ) )
 
+@permission_required('sarimui.change_falsepositive')
 def fp_modify(request):
     fpid = request.POST['fp']
     action = request.POST['action']
@@ -87,6 +91,7 @@ def fp_modify(request):
     else:
         return HttpResponseBadRequest( json.dumps( { 'message': "Invalid Action" } ) )
 
+@permission_required('sarimui.add_falsepositive')
 def fp_create(request):
 
     inc = request.POST['include']

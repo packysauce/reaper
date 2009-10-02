@@ -1,11 +1,11 @@
 from django.template import Library
 from reaper.utils.bobdb import *
+from sarimui.models import *
 
 register = Library()
 
 @register.filter
 def to_hostname(x):
-    from sarimui.models import *
     import re
 
     if SARIMUI_IP_RE.match(x):

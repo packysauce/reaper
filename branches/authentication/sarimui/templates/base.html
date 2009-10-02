@@ -30,6 +30,9 @@
             <!-- Main Tab Navigation.  -->
             <div class="clear">
                 <ul id="main_navigation">
+                {% if user.is_authenticated %}
+
+                    {% if user.is_staff %}
                     {% ifequal pagetitle 'Vulnerabilities' %}
                     <li id="main_navigation_current">
                     {% else %}
@@ -37,6 +40,7 @@
                     {% endifequal %}
                     <a href="{% url index %}">Vulnerabilities</a>
                     </li>
+                    {% endif %}
 
                     {% ifequal pagetitle 'Devices' %}
                     <li id="main_navigation_current">
@@ -46,6 +50,7 @@
                     <a href="{% url device_search %}">Devices</a>
                     </li>
 
+                    {% if user.is_staff %}
                     {% ifequal pagetitle 'Scans' %}
                     <li id="main_navigation_current">
                     {% else %}
@@ -53,7 +58,9 @@
                     {% endifequal %}
                     <a href="{% url scan_search %}">Scans</a>
                     </li>
+                    {% endif %}
 
+                    {% if user.is_staff %}
                     {% ifequal pagetitle 'Plugins' %}
                     <li id="main_navigation_current">
                     {% else %}
@@ -61,7 +68,9 @@
                     {% endifequal %}
                     <a href="{% url plugin_search %}">Plugins</a>
                     </li>
+                    {% endif %}
 
+                    {% if user.is_staff %}
                     {% ifequal pagetitle 'False Positives' %}
                     <li id="main_navigation_current">
                     {% else %}
@@ -69,6 +78,8 @@
                     {% endifequal %}
                     <a href="{% url fp_search %}">False Positives</a>
                     </li>
+                    {% endif %}
+                {% endif %}
 
                 </ul>
             </div>

@@ -6,7 +6,7 @@ from django.db import *
 from django.db.models import Q
 from django.core.exceptions import *
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.template import RequestContext
 from sarimui.models import *
 from utils.bobdb import *
@@ -125,6 +125,7 @@ def ips_by_vuln(request):
 
     return render_to_response('vulnerabilities/ips_by_vuln.html', render_dict, context_instance=RequestContext(request))
 
+@login_required
 def vulns_by_ip(request):
     render_dict = {'pagetitle':'Vulnerabilities', 'subtitle': 'By IP'}
     try:
@@ -198,6 +199,7 @@ def vulns_by_ip(request):
 
     return render_to_response('vulnerabilities/vulns_by_ip.html', render_dict, context_instance=RequestContext(request))
 
+@login_required
 def index(request):
     handlers = {'ip': vulns_by_ip, 'vulns':ips_by_vuln}
     try:
@@ -205,6 +207,7 @@ def index(request):
     except KeyError, e:
         return handlers['vulns'](request)
 
+@login_required
 def plugin_view(request, plugin, version):
     render_dict = {}
     render_dict['plugin'] = plugin
@@ -217,9 +220,11 @@ def plugin_view(request, plugin, version):
 
     return render_to_response("plugins/plugin.html", render_dict, context_instance=RequestContext(request))
 
+@login_required
 def plugin_list_view(request, plugin):
     return HttpResponse("List of things with this vulnerability found, part of the scan, etc goes here")
 
+@login_required
 def plugin_info_view(request, plugin, version):
     render_dict = {'pagetitle': 'Plugins', 'subtitle': 'Details'}
     render_dict['versions'] = []
@@ -300,7 +305,8 @@ def plugin_info_view(request, plugin, version):
 
     return render_to_response('plugins/plugin_info.html', render_dict, context_instance=RequestContext(request))
 
-def ip_view_core(ip, days_back):
+@login_required
+def ip_view_core(request, ip, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'IP'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = ip
@@ -382,7 +388,8 @@ def ip_view_core(ip, days_back):
 
     return render_dict
 
-def host_view_core(hostname, days_back):
+@login_required
+def host_view_core(request, hostname, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'Hostname'}
     render_dict['entry'] = hostname
     render_dict['category'] = 'MAC'
@@ -446,7 +453,8 @@ def host_view_core(hostname, days_back):
 
     return render_dict
 
-def mac_view_core(mac, days_back):
+@login_required
+def mac_view_core(request, mac, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'MAC Address'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = mac
@@ -537,13 +545,14 @@ def mac_view_core(mac, days_back):
     
     return render_dict
 
+@login_required
 def scan_view(request, scan):
     render_dict = {'pagetitle': 'Scans', 'subtitle': 'Details'}
     render_dict['id'] = scan
     try:
         scanobj = ScanRun.objects.get(id=scan)
     except:
-        return render_to_response('scans/scan_view.html', render_dict)
+        return render_to_response('scans/scan_view.html', render_dict, context_instance=RequestContext(request))
 
     render_dict['scan'] = scanobj
     render_dict['hosts'] = []
@@ -591,7 +600,7 @@ def device_search(request):
             what = request.GET[i]
             break
     else:
-        return render_to_response('search.html',render_dict)
+        return render_to_response('search.html',render_dict, context_instance=RequestContext(request))
 
     import re
     short_ip_re = re.compile(r"\d{1,3}\.\d{1,3}")
@@ -630,6 +639,7 @@ def device_search(request):
 
     return render_to_response('search.html', render_dict, context_instance=RequestContext(request))
 
+@login_required
 def device_view(request, what):
     days_back = 7
     if what == 'search':
@@ -641,6 +651,7 @@ def device_view(request, what):
 
     return device_view_core(request, what, days_back)
 
+@login_required
 def device_view_core(request, what, days_back):
     import re
 
@@ -648,11 +659,11 @@ def device_view_core(request, what, days_back):
     mac_re = re.compile("([a-fA-F0-9]{2}:){5}[a-fA-F0-9]")
 
     if ip_re.match(what):
-        render_dict = ip_view_core(what, days_back)
+        render_dict = ip_view_core(request, what, days_back)
     elif mac_re.match(what):
-        render_dict = mac_view_core(what, days_back)
+        render_dict = mac_view_core(request, what, days_back)
     else:
-        render_dict = host_view_core(what, days_back)
+        render_dict = host_view_core(request, what, days_back)
 
     if type(render_dict) == int:
         return HttpResponseRedirect(reverse('device_search'))
@@ -661,6 +672,7 @@ def device_view_core(request, what, days_back):
 
     return render_to_response('devices/view.html', render_dict, context_instance=RequestContext(request))
 
+@login_required
 def fp_view(request, fp_id):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Details'}
 
@@ -671,6 +683,7 @@ def fp_view(request, fp_id):
 
     return render_to_response('false_positives/false_positive.html', render_dict, context_instance=RequestContext(request))
 
+@permission_required('sarimui.add_falsepositive')
 def fp_create(request, pid):
     #Not using a render dict here because this will return a redirect to the modify page
     newfp = FalsePositive()
@@ -681,15 +694,18 @@ def fp_create(request, pid):
     newfp.save()
     return HttpResponseRedirect( reverse( 'fp_modify', args=[newfp.id] ) )
 
+@login_required
 def fp_create_help(request):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Create'}
     return render_to_response('false_positives/fp_create_help.html', render_dict, context_instance=RequestContext(request))
 
+@permission_required('sarimui.delete_falsepositive')
 def fp_delete(request, fp):
     print "Deleting fpid %d" % int(fp)
     FalsePositive.objects.get(id=int(fp)).delete()
     return HttpResponseRedirect(reverse('fp_search'))
 
+@permission_required('sarimui.change_falsepositive')
 def fp_modify(request, fp_id):
     render_dict = {'pagetitle': 'False Positives', 'subtitle': 'Modify'}
 
@@ -700,6 +716,7 @@ def fp_modify(request, fp_id):
 
     return render_to_response('false_positives/fp_modify.html', render_dict, context_instance=RequestContext(request))
 
+@login_required
 def fp_search(request):
     render_dict = {'pagetitle':'False Positives', 'subtitle':'Search'}
     render_dict['category'] = "False Positive"
@@ -746,6 +763,7 @@ def fp_search(request):
 
     return render_to_response('false_positives/fp_search.html', render_dict, context_instance=RequestContext(request))
 
+@login_required
 def scan_search(request):
     render_dict = {'pagetitle': 'Scans', 'subtitle': 'Search'}
     render_dict['category'] = "Scan"
@@ -766,6 +784,7 @@ def scan_search(request):
 
     return HttpResponseRedirect(reverse('scan', args=[what]))
 
+@login_required
 def plugin_search(request):
     render_dict = {'pagetitle': 'Plugins', 'subtitle': 'Search'}
     render_dict['category'] = "Plugin"

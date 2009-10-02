@@ -79,7 +79,7 @@
                     <form id='fp_create_{{plugin}}' class='fp_create' method='POST'>
                         <input type='hidden' value='{{ entry_data.name }}' name='include'>
                         <input type='hidden' value='{{ plugin }}' name='nessusid'>
-                        {% if perms.reaper.add_falsepositive %}
+                        {% if perms.sarimui.add_falsepositive %}
                         [<a id="{{plugin}}" href="#" class='fp_create'>Flag as False Positive</a>]
                         {% endif %}
                     </form>
