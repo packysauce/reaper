@@ -11,6 +11,8 @@ from django.template import RequestContext
 from sarimui.models import *
 from utils.bobdb import *
 from utils.djangolist import *
+from utils.gatorlink import *
+from utils.permissionutils import *
 import pprint
 
 FLAG_FP = 1
@@ -201,11 +203,15 @@ def vulns_by_ip(request):
 
 @login_required
 def index(request):
-    handlers = {'ip': vulns_by_ip, 'vulns':ips_by_vuln}
-    try:
-        return handlers[request.GET['view']](request)
-    except KeyError, e:
-        return handlers['vulns'](request)
+    if request.user.is_staff:
+        handlers = {'ip': vulns_by_ip, 'vulns':ips_by_vuln}
+        try:
+            return handlers[request.GET['view']](request)
+        except KeyError, e:
+            return handlers['vulns'](request)
+    else:
+        hostlist = get_hosts_by_user(request.user)
+        return render_to_response('devices/by_user.html', {'hosts': hostlist}, context_instance=RequestContext(request))
 
 @login_required
 def plugin_view(request, plugin, version):
@@ -652,6 +658,7 @@ def device_view(request, what):
     return device_view_core(request, what, days_back)
 
 @login_required
+@user_owns_machine
 def device_view_core(request, what, days_back):
     import re
 

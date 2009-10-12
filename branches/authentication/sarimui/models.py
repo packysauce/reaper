@@ -135,6 +135,7 @@ class Mac(models.Model):
     entered = models.DateTimeField()
     class Meta:
         ordering = ["entered"]
+        get_latest_by = "entered"
         managed = False
         db_table = u'mac'
 
@@ -146,6 +147,7 @@ class MacIp(models.Model):
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         ordering = ["ip","-observed"]
+        get_latest_by = "observed"
         managed = False
         db_table = u'macip'
 
