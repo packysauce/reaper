@@ -4,7 +4,10 @@ from sarimui.models import *
 from django.core.exceptions import *
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
-import json
+try:
+    import json
+except:
+    import django.utils.simplejson as json
 import re
 
 @permission_required('sarimui.change_falsepositive')

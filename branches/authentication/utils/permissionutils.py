@@ -1,5 +1,8 @@
 from django.http import HttpResponseRedirect
-from functools import wraps
+try:
+    from functools import wraps
+except ImportError:
+    from django.utils.functional import wraps
 from utils.gatorlink import get_hosts_by_user
 from utils.bobdb import *
 from sarimui.models import *
