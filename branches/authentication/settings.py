@@ -69,6 +69,8 @@ AUTHENTICATION_BACKENDS = (
    'django.contrib.auth.backends.RemoteUserBackend',
 )
 
+AUTH_PROFILE_MODULE = 'sarimui.UserProfile'
+
 ROOT_URLCONF = 'reaper.urls'
 
 TEMPLATE_DIRS = (

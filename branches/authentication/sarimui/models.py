@@ -11,7 +11,13 @@ sys.path.append('/opt/reaper')
 
 from django.db import models
 from reaper.fields import SparseField
+import django.contrib.auth.models
 from utils.bobdb import *
+import sarimui.signals
+
+class UserProfile(models.Model):
+    user = models.ForeignKey(django.contrib.auth.models.User, unique=True)
+    default_days_back = models.IntegerField(max_length=2, default=7)
 
 class Source(models.Model):
     id = models.IntegerField(primary_key=True)

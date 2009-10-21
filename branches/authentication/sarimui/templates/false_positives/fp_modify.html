@@ -139,7 +139,6 @@
             dataType: "json",
             data: { fp: '{{fp.id}}',
                     action: 'change_details',
-                    user: $("#id_added_by").val(),
                     comments: $("#id_comments").val()
                   }
         });
@@ -176,7 +175,7 @@
 </ul>
 <table>
     <tr>
-        <th><label for="id_added_by">Entered by</label></th><td><input name="added_by" id="id_added_by" type='text' value='{{ fp.added_by }}'/></td>
+        <th>Entered by</th><td>{{ fp.added_by }}</td>
     </tr>
     <tr>
         <th>Added on</th><td>{{ fp.date_added|date:"F j, Y \a\t P" }}</td>

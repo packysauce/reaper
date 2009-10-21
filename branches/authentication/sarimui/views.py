@@ -23,10 +23,14 @@ HIDE_FP = 0
 def ips_by_vuln(request):
     render_dict = {'pagetitle':'Vulnerabilities'}
     start_time = datetime.now()
-    try:
-        days_back = int(request.GET['days'])
-    except:
-        days_back = 7
+    userprofile = request.user.get_profile()
+
+    if request.GET.has_key('days'):
+        userprofile.default_days_back = int(request.GET['days'])
+        userprofile.save()
+
+    days_back = userprofile.default_days_back
+
     fp_option = FLAG_FP
 
     render_dict['days_back'] = days_back
@@ -694,7 +698,7 @@ def fp_view(request, fp_id):
 def fp_create(request, pid):
     #Not using a render dict here because this will return a redirect to the modify page
     newfp = FalsePositive()
-    newfp.added_by = 'user'
+    newfp.added_by = request.user.username
     newfp.comment = 'Added from Plugin page'
     newfp.active = True
     newfp.plugin = Plugin.objects.get(id=pid)
@@ -805,10 +809,9 @@ def plugin_search(request):
         return render_to_response('search.html',render_dict, context_instance=RequestContext(request))
 
     try:
-        Plugin.objects.get(nessusid=what)
+        Plugin.objects.filter(nessusid=int(what)).latest()
+        return HttpResponseRedirect(reverse('plugin', args=[what, 'latest']))
     except:
         render_dict['errors'] = ["No plugin with Nessus ID " + str(what) + " found.",]
-        return render_to_response('search.html', render_dict)
-
-    return HttpResponseRedirect(reverse('plugin', args=[what, 'latest']))
+        return render_to_response('search.html', render_dict, context_instance=RequestContext(request))
 

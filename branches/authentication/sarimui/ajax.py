@@ -10,7 +10,6 @@ except:
     import django.utils.simplejson as json
 import re
 
-@permission_required('sarimui.change_falsepositive')
 def add_to_fp(fp, what, data):
     if what == "inc":
         iplist = fp.includes
@@ -34,7 +33,6 @@ def add_to_fp(fp, what, data):
     except Exception, e:
         return HttpResponseBadRequest(json.dumps( {'message': str(e)}))
 
-@permission_required('sarimui.change_falsepositive')
 def remove_from_fp(fp, what, data):
     if what == "inc":
         iplist = fp.includes
@@ -56,10 +54,8 @@ def remove_from_fp(fp, what, data):
     except Exception, e:
         return HttpResponseBadRequest(json.dumps( {'message':  str(e)}))
 
-@permission_required('sarimui.change_falsepositive')
-def change_fp_details(fp, user, comment):
+def change_fp_details(fp, comment):
     try:
-        fp.added_by = user
         fp.comment = comment
         fp.save()
         return HttpResponse( json.dumps( {'message': 'Success'} ) )
@@ -89,9 +85,8 @@ def fp_modify(request):
         data = request.POST['data']
         return remove_from_fp(fp, action[-3:], data)
     elif action == "change_details":
-        user = request.POST['user']
         comments = request.POST['comments']
-        return change_fp_details(fp, user, comments)
+        return change_fp_details(fp, comments)
     else:
         return HttpResponseBadRequest( json.dumps( { 'message': "Invalid Action" } ) )
 
@@ -116,7 +111,7 @@ def fp_create(request):
             fp.includes.add(inc)
         except ObjectDoesNotExist, e:
             newfp = FalsePositive()
-            newfp.added_by = 'user'
+            newfp.added_by = request.user.username
             newfp.comment = 'comment'
             newfp.active = True
             newfp.plugin = Plugin.objects.filter(nessusid=request.POST['nessusid']).latest()

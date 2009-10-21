@@ -6,7 +6,7 @@
 {% block main_body %}
 {{ block.super }}
         <table class='block'>
-            <tr><th>Nessus ID</th><th>IP Address</th><th>Hostname</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
+            <tr><th>Nessus ID</th><th>IP Address</th><th>Hostname</th><th>Last Found</th><th>Scan Type</th></tr>
             {% for vuln in vuln_list %}
             {% for ip, result, scantype, fpflag in vuln.ips %}
             {% if forloop.first %}
@@ -31,9 +31,8 @@
                             {% with hostname_list|hash:ip as hname %}
                             <td {% if fpflag %}class='falsepositive'{%endif%}>{% ifequal hname 'NA' %}N/A{%else%}<a href="{% url device hname %}">{{ hname }}</a>{% endifequal %}</td>
                             {% endwith %}
-                            <td {% if fpflag %}class='falsepositive'{%endif%}>{{ scantype }}</td>
                             <td {% if fpflag %}class='falsepositive'{%endif%}>{{ result.end|date:"F j, Y" }}</td>
-                            <td {% if fpflag %}class='falsepositive'{%endif%}><a href="{% url scan result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+                            <td {% if fpflag %}class='falsepositive'{%endif%}><a href="{% url scan result.scanrun_id %}">{{ scantype }}</a></td>
                         </tr>
                         {% endfor %}
                         {% endfor %}
