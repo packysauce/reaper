@@ -27,7 +27,6 @@ def permission(permission_tester):
 @permission
 def user_owns_machine(request, *args, **kwargs):
     if request.user.is_staff:
-        print "user is staff or superuser"
         return True
 
     import subprocess, re, socket
