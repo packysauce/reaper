@@ -70,7 +70,7 @@
             <ul class='scan_list'>
                 <h3 class='scan_header'>Found {{ entry_data.vuln_total }} vulnerabilit{{ entry_data.vuln_total|pluralize:"y,ies" }} in {{ entry_data.scans|length}} scan{{ entry_data.scans|length|pluralize }}.</h3>
                 {% for scan, vulns in entry_data.scans %}
-                <li class='scan_item'>Scan ID <a href='{% url scan scan.scanrun_id %}'>{{scan.scanrun_id}}</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
+                <li class='scan_item'><a href='{% url scan scan.scanrun_id %}'>[{{ scan.scanrun.scanset.type }}]</a>: {{ scan.end|date:"F j, Y - g:i:s A" }}</li>
                 {% if vulns %}
                 <ul>
                     {% for name, plugin, fpflag in vulns %}
