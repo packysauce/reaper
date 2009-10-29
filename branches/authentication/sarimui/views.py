@@ -11,8 +11,8 @@ from django.template import RequestContext
 from sarimui.models import *
 from utils.bobdb import *
 from utils.djangolist import *
-from utils.gatorlink import *
 from utils.permissionutils import *
+from utils import gatorlink
 import pprint
 
 FLAG_FP = 1
@@ -326,6 +326,8 @@ def ip_view_core(request, ip, days_back):
         _ip = IpAddress.objects.get(ip=aton(ip))
     except:
         return -1
+    render_dict['most_frequent_user'] = get_most_frequent_user(_ip.ip)
+    render_dict['gator_info'] = gatorlink.Gator(_ip.ip)
 
     try:
         comments = list(IpComments.objects.filter(ip=_ip))
@@ -403,11 +405,15 @@ def host_view_core(request, hostname, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'Hostname'}
     render_dict['entry'] = hostname
     render_dict['category'] = 'MAC'
+    render_dict['gator_info'] = gatorlink.Gator(hostname)
 
     try:
         hostobj = Hostname.objects.get(hostname=hostname)
     except:
         return -1
+
+    current_ip = hostobj.iphostname_set.latest().ip.ip
+    render_dict['most_frequent_user'] = get_most_frequent_user(current_ip)
 
     addresses = hostobj.ipaddress_set.all()
     iphosts = hostobj.iphostname_set.all()
@@ -468,11 +474,15 @@ def mac_view_core(request, mac, days_back):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'MAC Address'}
     render_dict['category'] = 'IP'
     render_dict['entry'] = mac
+    render_dict['gator_info'] = gatorlink.Gator(mac)
 
     try:
         macobj = Mac.objects.get(mac=mac)
     except:
         return -1
+
+    current_ip = macobj.macip_set.latest().ip.ip
+    render_dict['most_frequent_user'] = get_most_frequent_user(current_ip)
 
     dtime = datetime.now() - timedelta(days=days_back)
     if days_back == 0:

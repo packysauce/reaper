@@ -36,6 +36,27 @@
 
 {% block main_body %}
 <h1>Database results for {{ entry }}</h1>
+<h2>Device information</h2>
+<table>
+    <tr>
+    {% if gator_info %}
+        <th>Owner</th><td>
+            {% if gator_info.username %}
+            <a href="mailto:{{gator_info.username}}@jlab.org?Subject=Vulerabilites on {{ entry }}">{{gator_info.username}}@jlab.org</a>
+            {% else %}
+            No Owner Available
+            {% endif %}
+        </td>
+    {% endif %}
+    </tr>
+    <tr>
+        {% if most_frequent_user %}
+        <th>Most Frequent User</th><td>
+            <a href="mailto:{{most_frequent_user}}@jlab.org?Subject=Vulerabilites on {{ entry }}">{{most_frequent_user}}@jlab.org</a>
+        </td>
+        {% endif %}
+    </tr>
+    </table>
 {% ifequal days_back 0 %}
 <h2>All information available</h2>
 {% else %}

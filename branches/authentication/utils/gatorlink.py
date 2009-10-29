@@ -52,8 +52,6 @@ class Gator:
         else:
             raise ValueError('Invalid identifier specified')
 
-        print lookup_type
-
         conn = httplib.HTTPSConnection('jnet.jlab.org')
         conn.request('get','/remote/query.php?type=%s&q=%s' % (lookup_type, id))
         r = conn.getresponse().read()
