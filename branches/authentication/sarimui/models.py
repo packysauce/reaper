@@ -14,16 +14,30 @@ from reaper.fields import SparseField
 import django.contrib.auth.models
 from utils.bobdb import *
 import sarimui.signals
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
+
+class Comment(models.Model):
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+
+    comment = models.TextField()
+    #attachment = models.BlobField() ...if we ever get a BlobField this would be nice
+    user = models.ForeignKey(django.contrib.auth.models.User)
+    entered = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now_add = True, auto_now = True)
 
 class UserProfile(models.Model):
     user = models.ForeignKey(django.contrib.auth.models.User, unique=True)
     default_days_back = models.IntegerField(max_length=2, default=7)
+    comments = generic.GenericRelation(Comment)
 
 class Source(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=96)
     description = models.CharField(max_length=192, blank=True)
     entered = models.DateTimeField(auto_now_add = True)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'source'
@@ -34,6 +48,7 @@ class ConfigList(models.Model):
     digest = models.CharField(max_length=192)
     entered = models.DateTimeField(auto_now_add=True)
     config = models.TextField()
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'configlist'
@@ -48,6 +63,7 @@ class FalsePositive(models.Model):
     comment = models.TextField()
     active = models.BooleanField()
     plugin = models.ForeignKey('Plugin')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         get_latest_by = 'last_modified'
 
@@ -57,6 +73,7 @@ class Hostname(models.Model):
 
     id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=384)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         ordering = ['hostname']
@@ -73,6 +90,7 @@ class HostSet(models.Model):
     digest = models.CharField(max_length=192)
     entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('Source', db_column='sourceid')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'hostset'
@@ -82,6 +100,7 @@ class ImapLoginList(models.Model):
     ip = models.ForeignKey('IpAddress', db_column='ip')
     date = models.DateField()
     username = models.CharField(max_length=96)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'imaploginlist'
@@ -92,6 +111,7 @@ class IpAddress(models.Model):
     ip = models.IntegerField(primary_key=True)
     hostnames = models.ManyToManyField('Hostname', through='IpHostname')
     macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
+    comments = generic.GenericRelation(Comment)
 
     class Meta:
         ordering = ['ip']
@@ -116,6 +136,7 @@ class IpHostname(models.Model):
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('Source', db_column='sourceid')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         ordering = ["ip", "-observed"]
         managed = False
@@ -128,6 +149,7 @@ class Log(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     comment = models.TextField(blank=True)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'log'
@@ -139,6 +161,7 @@ class Mac(models.Model):
     mac = models.CharField(max_length=51, blank=True)
     source = models.ForeignKey(Source, db_column='sourceid')
     entered = models.DateTimeField(auto_now_add=True)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         ordering = ["entered"]
         get_latest_by = "entered"
@@ -151,6 +174,7 @@ class MacIp(models.Model):
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('Source', db_column='sourceid')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         ordering = ["ip","-observed"]
         get_latest_by = "observed"
@@ -184,6 +208,7 @@ class Plugin(models.Model):
     description = models.TextField(blank=True)
     configfile = models.TextField(blank=True)
     entered = models.DateTimeField(auto_now_add=True)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         ordering = ['-entered']
@@ -200,6 +225,7 @@ class PluginDump(models.Model):
     starttime = models.DateTimeField()
     endtime = models.DateTimeField(null=True, blank=True)
     plugins = models.ManyToManyField('Plugin', through='PluginDumpPlugin')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'plugindump'
@@ -207,6 +233,7 @@ class PluginDump(models.Model):
 class PluginDumpPlugin(models.Model):
     plugindump = models.ForeignKey('PluginDump', db_column='plugindumpid')
     plugin = models.ForeignKey('Plugin', db_column='pluginid')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'plugindumpplugin'
@@ -216,6 +243,7 @@ class Scanner(models.Model):
     name = models.CharField(max_length=384)
     ip = models.ForeignKey('IpAddress')
     entered = models.DateTimeField(auto_now_add=True)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'scanner'
@@ -231,6 +259,7 @@ class ScanResults(models.Model):
     end = models.DateTimeField(null=True, blank=True)
     ports = models.TextField(blank=True)
     vulns = models.TextField(blank=True)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         ordering = ['-id','-end']
         managed = False
@@ -247,6 +276,7 @@ class ScanRun(models.Model):
     scanner = models.ForeignKey('Scanner', db_column='scannerid')
     configfile = models.TextField()
     resultfile = models.TextField()
+    comments = generic.GenericRelation(Comment)
     class Meta:
         ordering = ['end']
         managed = False
@@ -260,6 +290,7 @@ class ScanSet(models.Model):
     pluginlist = models.TextField()
     source = models.ForeignKey('Source', db_column='sourceid')
     entered = models.DateTimeField()
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'scanset'
@@ -269,6 +300,7 @@ class Schedule(models.Model):
     type = models.CharField(max_length=48)
     frequency = models.IntegerField()
     unit = models.CharField(max_length=24)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'schedule'
@@ -279,6 +311,7 @@ class Top20Lists(models.Model):
     cvelist = models.TextField()
     entered = models.DateTimeField()
     source = models.ForeignKey('Source', db_column='sourceid')
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'top20lists'
@@ -288,6 +321,7 @@ class Vlans(models.Model):
     digest = models.CharField(max_length=192)
     record = models.TextField()
     entered = models.DateTimeField()
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'vlans'
@@ -301,6 +335,7 @@ class VlanScanState(models.Model):
     ex_adhoc = models.CharField(max_length=48)
     changedate = models.DateTimeField()
     contact = models.CharField(max_length=96)
+    comments = generic.GenericRelation(Comment)
     class Meta:
         managed = False
         db_table = u'vlanscanstate'
