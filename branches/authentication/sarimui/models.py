@@ -23,7 +23,7 @@ class Source(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=96)
     description = models.CharField(max_length=192, blank=True)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add = True)
     class Meta:
         managed = False
         db_table = u'source'
@@ -32,7 +32,7 @@ class ConfigList(models.Model):
     id = models.IntegerField(primary_key=True)
     comment = models.TextField()
     digest = models.CharField(max_length=192)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     config = models.TextField()
     class Meta:
         managed = False
@@ -71,7 +71,7 @@ class HostSet(models.Model):
     type = models.CharField(max_length=48)
     iplist = SparseField(blank=True)
     digest = models.CharField(max_length=192)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         managed = False
@@ -101,7 +101,7 @@ class IpComments(models.Model):
         return "%s, %s" % (self.analyst, self.entered)
     id = models.IntegerField(primary_key=True)
     ip = models.ForeignKey('IpAddress', db_column='ip')
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True, auto_now=True)
     content = models.TextField()
     analyst = models.CharField(max_length=96)
     source = models.ForeignKey('Source', db_column='sourceid')
@@ -114,7 +114,7 @@ class IpHostname(models.Model):
     ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
     hostname = models.ForeignKey('Hostname', db_column='hostnameid', primary_key=True)
     observed = models.DateTimeField(primary_key=True)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         ordering = ["ip", "-observed"]
@@ -138,7 +138,7 @@ class Mac(models.Model):
     id = models.IntegerField(primary_key=True)
     mac = models.CharField(max_length=51, blank=True)
     source = models.ForeignKey(Source, db_column='sourceid')
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ["entered"]
         get_latest_by = "entered"
@@ -149,7 +149,7 @@ class MacIp(models.Model):
     mac = models.ForeignKey('Mac', db_column='macid', primary_key=True)
     ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
     observed = models.DateTimeField(primary_key=True)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('Source', db_column='sourceid')
     class Meta:
         ordering = ["ip","-observed"]
@@ -162,7 +162,7 @@ class Notes(models.Model):
     note = models.TextField()
     tags = models.TextField(blank=True)
     uid = models.CharField(max_length=48)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     class Meta:
         managed = False
         db_table = u'notes'
@@ -183,7 +183,7 @@ class Plugin(models.Model):
     top20cves = models.TextField(blank=True)
     description = models.TextField(blank=True)
     configfile = models.TextField(blank=True)
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     class Meta:
         managed = False
         ordering = ['-entered']
@@ -215,7 +215,7 @@ class Scanner(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=384)
     ip = models.ForeignKey('IpAddress')
-    entered = models.DateTimeField()
+    entered = models.DateTimeField(auto_now_add=True)
     class Meta:
         managed = False
         db_table = u'scanner'
