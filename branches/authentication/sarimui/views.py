@@ -327,12 +327,10 @@ def ip_view_core(request, ip, days_back):
     except:
         return -1
     render_dict['most_frequent_user'] = get_most_frequent_user(_ip.ip)
-    render_dict['gator_info'] = gatorlink.Gator(_ip.ip)
+    render_dict['gator_info'] = gatorlink.Gator(str(_ip))
 
-    try:
-        comments = list(IpComments.objects.filter(ip=_ip))
-    except:
-        comments = []
+    render_dict['comments'] = []
+    render_dict['comments'] += _ip.comments.all()
 
     if days_back == 0:
         results = list(ScanResults.objects.filter(ip=_ip, state='up'))
@@ -346,6 +344,7 @@ def ip_view_core(request, ip, days_back):
     #I flesh out the dict here to make sure that if a MAC has no data it is shown as being empty instead of not present
     for i in _ip.macs.all():
         mac = i.mac
+        render_dict['comments'] += i.comments.all()
         render_dict['entries'][mac] = dict()
         render_dict['entries'][mac]['scans'] = []
         render_dict['entries'][mac]['vuln_total'] = 0
@@ -363,7 +362,7 @@ def ip_view_core(request, ip, days_back):
         #also get the comments for the entry
         mac = assoc.mac.mac
         
-        render_dict['entries'][mac]['comments'] += list(IpComments.objects.filter(ip=_ip, entered__gte=assoc.observed, entered__lte=assoc.entered))
+        render_dict['entries'][mac]['comments'] += assoc.comments.all()
 
         if render_dict['entries'][mac]['name'] == '':
             hostnames = list(IpHostname.objects.filter(ip=_ip, observed__gte=assoc.observed, entered__lte=assoc.entered))
@@ -398,6 +397,8 @@ def ip_view_core(request, ip, days_back):
                     fpvulns.append( (x,y,z) )
                 render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, fpvulns ) )
 
+    render_dict['comments'] = sorted(render_dict['comments'], key=lambda(x): x.entered)
+
     return render_dict
 
 @login_required
@@ -414,6 +415,7 @@ def host_view_core(request, hostname, days_back):
 
     current_ip = hostobj.iphostname_set.latest().ip.ip
     render_dict['most_frequent_user'] = get_most_frequent_user(current_ip)
+    render_dict['comments'] = [] + hostobj.comments.all()
 
     addresses = hostobj.ipaddress_set.all()
     iphosts = hostobj.iphostname_set.all()
@@ -426,6 +428,7 @@ def host_view_core(request, hostname, days_back):
         render_dict['entries'][ip] = dict()
         render_dict['entries'][ip]['scans'] = []
         render_dict['entries'][ip]['vuln_total'] = 0
+        render_dict['entries'][ip]['comments'] = ip.comments.all()
         if days_back != 0:
             dtime = datetime.now()-timedelta(days=days_back)
             results += ScanResults.objects.filter(ip=ip.ip, end__gte=dtime)

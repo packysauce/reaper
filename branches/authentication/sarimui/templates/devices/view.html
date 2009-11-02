@@ -56,6 +56,14 @@
         </td>
         {% endif %}
     </tr>
+    {% for comment in comments %}
+        <tr>
+        {% if forloop.first %}
+            <th rowspan={{comments|length}}>Comments</th>
+        {% endif %}
+            <td>{{ comment.user }} on {{comment.entered|date:"F j, Y @ P"}}<br>{{comment.comment}}</td>
+        </tr>
+    {% endfor %}
     </table>
 {% ifequal days_back 0 %}
 <h2>All information available</h2>
