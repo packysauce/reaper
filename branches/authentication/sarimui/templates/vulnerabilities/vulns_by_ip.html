@@ -4,7 +4,7 @@
 {% block main_body %}
 {{ block.super }}
 <table class='block'>
-    <tr><th>IP Address</th><th>Vulnerability</th><th>Nessus ID</th><th>Scan Type</th><th>Last Found</th><th>Scan ID</th></tr>
+    <tr><th>IP Address</th><th>Vulnerability</th><th>Nessus ID</th><th>Last Found</th><th>Scan Type</th></tr>
     {% for ip in vuln_list %}
     {% for vuln, result, scantype, fpflag in ip.resmap %}
         <tr>
@@ -18,9 +18,8 @@
             {% endif %}
             <td {% if fpflag %}class="falsepositive"{% endif %}>{{ vuln.0 }}</td>
             <td {% if fpflag %}class="falsepositive"{% endif %}><a href="{% url plugin vuln.1 'latest' %}">{{ vuln.1 }}</a></td>
-            <td {% if fpflag %}class="falsepositive"{% endif %}>{{ scantype }}</td>
             <td {% if fpflag %}class="falsepositive"{% endif %}>{{ result.end|date:"F j, Y" }}</td>
-            <td {% if fpflag %}class="falsepositive"{% endif %}><a href="{% url scan result.scanrun_id %}">{{ result.scanrun_id }}</a></td>
+            <td {% if fpflag %}class="falsepositive"{% endif %}><a href="{% url scan result.scanrun_id %}">{{ scantype }}</a></td>
         </tr>
         {% endfor %}
         {% endfor %}

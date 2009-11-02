@@ -134,10 +134,14 @@ def ips_by_vuln(request):
 @login_required
 def vulns_by_ip(request):
     render_dict = {'pagetitle':'Vulnerabilities', 'subtitle': 'By IP'}
-    try:
-        days_back = int(request.GET['days'])
-    except:
-        days_back = 7
+    userprofile = request.user.get_profile()
+
+    if request.GET.has_key('days'):
+        userprofile.default_days_back = int(request.GET['days'])
+        userprofile.save()
+
+    days_back = userprofile.default_days_back
+
     fp_option = FLAG_FP
 
     render_dict['days_back'] = days_back
