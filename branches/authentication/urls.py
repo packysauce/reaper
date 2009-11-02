@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^false_positive/modify/$', ajax.fp_modify, name="fp_modify_ajax"),
     url(r'^false_positive/new/$', ajax.fp_create, name='fp_create_ajax'),
     url(r'^false_positive/search/$', views.fp_search, name='fp_search'),
+    url(r'^comments/add/(.+)/(.+)/$', ajax.add_comment, name='add_comment'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

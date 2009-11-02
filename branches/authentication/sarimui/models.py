@@ -27,6 +27,9 @@ class Comment(models.Model):
     entered = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now_add = True, auto_now = True)
 
+    class Meta:
+        ordering = ["modified"]
+
 class UserProfile(models.Model):
     user = models.ForeignKey(django.contrib.auth.models.User, unique=True)
     default_days_back = models.IntegerField(max_length=2, default=7)

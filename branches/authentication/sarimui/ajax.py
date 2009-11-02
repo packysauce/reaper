@@ -121,4 +121,16 @@ def fp_create(request):
     except Exception, e:
         return HttpResponse( json.dumps( { 'result': 'failure', 'error': str(e), } ) )
 
+@permission_required('sarimui.add_comment')
+def add_comment(request, object, id):
+    if object == "Hostname":
+        obj = Hostname.objects.get(hostname__iexact=id)
+    elif object == "IP":
+        obj = IpAddress.objects.get(ip=aton(id))
+    elif object == "MAC":
+        obj = MacAddress.objects.get(mac__iexact=id)
+    else:
+        return HttpResponseBadRequest( json.dumps( {'result':'failure', 'error':'Object not found'} ) )
 
+    obj.comments.create(user=request.user, comment=request.POST['comment'])
+    return HttpResponse( json.dumps( {'result': 'success'} ) )

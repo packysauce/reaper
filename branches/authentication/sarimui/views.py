@@ -401,8 +401,8 @@ def ip_view_core(request, ip, days_back):
                     fpvulns.append( (x,y,z) )
                 render_dict['entries'][assoc.mac.mac]['scans'].append( ( scan, fpvulns ) )
 
-    render_dict['comments'] = sorted(render_dict['comments'], key=lambda(x): x.entered)
-
+    render_dict['comments'] = sorted(render_dict['comments'], key=lambda(x): x.modified, reverse=True)
+    
     return render_dict
 
 @login_required
@@ -419,7 +419,7 @@ def host_view_core(request, hostname, days_back):
 
     current_ip = hostobj.iphostname_set.latest().ip.ip
     render_dict['most_frequent_user'] = get_most_frequent_user(current_ip)
-    render_dict['comments'] = [] + hostobj.comments.all()
+    render_dict['comments'] = [] + list(hostobj.comments.all())
 
     addresses = hostobj.ipaddress_set.all()
     iphosts = hostobj.iphostname_set.all()
@@ -473,6 +473,8 @@ def host_view_core(request, hostname, days_back):
 
                 #add the scan and its vulnerabilities to the rendering structure
                 render_dict['entries'][iphost.ip]['scans'].append( ( scan, fpvulns ) )
+
+    render_dict['comments'] = sorted(render_dict['comments'], key=lambda(x): x.modified, reverse=True)
 
     return render_dict
 
@@ -569,6 +571,8 @@ def mac_view_core(request, mac, days_back):
                         render_dict['entries'][ip]['alt_name'] = hostname
                     except:
                         pass #really really weird
+
+    render_dict['comments'] = sorted(render_dict['comments'], key=lambda(x): x.modified, reverse=True)
     
     return render_dict
 

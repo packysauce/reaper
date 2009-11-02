@@ -2,25 +2,46 @@
 
 {% block extra_head %}
 <script type="text/javascript">
- $(document).ready(function() {
-   $("a.fp_create").click(function() {
-       include = this.parentNode.include.value;
-       nessusid = this.parentNode.nessusid.value;
-       $.post('{% url fp_create_ajax %}', {'include':include, 'nessusid':nessusid},
-           function(data, textStatus) {
+$(document).ready(function() {
+    $("a.fp_create").click(function() {
+        include = this.parentNode.include.value;
+        nessusid = this.parentNode.nessusid.value;
+        $.post('{% url fp_create_ajax %}', {'include':include, 'nessusid':nessusid},
+            function(data, textStatus) {
+                 if(textStatus == "success" && data.result == "success") {
+                     var formobj = $("#fp_create_"+data.nessusid);
+                     var row = formobj.parent();
+                     row.addClass(' falsepositive');
+                     formobj.remove();
+                 } else {
+                     alert(data.error);
+                 }
+            },
+            "json"
+            );
+    });
+
+    $("a#link_add_comment").click(function() {
+        comment = prompt("Add comment for {{ entry }}", "Type your comment here");
+        if (comment == null || comment == "Type your comment here" || comment == "") {
+            alert("Comment not saved.")
+            return false;
+        }
+
+        $.post('{% url add_comment subtitle entry %}', {'comment':comment},
+            function(data, textStatus) {
                 if(textStatus == "success" && data.result == "success") {
-                    var formobj = $("#fp_create_"+data.nessusid);
-                    var row = formobj.parent();
-                    row.addClass(' falsepositive');
-                    formobj.remove();
+                    $('ul#comment_list').prepend("<li>{{ user }} - Just now<br>"+comment+"</li>");
                 } else {
-                    alert(data.error);
+                    alert("Comment not saved. Error " + data.error);
                 }
-           },
-           "json"
-           );
-   });
- });
+            },
+            "json"
+            );
+
+        return false;
+    });
+});
 </script>    
 {% endblock %}
 
@@ -56,15 +77,20 @@
         </td>
         {% endif %}
     </tr>
-    {% for comment in comments %}
-        <tr>
-        {% if forloop.first %}
-            <th rowspan={{comments|length}}>Comments</th>
-        {% endif %}
-            <td>{{ comment.user }} on {{comment.entered|date:"F j, Y @ P"}}<br>{{comment.comment}}</td>
-        </tr>
-    {% endfor %}
     </table>
+    <h2>Comments <a id="link_add_comment" href="#">[add]</a></h2>
+    {% for comment in comments %}
+        {% if forloop.first %}
+        <ul id="comment_list">
+        {% endif %}
+            <li>{{ comment.user }} on {{comment.entered|date:"F j, Y @ P"}}<br>{{comment.comment}}</li>
+        {% if forloop.last %}
+        </ul>
+        {% endif %}
+    {% endfor %}
+    </tr>
+
+<h1>Scan Information</h1>
 {% ifequal days_back 0 %}
 <h2>All information available</h2>
 {% else %}
@@ -91,8 +117,8 @@
         <h3>Comments</h3>
     {% endif %}
         <div class='comment'>
-            <span class='author'><b>{{ comment.analyst }} on {{ comment.entered|date:"F j, Y \a\t P " }}</b></br></span>
-            <span class='content'>{{ comment.content }}</span>
+            <span class='author'><b>{{ comment.user }} on {{ comment.entered|date:"m/j/Y \a\t P " }}</b></br></span>
+            <span class='content'>{{ comment.comment }}</span>
     {% endfor %}
 
             {% ifnotequal entry_data.scans|length 0 %}
