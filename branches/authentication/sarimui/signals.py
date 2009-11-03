@@ -3,7 +3,11 @@ from django.contrib.auth.models import User
 from sarimui.models import UserProfile
 
 def create_profile_handler(sender, **kwargs):
-    if kwargs['created'] == True and kwargs['instance'].is_staff:
-        UserProfile(user = kwargs['instance']).save()
+    user_instance = kwargs['instance']
+    if user_instance.is_staff == True:
+        try:
+            user_instance.get_profile()
+        except:
+            UserProfile(user = user_instance).save()
 
 post_save.connect(create_profile_handler, sender=User)
