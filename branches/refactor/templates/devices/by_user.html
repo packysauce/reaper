@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block main_body %}
+    {% for host in hosts %}
+        {% if forloop.first %}
+            <h2>Hostnames registered to you</h2>
+            <ul>
+        {% endif %}
+            <li><a href="{% url device host %}">{{host}}</a></li>
+        {% if forloop.last %}
+            </ul>
+        {% endif %}
+        {% empty %}
+        <h2>There are no devices registered in your name</h2>
+    {% endfor %}
+{% endblock %}
