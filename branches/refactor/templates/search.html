@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load searchutils %}
+
+{% block main_body %}
+
+<h1>{{ category }} Search</h1>
+
+<div id='search'>
+    <form method='get'>
+        {% block search_header %} {{search_header}} {% endblock %}
+        <br />
+        <input type='text' onclick='javascript:this.value = "";' name='q' value='{{search_term}}'/><input type='submit' value='Search' /><br />
+        {% block search_options %}{% endblock %}
+    </form>
+
+    <ul id="messages">
+        {% for e in errors %}
+        <li class='error'>{{ e }}</li>
+        {% endfor %}
+
+        {% for w in warnings %}
+        <li class='warning'>{{ w }}</li>
+        {% endfor %}
+    </ul>
+
+    {% for result in results %}
+        {% if forloop.first %}
+            <ul id='results' style='width:{{ results|length|search_width }}px; height:{{ results|length|search_height }}px;'>
+        {% endif %}
+
+        <li><a href="{{ result.url }}" title='{{ result.summary }}'>{{ result.description }}</a></li>
+
+        {% if forloop.last %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}
