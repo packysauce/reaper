@@ -29,7 +29,7 @@ def fp_view(request, fp_id):
 def fp_create(request, pid):
     #Not using a render dict here because this will return a redirect to the modify page
     newfp = FalsePositive()
-    newfp.added_by = request.user.username
+    newfp.user = request.user
     newfp.comment = 'Added from Plugin page'
     newfp.active = True
     newfp.plugin = Plugin.objects.get(id=pid)

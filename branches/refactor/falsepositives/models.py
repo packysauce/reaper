@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from sarim.models import Comment
 
 # Create your models here.
 class FalsePositive(models.Model):
-    added_by = models.CharField(max_length=20)
+    user = models.ForeignKey(User)
     date_added = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
     include_all = models.BooleanField()
