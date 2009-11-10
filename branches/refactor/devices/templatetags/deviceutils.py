@@ -1,6 +1,6 @@
 from django.template import Library
 from reaper.utils.bobdb import *
-from sarimui.models import *
+from devices.models import *
 
 register = Library()
 

@@ -57,7 +57,7 @@ def scan_view(request, scan):
         if render_dict['result_height'] == 0:
             render_dict['result_height'] = 25
 
-    return render_to_response('scans/scan_view.html', render_dict, context_instance=RequestContext(request))
+    return render_to_response('scan_view.html', render_dict, context_instance=RequestContext(request))
 
 @login_required
 def scan_search(request):

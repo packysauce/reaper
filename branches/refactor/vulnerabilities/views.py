@@ -132,7 +132,7 @@ def ips_by_vuln(request):
     render_dict['plugin_list'] = plugin_list
     render_dict['vuln_list'] = sorted(vuln_list, key=vsort, reverse=True)
 
-    return render_to_response('vulnerabilities/ips_by_vuln.html', render_dict, context_instance=RequestContext(request))
+    return render_to_response('ips_by_vuln.html', render_dict, context_instance=RequestContext(request))
 
 @login_required
 def vulns_by_ip(request):
@@ -210,6 +210,6 @@ def vulns_by_ip(request):
         return aton(x['ip'])
     render_dict['vuln_list'] = sorted(vuln_list, key=ipsort)
 
-    return render_to_response('vulnerabilities/vulns_by_ip.html', render_dict, context_instance=RequestContext(request))
+    return render_to_response('vulns_by_ip.html', render_dict, context_instance=RequestContext(request))
 
 

@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     (r'^falsepositives/', include('reaper.falsepositives.urls')),
 
     url(r'^site_media/(?P<path>.*)$', django.views.static.serve,
-        {'document_root': 'C:/users/pdwhite/desktop/reaper/sarimui/static'}, name='static'),
+        {'document_root': 'C:/users/pdwhite/desktop/reaper/common/static'}, name='static'),
         # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),

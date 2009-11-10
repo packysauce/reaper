@@ -24,7 +24,7 @@ def plugin_view(request, plugin, version):
     else:
         render_dict['version'] = Plugin.objects.get(nessusid=plugin, version=version).latest().version
 
-    return render_to_response("plugins/plugin.html", render_dict, context_instance=RequestContext(request))
+    return render_to_response("plugin.html", render_dict, context_instance=RequestContext(request))
 
 @login_required
 def plugin_list_view(request, plugin):
@@ -109,7 +109,7 @@ def plugin_info_view(request, plugin, version):
         #Take care of dictionary names with spaces in them
         render_dict[word.replace(' ', '')] = s
 
-    return render_to_response('plugins/plugin_info.html', render_dict, context_instance=RequestContext(request))
+    return render_to_response('plugin_info.html', render_dict, context_instance=RequestContext(request))
 
 @login_required
 def plugin_search(request):

@@ -96,7 +96,7 @@ def device_view_core(request, what, days_back):
 
     render_dict['days_back'] = days_back
 
-    return render_to_response('devices/view.html', render_dict, context_instance=RequestContext(request))
+    return render_to_response('device_view.html', render_dict, context_instance=RequestContext(request))
 
 @login_required
 def index(request):
@@ -108,7 +108,7 @@ def index(request):
             return handlers['vulns'](request)
     else:
         hostlist = get_hosts_by_user(request.user)
-        return render_to_response('devices/by_user.html', {'hosts': hostlist}, context_instance=RequestContext(request))
+        return render_to_response('devices_by_user.html', {'hosts': hostlist}, context_instance=RequestContext(request))
 
 @login_required
 def ip_view_core(request, ip, days_back):
