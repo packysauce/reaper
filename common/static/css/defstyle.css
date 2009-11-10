@@ -123,8 +123,8 @@ need this if nav length < content */
 	height:1%;
 }
 
-#main_body p, p#main_body { padding-left: 25px; }
-
+/*#main_body p, p#main_body { padding-left: 25px; }
+*/
 /* Makes background color of sidebar.
 aligned to the left
  */

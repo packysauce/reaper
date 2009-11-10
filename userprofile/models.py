@@ -19,4 +19,4 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     default_days_back = models.IntegerField(max_length=2, default=7)
     comments = generic.GenericRelation('sarim.Comment')
-
+    subscriptions = generic.GenericRelation('subscriptions.Subscription')

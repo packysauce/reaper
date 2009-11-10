@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block sidebar %}
+<li><a href="{% url edit_subscriptions %}">Subscriptions</a></li>
+{% endblock %}
+
 {% block main_body %}
 <h1>Preferences</h1>
 <h2>Display Settings</h2>

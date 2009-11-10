@@ -97,3 +97,12 @@ ul#messages > li.success {
 th {
     text-align:left;
 }
+
+p.helptext {
+    float: right;
+    background-color: #D4BFA9;
+    padding-right: 2px;
+    padding-left: 2px;
+    font-size: 0.9em;
+    font-weight: normal;
+}

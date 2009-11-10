@@ -8,4 +8,5 @@ from reaper.userprofile import views
 urlpatterns = patterns('',
     # Example:
     url(r'^$', views.index, name='profile_view'),
+    url(r'^subscriptions/$', include('subscriptions.urls')),
 )
