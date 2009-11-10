@@ -1,4 +1,6 @@
 # Django settings for reaper project.
+import os
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -36,6 +38,7 @@ USE_I18N = False
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = '/opt/reaper/sarimui/static'
+PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -73,7 +76,7 @@ AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
 ROOT_URLCONF = 'reaper.urls'
 
 TEMPLATE_DIRS = (
-    "C:/users/pdwhite/desktop/reaper/common/templates",
+    os.path.join(PROJECT_ROOT, 'common','templates')
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
