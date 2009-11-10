@@ -3,7 +3,7 @@ from django.http import *
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required, permission_required
 from django.template import RequestContext
-from sarimui.models import *
+from sarim.models import *
 from userprofile.models import *
 from userprofile.forms import *
 import pprint

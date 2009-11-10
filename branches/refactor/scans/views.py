@@ -7,7 +7,9 @@ from django.core.exceptions import *
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.template import RequestContext
-from sarimui.models import *
+from scans.models import *
+from vulnerabilities.models import ScanResults
+from devices.models import *
 from utils.bobdb import *
 from utils.djangolist import *
 from utils.permissionutils import *

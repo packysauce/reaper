@@ -5,7 +5,7 @@ except ImportError:
     from django.utils.functional import wraps
 from utils.gatorlink import get_hosts_by_user
 from utils.bobdb import *
-from sarimui.models import *
+from devices.models import *
 
 #Helper decorator for creating new permissions.
 def permission(permission_tester):
@@ -49,7 +49,7 @@ def user_owns_machine(request, *args, **kwargs):
 
     elif SARIMUI_MAC_RE.match(what):
         #it's a MAC, turn it into a hostname
-        hostname = IpHostname.objects.filter(ip__macip__mac__mac='00:11:43:22:69:48').latest().hostname.hostname
+        hostname = Hostname.objects.filter(ip__macip__mac__mac__iexact=what).latest()
         hostname = hostname.strip().lower()
     else:
         #assume it's a hostname

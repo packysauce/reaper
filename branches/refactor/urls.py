@@ -1,8 +1,5 @@
 import django.views.static
 from django.conf.urls.defaults import *
-from reaper.sarimui import views
-from reaper.sarimui import ajax
-from sarimui.models import *
 from django.views.generic.simple import direct_to_template
 
 # Uncomment the next two lines to enable the admin:
@@ -11,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
-    (r'^/$', include('reaper.sarim.urls')),
+    (r'^$', include('reaper.sarim.urls')),
     (r'^userprofile/', include('reaper.userprofile.urls')),
     (r'^devices/', include('reaper.devices.urls')),
     (r'^vulns/', include('reaper.vulnerabilities.urls')),

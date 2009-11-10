@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from reaper.falsepositives import views
+from reaper.falsepositives import views, ajax
 
 urlpatterns = patterns('',
     url(r'^(\d*)/$', views.fp_view, name='fp_detail'),

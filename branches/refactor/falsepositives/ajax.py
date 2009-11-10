@@ -1,7 +1,7 @@
 from django.http import *
 from utils.bobdb import *
 from devices.models import *
-from falsepositive.models import *
+from falsepositives.models import *
 from django.core.exceptions import *
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
