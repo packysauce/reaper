@@ -9,8 +9,8 @@ def to_hostname(x):
     import re
 
     if SARIMUI_IP_RE.match(x):
-        return IpHostname.objects.filter(ip_id = aton(x)).latest().hostname.hostname
+        return IpHostname.objects.filter(ip = aton(x)).latest().hostname.hostname
     elif SARIMUI_MAC_RE.match(x):
-        return IpHostname.objects.filter(ip_id = MacIp.objects.filter(macid = Mac.objects.get(mac=x)).latest().ip_id).hostname.hostname
+        return IpHostname.objects.filter(ip = MacIp.objects.filter(mac = Mac.objects.get(mac=x)).latest().ip).latest().hostname.hostname
     else:
         return x
