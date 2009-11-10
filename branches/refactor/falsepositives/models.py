@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes import generic
+from sarim.models import Comment
 
 # Create your models here.
 class FalsePositive(models.Model):
@@ -14,3 +16,4 @@ class FalsePositive(models.Model):
     comments = generic.GenericRelation('sarim.Comment')
     class Meta:
         get_latest_by = 'last_modified'
+        db_table = 'sarimui_falsepositive'

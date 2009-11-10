@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes import generic
+from devices.models import IpAddress
 
 # Create your models here.
 class ScanResults(models.Model):
@@ -12,7 +14,7 @@ class ScanResults(models.Model):
     end = models.DateTimeField(null=True, blank=True)
     ports = models.TextField(blank=True)
     vulns = models.TextField(blank=True)
-    comments = generic.GenericRelation(Comment)
+    comments = generic.GenericRelation('sarim.Comment')
     class Meta:
         ordering = ['-id','-end']
         managed = False

@@ -1,5 +1,5 @@
 from django.db import models
-from sarimui.models import *
+from sarim.models import *
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 
@@ -18,5 +18,5 @@ class Activity(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     default_days_back = models.IntegerField(max_length=2, default=7)
-    comments = generic.GenericRelation('sarimui.Comment')
+    comments = generic.GenericRelation('sarim.Comment')
 

@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.contenttypes import generic
+from reaper.utils.fields import SparseField
+from sarim.models import Comment
 
 # Create your models here.
 class Plugin(models.Model):
@@ -41,7 +44,7 @@ class PluginDump(models.Model):
         db_table = u'plugindump'
 
 class PluginDumpPlugin(models.Model):
-    plugindump = models.ForeignKey('PluginDump', db_column='plugindumpid')
+    plugindump = models.ForeignKey('PluginDump', db_column='plugindumpid', primary_key=True)
     plugin = models.ForeignKey('Plugin', db_column='pluginid')
     class Meta:
         managed = False

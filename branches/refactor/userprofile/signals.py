@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from sarimui.models import *
+from sarim.models import *
 from userprofile.models import Activity
 
 def comment_handler(sender, **kwargs):
@@ -25,5 +25,5 @@ def falsepositive_handler(sender, **kwargs):
 
     Activity.objects.create(user = user, description = msg[:140]).save()
 
-post_save.connect(comment_handler, sender=Comment)
-post_save.connect(falsepositive_handler, sender=FalsePositive)
+post_save.connect(comment_handler, sender='sarim.Comment')
+post_save.connect(falsepositive_handler, sender='falsepositives.FalsePositive')

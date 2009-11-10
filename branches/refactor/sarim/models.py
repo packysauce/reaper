@@ -10,12 +10,13 @@ import sys
 sys.path.append('/opt/reaper')
 
 from django.db import models
-from reaper.fields import SparseField
-import django.contrib.auth.models
+from utils.fields import SparseField
 from utils.bobdb import *
-import sarimui.signals
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
+
+import django.contrib.auth.models
+import sarim.signals
 
 class Comment(models.Model):
     content_type = models.ForeignKey(ContentType)
@@ -30,6 +31,7 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["modified"]
+        db_table = "sarimui_comment"
 
 class Source(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -71,7 +73,7 @@ class HostSet(models.Model):
 class Scanner(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=384)
-    ip = models.ForeignKey('IpAddress')
+    ip = models.ForeignKey('devices.IpAddress', db_column='ip')
     entered = models.DateTimeField(auto_now_add=True)
     comments = generic.GenericRelation(Comment)
     class Meta:

@@ -73,13 +73,7 @@ AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
 ROOT_URLCONF = 'reaper.urls'
 
 TEMPLATE_DIRS = (
-    "C:/users/pdwhite/desktop/reaper/sarim/templates",
-    "C:/users/pdwhite/desktop/reaper/devices/templates",
-    "C:/users/pdwhite/desktop/reaper/plugins/templates",
-    "C:/users/pdwhite/desktop/reaper/vulnerabilities/templates",
-    "C:/users/pdwhite/desktop/reaper/scans/templates",
-    "C:/users/pdwhite/desktop/reaper/userprofile/templates",
-    "C:/users/pdwhite/desktop/reaper/falsepositives/templates",
+    "C:/users/pdwhite/desktop/reaper/common/templates",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
