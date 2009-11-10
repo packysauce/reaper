@@ -43,7 +43,6 @@ def fp_create_help(request):
 
 @permission_required('sarimui.delete_falsepositive')
 def fp_delete(request, fp):
-    print "Deleting fpid %d" % int(fp)
     FalsePositive.objects.get(id=int(fp)).delete()
     return HttpResponseRedirect(reverse('fp_search'))
 

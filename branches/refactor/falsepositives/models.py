@@ -5,6 +5,9 @@ from sarim.models import Comment
 
 # Create your models here.
 class FalsePositive(models.Model):
+    def get_receiving_object(self):
+        return self.plugin
+
     user = models.ForeignKey(User)
     date_added = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
@@ -18,3 +21,4 @@ class FalsePositive(models.Model):
     class Meta:
         get_latest_by = 'last_modified'
         db_table = 'sarimui_falsepositive'
+        verbose_name = 'false positive'

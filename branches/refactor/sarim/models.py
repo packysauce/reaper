@@ -19,6 +19,9 @@ import django.contrib.auth.models
 import sarim.signals
 
 class Comment(models.Model):
+    def get_receiving_object(self):
+        return self.object
+
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     object = generic.GenericForeignKey()
@@ -32,8 +35,11 @@ class Comment(models.Model):
     class Meta:
         ordering = ["modified"]
         db_table = "sarimui_comment"
+        verbose_name = 'comment'
 
 class Source(models.Model):
+    def __unicode__(self):
+        return u'Source {0}'.format(self.name)
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=96)
     description = models.CharField(max_length=192, blank=True)
@@ -71,6 +77,8 @@ class HostSet(models.Model):
         db_table = u'hostset'
 
 class Scanner(models.Model):
+    def __unicode__(self):
+        return u'Scanner {0}'.format(self.name)
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=384)
     ip = models.ForeignKey('devices.IpAddress', db_column='ip')

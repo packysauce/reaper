@@ -5,6 +5,8 @@ from sarim.models import Comment
 
 # Create your models here.
 class Plugin(models.Model):
+    def __unicode__(self):
+        return u'nessus plugin {0}'.format(self.nessusid)
     id = models.IntegerField(primary_key=True)
     digest = models.CharField(max_length=192, primary_key=True)
     nessusid = models.IntegerField()
