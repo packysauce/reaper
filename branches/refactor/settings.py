@@ -80,10 +80,11 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django_extensions',
     'django.contrib.databrowse',
     'reaper.common',
-    'reaper.sarim',
     'reaper.devices',
+    'reaper.sarim',
     'reaper.vulnerabilities',
     'reaper.plugins',
     'reaper.falsepositives',

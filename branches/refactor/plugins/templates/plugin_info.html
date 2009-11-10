@@ -28,7 +28,7 @@
                     {% ifequal v plugin.version %}
                     {{v}}
                     {% else %}
-                    <a href="{% url reaper.sarimui.views.plugin_info_view plugin.nessusid, v %}">{{v}}</a>
+                    <a href="{% url plugin plugin.nessusid, v %}">{{v}}</a>
                     {% endifequal %}
                     {% endfor %}
                 </td>

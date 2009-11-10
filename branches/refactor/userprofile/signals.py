@@ -6,6 +6,7 @@ from userprofile.models import Activity
 def comment_handler(sender, **kwargs):
     comment = kwargs['instance']
     user = comment.user
+    print "COMMENT HANDLER: " + comment.comment
 
     if kwargs['created']:
         msg = "Posted a comment on " + str(comment.object)

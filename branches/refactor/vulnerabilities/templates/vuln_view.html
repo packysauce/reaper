@@ -28,8 +28,8 @@
 
 {% block sidebar %}
 <li class='sidenav_heading'>Arrange by</li>
-<li><a href="{% url index %}">Vulnerability</a></li>
-<li><a href="{% url index %}?view=ip">IP</a></li>
+<li><a href="{% url ips_by_vuln %}">Vulnerability</a></li>
+<li><a href="{% url vulns_by_ip %}">IP</a></li>
 {% endblock %}
 
 {% block main_body %}
