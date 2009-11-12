@@ -11,6 +11,8 @@ class Hostname(models.Model):
     id = models.IntegerField(primary_key=True)
     hostname = models.CharField(max_length=384)
     comments = generic.GenericRelation('sarim.Comment')
+    subscribers = generic.GenericRelation('subscriptions.Subscription')
+
     class Meta:
         managed = False
         ordering = ['hostname']
@@ -19,10 +21,12 @@ class Hostname(models.Model):
 class IpAddress(models.Model):
     def __unicode__(self):
         return ntoa(self.ip)
-    ip = models.IntegerField(primary_key=True)
+    id = models.IntegerField(db_column='ip', primary_key=True)
+    ip = models.IntegerField()
     hostnames = models.ManyToManyField('Hostname', through='IpHostname')
     macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
     comments = generic.GenericRelation('sarim.Comment')
+    subscribers = generic.GenericRelation('subscriptions.Subscription')
 
     class Meta:
         ordering = ['ip']
@@ -49,6 +53,7 @@ class Mac(models.Model):
     source = models.ForeignKey('sarim.Source', db_column='sourceid')
     entered = models.DateTimeField(auto_now_add=True)
     comments = generic.GenericRelation('sarim.Comment')
+    subscribers = generic.GenericRelation('subscriptions.Subscription')
     class Meta:
         ordering = ["entered"]
         get_latest_by = "entered"
