@@ -106,3 +106,28 @@ p.helptext {
     font-size: 0.9em;
     font-weight: normal;
 }
+
+div.subs_list {
+    float: left;
+    width:250px;
+    padding-right:20px;
+    padding-left:20px;
+    height:350px;
+}
+
+div#list_subs_wrapper {
+    height:360px;
+}
+
+a.btn_add {
+    float: right;
+}
+
+ul.subs_content {
+    overflow: auto;
+    height: 322px;
+}
+
+ul.subs_content > li {
+    list-style: none;
+}

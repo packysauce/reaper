@@ -5,6 +5,39 @@
 <p class='helptext'>Subscribing to devices allows you to receive filtered lists of updates about machines.<br>
 Such updates include vulnerabilities and comments involving machines you subscribe to.<br>
 Use this page to change your subscription settings</p></h1>
-<h2>Subscribed to...</h2>
-<h2>Add Subscribtion</h2>
+<div id="active_subs">
+    <h2>Subscribed to...</h2>
+    <div id="list_subs_wrapper">
+        <div class="subs_list">
+            <h2>IPs<a id="add-ip" class="btn_add" href="#">[+]</a></h2>
+            <ul class="subs_content">
+                {% for ip in subscribed_ips %}
+                <li id="ip-{{ip}}" class="subscribed">{{ ip }}</li>
+                {% empty %}
+                <li id="no-subscribed_ip">No Subscriptions</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="subs_list">
+            <h2>Hostnames<a id="add-host" class="btn_add" href="#">[+]</a></h2>
+            <ul class="subs_content">
+                {% for host in subscribed_hosts %}
+                <li id="host-{{host}}" class="subscribed">{{ host }}</li>
+                {% empty %}
+                <li id="no-subscribed_host">No Subscriptions</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="subs_list">
+            <h2>MACs<a id="add-mac" class="btn_add" href="#">[+]</a></h2>
+            <ul class="subs_content">
+                {% for mac in subscribed_macs %}
+                <li id="mac-{{mac}}" class="subscribed">{{ mac }}</li>
+                {% empty %}
+                <li id="no-subscribed_mac">No Subscriptions</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
