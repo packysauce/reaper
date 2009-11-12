@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class Subscription(models.Model):
     def get_receiving_object(self):
-        return content_object
+        return self.content_object
 
     #Simple generic many-to-many to allow users to subscribe to a device
     user = models.ForeignKey('auth.User', related_name='subscriptions')
@@ -16,3 +16,6 @@ class Subscription(models.Model):
     vulns = models.BooleanField(default=True)
     comments = models.BooleanField(default=True)
     #more to come...
+
+    class Meta:
+        unique_together = ('user', 'content_type', 'object_id')
