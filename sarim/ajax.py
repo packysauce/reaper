@@ -9,7 +9,7 @@ try:
 except:
     import django.utils.simplejson as json
 
-#@permission_required('sarim.add_comment')
+@permission_required('sarim.add_comment')
 def add_comment(request, object, id):
     if object == "Hostname":
         obj = Hostname.objects.get(hostname__iexact=id)

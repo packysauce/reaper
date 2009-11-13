@@ -10,12 +10,13 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
-    (r'^userprofile/', include('reaper.userprofile.urls')),
-    (r'^devices/', include('reaper.devices.urls')),
-    (r'^vulns/', include('reaper.vulnerabilities.urls')),
-    (r'^scans/', include('reaper.scans.urls')),
-    (r'^plugins/', include('reaper.plugins.urls')),
-    (r'^falsepositives/', include('reaper.falsepositives.urls')),
+    (r'^userprofile/', include('userprofile.urls')),
+    (r'^devices/', include('devices.urls')),
+    (r'^vulns/', include('vulnerabilities.urls')),
+    (r'^scans/', include('scans.urls')),
+    (r'^plugins/', include('plugins.urls')),
+    (r'^falsepositives/', include('falsepositives.urls')),
+    (r'^subscriptions/', include('subscriptions.urls')),
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     
