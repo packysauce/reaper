@@ -23,7 +23,7 @@ def index(request):
         else:
             render_dict['error'] = ['Unable to update profile']
 
-    render_dict['activity'] = Activity.objects.filter(user = user, timestamp__gte = datetime.datetime.now() - datetime.timedelta(days=30) )
+    render_dict['activity'] = Activity.objects.filter(user = user, timestamp__gte = datetime.datetime.now() - datetime.timedelta(days=7) )
     render_dict['form'] = UserProfileForm(instance=user.get_profile())
     
     return render_to_response('view_profile.html', render_dict, context_instance= RequestContext(request))

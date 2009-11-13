@@ -21,8 +21,7 @@ class Hostname(models.Model):
 class IpAddress(models.Model):
     def __unicode__(self):
         return ntoa(self.ip)
-    id = models.IntegerField(db_column='ip', primary_key=True)
-    ip = models.IntegerField()
+    ip = models.IntegerField(primary_key=True)
     hostnames = models.ManyToManyField('Hostname', through='IpHostname')
     macs = models.ManyToManyField('Mac', through='MacIp', related_name='ipaddresses')
     comments = generic.GenericRelation('sarim.Comment')
@@ -63,6 +62,7 @@ class Mac(models.Model):
 class MacIp(models.Model):
     mac = models.ForeignKey('Mac', db_column='macid', primary_key=True)
     ip = models.ForeignKey('IpAddress', db_column='ip', primary_key=True)
+    ip_id = models.IntegerField(db_column = 'ip')
     observed = models.DateTimeField(primary_key=True)
     entered = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey('sarim.Source', db_column='sourceid')
@@ -73,7 +73,7 @@ class MacIp(models.Model):
         managed = False
         db_table = u'macip'
 
-class Vlans(models.Model):
+class VlanDump(models.Model):
     id = models.IntegerField(primary_key=True)
     digest = models.CharField(max_length=192)
     record = models.TextField()
@@ -82,6 +82,7 @@ class Vlans(models.Model):
     class Meta:
         managed = False
         db_table = u'vlans'
+        get_latest_by = 'entered'
 
 class VlanScanState(models.Model):
     id = models.IntegerField(primary_key=True)
