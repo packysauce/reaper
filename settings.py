@@ -18,6 +18,9 @@ DATABASE_PASSWORD = 'vs-script,rw'         # Not used with sqlite3.
 DATABASE_HOST = 'ccdevdb'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+EMAIL_HOST = 'smtpmail.jlab.org'
+EMAIL_PORT = '25'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

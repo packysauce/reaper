@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
+import subscriptions.signals
+
 class Subscription(models.Model):
     def get_receiving_object(self):
         return self.content_object
