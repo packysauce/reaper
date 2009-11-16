@@ -15,8 +15,10 @@ class Subscription(models.Model):
     content_object = generic.GenericForeignKey()
 
     #Now what they subscribe to
-    vulns = models.BooleanField(default=True)
+    vulns = models.BooleanField(default=True, verbose_name='Vulnerabilities')
     comments = models.BooleanField(default=True)
+    subscriptions = models.BooleanField(default=False)
+    sod_notify = models.BooleanField(default=True, verbose_name='User-initiated scans') #Scan on demand notifications
     #more to come...
 
     class Meta:
