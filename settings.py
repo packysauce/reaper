@@ -96,7 +96,7 @@ INSTALLED_APPS = (
     'reaper.falsepositives',
     'reaper.scans',
     'reaper.userprofile',
-    'subscriptions',
+    'reaper.subscriptions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
