@@ -40,13 +40,19 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/opt/reaper/sarimui/static'
+if not DEBUG:
+    MEDIA_ROOT = '/opt/reaper/sarim/static'
+else:
+    MEDIA_ROOT = 'C:\\users\\pdwhite\\desktop\\reaper\\common\\static'
 PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'https://jsl8.jlab.org/sarim/site_media/'
+if not DEBUG:
+    MEDIA_URL = 'https://jsl8.jlab.org/sarim/site_media/'
+else:
+    MEDIA_URL = 'http://localhost:8000/site_media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
