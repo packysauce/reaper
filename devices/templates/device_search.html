@@ -2,7 +2,11 @@
 
 {% block extra_head %}
 <script language="javascript" type="text/javascript">
-   function GoToURL() {
+    $(document).ready( function() {
+        $("#searchText").autocomplete("{% url device_ac %}")
+    });
+
+    function GoToURL() {
         var url = document.getElementById('searchText').value;
         location.href = '{% url device_search %}?q=' + url;
     } 

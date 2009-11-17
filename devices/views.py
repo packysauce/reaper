@@ -20,6 +20,7 @@ def device_search(request):
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'Search'}
     render_dict['category'] = "Device"
     render_dict['search_header'] = "Enter an IP or MAC address, or hostname"
+    render_dict['ac_url'] = reverse('device_ac')
     what = ''
     for i in request.GET.keys():
         if i.lower() == 'q':

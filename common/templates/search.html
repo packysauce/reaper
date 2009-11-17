@@ -2,6 +2,17 @@
 
 {% load searchutils %}
 
+{% block extra_head %}
+{% if ac_url %}
+<script type="text/javascript">
+    $(document).ready( function() {
+            $("#searchbox").autocomplete("{{ ac_url }}", {delay:10});
+    });
+</script>
+{% endif %}
+{% endblock %}
+
+
 {% block main_body %}
 
 <h1>{{ category }} Search</h1>
@@ -10,7 +21,7 @@
     <form method='get'>
         {% block search_header %} {{search_header}} {% endblock %}
         <br />
-        <input type='text' onclick='javascript:this.value = "";' name='q' value='{{search_term}}'/><input type='submit' value='Search' /><br />
+        <input id="searchbox" type='text' onclick='javascript:this.value = "";' name='q' value='{{search_term}}'/><input type='submit' value='Search' /><br />
         {% block search_options %}{% endblock %}
     </form>
 
