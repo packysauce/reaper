@@ -1,47 +1,90 @@
 {% extends 'base.html' %}
+{% load subscription_utils %}
 
 {% block extra_head %}
 <script type="text/javascript">
-$(document).ready(function() {
-    $("a.fp_create").click(function() {
-        include = this.parentNode.include.value;
-        nessusid = this.parentNode.nessusid.value;
-        $.post('{% url fp_create_ajax %}', {'include':include, 'nessusid':nessusid},
-            function(data, textStatus) {
-                 if(textStatus == "success" && data.result == "success") {
-                     var formobj = $("#fp_create_"+data.nessusid);
-                     var row = formobj.parent();
-                     row.addClass(' falsepositive');
-                     formobj.remove();
-                 } else {
-                     alert(data.error);
-                 }
-            },
-            "json"
-            );
-    });
-
-    $("a#link_add_comment").click(function() {
-        comment = prompt("Add comment for {{ entry }}", "Type your comment here");
-        if (comment == null || comment == "Type your comment here" || comment == "") {
-            alert("Comment not saved.")
-            return false;
-        }
-
-        $.post('{% url add_comment subtitle entry %}', {'comment':comment},
-            function(data, textStatus) {
-                if(textStatus == "success" && data.result == "success") {
-                    $('ul#comment_list').prepend("<li>{{ user }} - Just now<br>"+comment+"</li>");
+    function do_subscribe(type, id) {
+        $.post('{% url subscribe %}', {'type': type, 'id': id},
+            function(data,textStatus) {
+                if(data.result == "success") {
+                    return true;
                 } else {
-                    alert("Comment not saved. Error " + data.error);
+                    alert(data.message);
+                    return false;
                 }
             },
             "json"
-            );
+        );
+    }
 
-        return false;
+    function do_unsubscribe(type, id) {
+        $.post('{% url unsubscribe %}', {'type': type, 'id': id},
+            function(data,textStatus) {
+                if(data.result == "success") {
+                    return true;
+                } else {
+                    alert(data.message);
+                    return false;
+                }
+            },
+            "json"
+        );
+    }
+
+    $(document).ready(function() {
+            $("input[type=checkbox]#toggle_subscribe").click(function() {
+                if (this.checked) {
+                    if (!do_subscribe('{{dev_type}}', '{{entry}}')) {
+                        //Subscribe failed
+                        this.checked = true;
+                    }
+                } else {
+                    if (!do_unsubscribe('{{dev_type}}', '{{entry}}')) {
+                        //Unsubscribe failed
+                        this.checked = false;
+                    }
+                }
+            });
+
+            $("a.fp_create").click(function() {
+                    include = this.parentNode.include.value;
+                    nessusid = this.parentNode.nessusid.value;
+                    $.post('{% url fp_create_ajax %}', {'include':include, 'nessusid':nessusid},
+                        function(data, textStatus) {
+                        if(textStatus == "success" && data.result == "success") {
+                        var formobj = $("#fp_create_"+data.nessusid);
+                        var row = formobj.parent();
+                        row.addClass(' falsepositive');
+                        formobj.remove();
+                        } else {
+                        alert(data.error);
+                        }
+                        },
+                        "json"
+                        );
+                    });
+
+            $("a#link_add_comment").click(function() {
+                    comment = prompt("Add comment for {{ entry }}", "Type your comment here");
+                    if (comment == null || comment == "Type your comment here" || comment == "") {
+                    alert("Comment not saved.")
+                    return false;
+                    }
+
+                    $.post('{% url add_comment subtitle entry %}', {'comment':comment},
+                        function(data, textStatus) {
+                        if(textStatus == "success" && data.result == "success") {
+                        $('ul#comment_list').prepend("<li>{{ user }} - Just now<br>"+comment+"</li>");
+                        } else {
+                        alert("Comment not saved. Error " + data.error);
+                        }
+                        },
+                        "json"
+                        );
+
+                    return false;
+                    });
     });
-});
 </script>    
 {% endblock %}
 
@@ -77,6 +120,7 @@ $(document).ready(function() {
         </td>
         {% endif %}
     </tr>
+    <tr><td colspan=2><label for="toggle_subscribe">Subscribe</label><input id="toggle_subscribe" type="checkbox" checked='{{ user|subscribed_to:entry }}'></input>
     </table>
     <h2>Comments <a id="link_add_comment" href="#">[add]</a></h2>
     {% for comment in comments %}

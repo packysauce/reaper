@@ -8,6 +8,29 @@ try:
 except:
     import django.utils.simplejson as json
 
+def delete_subscription(request):
+    type = ''
+    id = ''
+    try:
+        type = request.POST['type']
+        if type not in ['ip', 'host', 'mac']:
+            raise ValueError('Invalid type specified')
+        id = request.POST['id']
+    except:
+        return HttpResponse( json.dumps( {'result': 'failure', 'message': 'Invalid request type'} ) )
+
+    try:
+        if type == 'ip':
+            IpAddress.objects.get(ip=id).subscribers.get(user=request.user).delete()
+        elif type == 'host':
+            Hostname.objects.get(hostname=id).subscribers.get(user=request.user).delete()
+        elif type == 'mac':
+            Mac.objects.get(mac=id).subscribers.get(user=request.user).delete()
+        return HttpResponse( json.dumps( {'result': 'success'} ) )
+    except Exception, e:
+        return HttpResponse( json.dumps( {'result': 'failure', 'message': str(e)} ) )
+
+
 def create_subscription(request):
     if request.POST.has_key('type') and request.POST['type'] in ['ip','host','mac']:
         sub_type = request.POST['type']

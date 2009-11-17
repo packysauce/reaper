@@ -88,10 +88,13 @@ def device_view_core(request, what, days_back):
 
     if ip_re.match(what):
         render_dict = ip_view_core(request, what, days_back)
+        render_dict['dev_type'] = 'ip'
     elif mac_re.match(what):
         render_dict = mac_view_core(request, what, days_back)
+        render_dict['dev_type'] = 'mac'
     else:
         render_dict = host_view_core(request, what, days_back)
+        render_dict['dev_type'] = 'host'
 
     if type(render_dict) == int:
         return HttpResponseRedirect(reverse('device_search'))
