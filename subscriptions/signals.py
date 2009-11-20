@@ -5,7 +5,6 @@ from devices.models import *
 from userprofile.models import Activity
 
 def activity_handler(sender, **kwargs):
-    print 'received signal'
     instance = kwargs['instance']
     if not hasattr(instance, 'get_receiving_object'):
         #can't use this object in this handler, bail
@@ -18,12 +17,10 @@ def activity_handler(sender, **kwargs):
     #a message indicating what happened
     notify = set([i.user.email for i in receiver.subscribers.all()])
     notify.remove(user.email)
-    print notify
     if len(notify) == 0:
         #nobody's listening...
         return
 
-    print 'sending mail'
     send_mail('{user.username} added a {something} to {what}'.format(
         user=user, something =instance._meta.verbose_name, what= str(receiver)),
         ('You are receiving this message because you are subscribed to updates on {what}.\n' +
