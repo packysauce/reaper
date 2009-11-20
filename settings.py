@@ -57,7 +57,10 @@ else:
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+if not DEBUG:
+    ADMIN_MEDIA_PREFIX = '/media/'
+else:
+    ADMIN_MEDIA_PREFIX = 'http://localhost:800/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'x)a51zz(%*mr=0&jfkrg1u^x=622+1icq#tc-30*%k#b%y*j-j'
