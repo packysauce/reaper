@@ -72,7 +72,9 @@ Use this page to change your subscription settings</p></h1>
             <ul class="subs_content">
                 {% for ip_sub in subscribed_ips %}
                     {% with ip_sub.content_object as ip %}
-                    <li id="ip-{{ip_sub}}" class="subscribed">{{ ip }}</li>
+                    <li id="ip-{{ip_sub}}" class="subscribed">
+                        <a href="{% url device ip %}">{{ ip }}</a>
+                    </li>
                     {% endwith %}
                 {% empty %}
                 <li id="no-subscribed_ip">No Subscriptions</li>
@@ -84,7 +86,9 @@ Use this page to change your subscription settings</p></h1>
             <ul class="subs_content">
                 {% for host_sub in subscribed_hosts %}
                     {% with host_sub.content_object as host %}
-                        <li id="host-{{host}}" class="subscribed">{{ host }}</li>
+                    <li id="host-{{host}}" class="subscribed">
+                        <a href="{% url device host %}">{{ host }}</a>
+                    </li>
                     {% endwith %}
                 {% empty %}
                 <li id="no-subscribed_host">No Subscriptions</li>
@@ -96,7 +100,9 @@ Use this page to change your subscription settings</p></h1>
             <ul class="subs_content">
                 {% for mac_sub in subscribed_macs %}
                     {% with mac_sub.content_object as mac %}
-                        <li id="mac-{{mac}}" class="subscribed">{{ mac }}</li>
+                    <li id="mac-{{mac}}" class="subscribed">
+                        <a href="{% url device mac %}">{{ mac }}</a>
+                    </li>
                     {% endwith %}
                 {% empty %}
                 <li id="no-subscribed_mac">No Subscriptions</li>

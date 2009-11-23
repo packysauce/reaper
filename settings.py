@@ -3,6 +3,7 @@ import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+DEBUG_HOST = "tonystark"
 
 ADMINS = (
     ('Patrick White', 'pdwhite@jlab.org.'),
@@ -52,7 +53,7 @@ PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 if not DEBUG:
     MEDIA_URL = 'https://jsl8.jlab.org/sarim/site_media/'
 else:
-    MEDIA_URL = 'http://localhost:8000/site_media/'
+    MEDIA_URL = 'http://' + DEBUG_HOST + '/site_media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -60,7 +61,7 @@ else:
 if not DEBUG:
     ADMIN_MEDIA_PREFIX = '/media/'
 else:
-    ADMIN_MEDIA_PREFIX = 'http://localhost:800/admin_media/'
+    ADMIN_MEDIA_PREFIX = 'http://' + DEBUG_HOST + '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'x)a51zz(%*mr=0&jfkrg1u^x=622+1icq#tc-30*%k#b%y*j-j'

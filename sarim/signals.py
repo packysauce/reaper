@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from reaper.userprofile.models import UserProfile
+from userprofile.models import UserProfile
 
 def create_profile_handler(sender, **kwargs):
     user_instance = kwargs['instance']

@@ -6,9 +6,6 @@
 #
 # Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
 # into your database.
-import sys
-sys.path.append('/opt/reaper')
-
 from django.db import models
 from utils.fields import SparseField
 from utils.bobdb import *
@@ -16,7 +13,6 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
 import django.contrib.auth.models
-import sarim.signals
 
 class Comment(models.Model):
     def get_receiving_object(self):
@@ -111,4 +107,5 @@ class Top20Lists(models.Model):
         db_table = u'top20lists'
 
 
+####### SIGNALS
 

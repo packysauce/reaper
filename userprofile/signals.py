@@ -1,7 +1,6 @@
+from sarim.models import *
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.contrib.auth.models import User
-from sarim.models import *
-from userprofile.models import Activity
 
 def default_handler(sender, **kwargs):
     instance = kwargs['instance']

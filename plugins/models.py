@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes import generic
-from reaper.utils.fields import SparseField
+from utils.fields import SparseField
 from sarim.models import Comment
 
 # Create your models here.

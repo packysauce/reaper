@@ -1,9 +1,6 @@
 from django.db import models
-from sarim.models import *
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-
-import userprofile.signals
 
 # Create your models here.
 
@@ -19,3 +16,4 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     default_days_back = models.IntegerField(max_length=2, default=7)
     comments = generic.GenericRelation('sarim.Comment')
+

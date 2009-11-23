@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes import generic
-from reaper.sarim.models import Comment
+from sarim.models import Comment
 from utils.bobdb import *
 
 # Create your models here.

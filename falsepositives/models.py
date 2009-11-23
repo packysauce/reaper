@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from sarim.models import Comment
 
 # Create your models here.
 class FalsePositive(models.Model):

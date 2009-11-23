@@ -1,8 +1,8 @@
-from sarimui.models import *
 from datetime import *
 from utils.bobdb import *
 from utils.djangolist import *
 from django.db.models import Q
+from devices.models import *
 
 class FalsePositivesHelper(object):
     def __init__(self, ip=None, plugin=None):
