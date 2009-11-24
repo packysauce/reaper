@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.template import RequestContext
 from devices.models import *
 from vulnerabilities.models import *
+from falsepositives.models import *
 from utils.bobdb import *
 from utils.djangolist import *
 from utils.permissionutils import *

@@ -16,7 +16,8 @@ def activity_handler(sender, **kwargs):
     #A user has done something, send all the other users
     #a message indicating what happened
     notify = set([i.user.email for i in receiver.subscribers.all()])
-    notify.remove(user.email)
+    if user.email in notify:
+        notify.remove(user.email)
     if len(notify) == 0:
         #nobody's listening...
         return

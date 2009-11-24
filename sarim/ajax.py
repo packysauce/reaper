@@ -18,10 +18,12 @@ def add_comment(request, object, id):
     elif object == "MAC":
         obj = Mac.objects.get(mac__iexact=id)
     else:
-        return HttpResponseBadRequest( json.dumps( {'result':'failure', 'error':'Object not found'} ) )
+        return HttpResponse( json.dumps( {'result':'failure', 'error':'Object not found'} ) )
 
     try:
         obj.comments.create(user=request.user, comment=request.POST['comment'])
-    except:
-        return HttpResponseBadRequest( json.dumps( {'result':'failure', 'error':'Bad data passed'} ) )
-    return HttpResponse( json.dumps( {'result': 'success'} ) )
+        return HttpResponse( json.dumps( {'result': 'success'} ) )
+    except Exception, e:
+        import traceback
+        err = traceback.format_exc()
+        return HttpResponse( json.dumps( {'result':'failure', 'error': err} ) )

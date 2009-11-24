@@ -67,19 +67,18 @@
             $("a#link_add_comment").click(function() {
                     comment = prompt("Add comment for {{ entry }}", "Type your comment here");
                     if (comment == null || comment == "Type your comment here" || comment == "") {
-                    alert("Comment not saved.")
-                    return false;
+                        return false;
                     }
 
                     $.post('{% url add_comment subtitle entry %}', {'comment':comment},
                         function(data, textStatus) {
-                        if(textStatus == "success" && data.result == "success") {
-                        $('ul#comment_list').prepend("<li>{{ user }} - Just now<br>"+comment+"</li>");
-                        } else {
-                        alert("Comment not saved. Error " + data.error);
-                        }
+                            if(textStatus == "success" && data.result == "success") {
+                                $('ul#comment_list').prepend("<li>{{ user }} - Just now<br>"+comment+"</li>");
+                            } else {
+                                alert("Comment not saved. Error " + data.error);
+                            }
                         },
-                        "json"
+                            "json"
                         );
 
                     return false;
@@ -123,15 +122,11 @@
     <tr><td colspan=2><label for="toggle_subscribe">Subscribe</label><input id="toggle_subscribe" type="checkbox" checked='{{ user|subscribed_to:entry }}'></input>
     </table>
     <h2>Comments <a id="link_add_comment" href="#">[add]</a></h2>
+    <ul id="comment_list">
     {% for comment in comments %}
-        {% if forloop.first %}
-        <ul id="comment_list">
-        {% endif %}
             <li>{{ comment.user }} on {{comment.entered|date:"F j, Y @ P"}}<br>{{comment.comment}}</li>
-        {% if forloop.last %}
-        </ul>
-        {% endif %}
     {% endfor %}
+    </ul>
     </tr>
 
 <h1>Scan Information</h1>

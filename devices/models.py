@@ -73,6 +73,17 @@ class MacIp(models.Model):
         managed = False
         db_table = u'macip'
 
+class Vlan(models.Model):
+    vlan_id = models.IntegerField(max_length=4)
+    entered = models.DateTimeField(auto_now=True, auto_now_add=True)
+    network = models.CharField(max_length=43) #It's big to support IPv6
+    purpose = models.TextField()
+    comments = generic.GenericRelation('sarim.Comment')
+    subscribers = generic.GenericRelation('subscriptions.Subscription')
+
+    class Meta:
+        get_latest_by = 'entered'
+
 class VlanDump(models.Model):
     id = models.IntegerField(primary_key=True)
     digest = models.CharField(max_length=192)
