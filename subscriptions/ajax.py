@@ -2,7 +2,6 @@ from subscriptions.models import *
 from django.http import *
 from devices.models import *
 from utils.bobdb import aton
-
 try:
     import json
 except:

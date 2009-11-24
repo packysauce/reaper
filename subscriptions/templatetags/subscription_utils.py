@@ -1,10 +1,9 @@
-from django.template import Library
 from reaper.utils.bobdb import *
+from django.template import Library
 from devices.models import *
 
 import re
 register = Library()
-
 @register.filter
 def subscribed_to(user, machine):
     if SARIMUI_IP_RE.match(machine):
