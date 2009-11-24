@@ -131,3 +131,18 @@ ul.subs_content {
 ul.subs_content > li {
     list-style: none;
 }
+
+div.vlan_list { 
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 830px;
+    height: 270px;
+}
+
+ul.vlans {
+    float:left;
+}
+ul.vlans > li {
+    list-style: none;
+}
+
