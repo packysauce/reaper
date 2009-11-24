@@ -89,6 +89,7 @@ class Vlan(models.Model):
 
     class Meta:
         get_latest_by = 'entered'
+        ordering = ('vlan_id',)
 
 class VlanDump(models.Model):
     id = models.IntegerField(primary_key=True)

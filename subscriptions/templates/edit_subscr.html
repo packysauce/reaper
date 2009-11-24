@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load subscription_utils %}
+{% load comparisons %}
 
 {% block extra_head %}
 <!--CSS file (default YUI Sam Skin) -->
@@ -26,6 +28,14 @@
 <script type='text/javascript'>
     var posturl = '{% url subscribe %}';
 
+    function check_all() {
+        $('input.vlan-chk').attr('checked', true);
+    }
+
+    function check_none() {
+        $('input.vlan-chk').removeAttr('checked');
+    }
+
     var do_add = function(stype, sid) {
         $.post(posturl, {'type': stype, 'id': sid},
             function(data, textStatus) {
@@ -52,6 +62,29 @@ Such updates include vulnerabilities and comments involving machines you subscri
 Use this page to change your subscription settings</p></h1>
 <div id="active_subs">
     <h2>Subscribed to...</h2>
+    <div class="vlan_list">
+        <h2>VLANs <sub style="float:right;">(Select <a href="javascript:check_all();">All</a> or <a href="javascript:check_none();">None</a>)</sub></h2>
+        <form method="POST">
+            {% for v in vlans %}
+            {% ifequal forloop.counter0|mod:10 0 %}
+            <ul class="vlans">
+            {% endifequal %}
+                <li>
+                    <input class="vlan-chk" value='{{v.vlan_id}}' name='vlans' type='checkbox' id='chk-vlan-{{v.vlan_id}}' {% if user|subscribed_to:v %}checked='true'{%endif%}/>
+                    <label title='{{v.network}} - {{v.purpose}}' for="chk-vlan-{{v.vlan_id}}">{{v.vlan_id}}</label>
+                </li>
+
+            {%if forloop.last%}
+                <li><input type="submit" value="Save"></li>
+            </ul>
+            {% else %}
+                {% ifequal forloop.counter|mod:10 0 %}
+                    </ul>
+                {% endifequal %}
+            {% endif %}
+            {% endfor %}
+        </form>
+    </div>
     <div id="list_subs_wrapper">
         <div class="subs_list">
             <h2>IPs</h2>
@@ -68,7 +101,7 @@ Use this page to change your subscription settings</p></h1>
             </ul>
         </div>
         <div class="subs_list">
-            <h2>Hostnames<a id="add-host" class="btn_add" href="#">[+]</a></h2>
+            <h2>Hostnames</h2>
             <ul class="subs_content">
                 {% for host_sub in subscribed_hosts %}
                     {% with host_sub.content_object as host %}
@@ -82,7 +115,7 @@ Use this page to change your subscription settings</p></h1>
             </ul>
         </div>
         <div class="subs_list">
-            <h2>MACs<a id="add-mac" class="btn_add" href="#">[+]</a></h2>
+            <h2>MACs</h2>
             <ul class="subs_content">
                 {% for mac_sub in subscribed_macs %}
                     {% with mac_sub.content_object as mac %}
