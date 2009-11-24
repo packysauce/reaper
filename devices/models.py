@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from sarim.models import Comment
 from utils.bobdb import *
+import ipaddr
 
 # Create your models here.
 class Hostname(models.Model):
@@ -74,8 +75,13 @@ class MacIp(models.Model):
         db_table = u'macip'
 
 class Vlan(models.Model):
+    def get_hosts(self):
+        ip_list = [int(i) for i in ipaddr.IPNetwork(self.network).iterhosts()]
+        return IpAddress.objects.filter(ip__in = ip_list)
+
     vlan_id = models.IntegerField(max_length=4)
-    entered = models.DateTimeField(auto_now=True, auto_now_add=True)
+    entered = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
     network = models.CharField(max_length=43) #It's big to support IPv6
     purpose = models.TextField()
     comments = generic.GenericRelation('sarim.Comment')

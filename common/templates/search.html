@@ -6,7 +6,7 @@
 {% if ac_url %}
 <script type="text/javascript">
     $(document).ready( function() {
-            $("#searchbox").autocomplete("{{ ac_url }}", {delay:10});
+            $("#searchbox").autocomplete("{{ ac_url }}", {delay:10,minChars:3});
     });
 </script>
 {% endif %}

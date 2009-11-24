@@ -39,22 +39,8 @@
             );
     };
 
-    var add_ip = function() {
-        do_add('ip', prompt('Enter an IP address to subscribe to (short IPs ok)'))
-    };
-
-    var add_host = function() {
-        do_add('host', prompt('Enter a hostname to subscribe to (omit .jlab.org)'))
-    };
-
-    var add_mac = function() {
-        do_add('mac', prompt('Enter a mac address to subscribe to (with semicolons)'))
-    };
-
     $(document).ready(function() {
-        $('#add-ip').click(add_ip);
-        $('#add-host').click(add_host);
-        $('#add-mac').click(add_mac);
+
     });
 </script>
 {% endblock %}
@@ -68,7 +54,7 @@ Use this page to change your subscription settings</p></h1>
     <h2>Subscribed to...</h2>
     <div id="list_subs_wrapper">
         <div class="subs_list">
-            <h2>IPs<a id="add-ip" class="btn_add" href="#">[+]</a></h2>
+            <h2>IPs</h2>
             <ul class="subs_content">
                 {% for ip_sub in subscribed_ips %}
                     {% with ip_sub.content_object as ip %}

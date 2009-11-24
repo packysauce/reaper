@@ -7,7 +7,7 @@ from django.db import connection as cx
 @user_passes_test(lambda u: u.is_staff)
 def autocomplete_search_devices(request):
     if not request.GET.has_key('q'):
-        return HttpResponseBadRequest( json.dumps({'failure': 'invalid request'}))
+        return HttpResponse( json.dumps({'failure': 'invalid request'}))
 
     searchstr = request.GET['q']
 
@@ -15,8 +15,8 @@ def autocomplete_search_devices(request):
     macs = Mac.objects.filter(mac__icontains=searchstr)
 
     if request.GET.has_key('limit'):
-        hostnames = hostnames[:request.GET['limit']]
-        macs = macs[:request.GET['limit']]
+        hostnames = hostnames[:int(request.GET['limit'])]
+        macs = macs[:int(request.GET['limit'])]
 
     return HttpResponse( '\n'.join([i['hostname'] for i in hostnames.values('hostname')]) + 
             '\n'.join([i['mac'] for i in macs.values('mac')]))

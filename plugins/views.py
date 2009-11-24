@@ -116,6 +116,7 @@ def plugin_search(request):
     render_dict = {'pagetitle': 'Plugins', 'subtitle': 'Search'}
     render_dict['category'] = "Plugin"
     render_dict['search_header'] = "Enter a Nessus ID"
+    render_dict['ac_url'] = reverse('plugin_ac')
     what = ''
     for i in request.GET.keys():
         if i.lower() == 'q':
