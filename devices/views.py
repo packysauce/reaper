@@ -341,8 +341,8 @@ def mac_view_core(request, mac, days_back):
             for (x,y) in vulns:
                 z = False
                 r = FalsePositive.objects.filter(
-                        Q(includes=_ip) | Q(include_all=True),
-                        ~Q(excludes=_ip),
+                        Q(includes=ip) | Q(include_all=True),
+                        ~Q(excludes=ip),
                         plugin__nessusid = y
                         )
                 if len(r) > 0:

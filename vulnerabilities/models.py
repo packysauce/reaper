@@ -5,7 +5,7 @@ from plugins.models import *
 
 # Create your models here.
 class ScanResults(models.Model):
-    def get_vuln_plugins(self):   
+    def get_vulns(self):   
         nessusids = [i.split('|')[1] for i in self.vulns.split(',')]
         plugins = []
 

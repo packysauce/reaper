@@ -68,19 +68,19 @@ class Plugin(models.Model):
             return None
     def __get_desc(self):
         self.__parse_desc()
-        if self.descparts.has_key('description')
+        if self.descparts.has_key('description'):
             return self.descparts['description']
         else:
             return None
     def __get_solution(self):
         self.__parse_desc()
-        if self.descparts.has_key('solution')
+        if self.descparts.has_key('solution'):
             return self.descparts['solution']
         else:
             return None
     def __get_riskfactor(self):
         self.__parse_desc()
-        if self.descparts.has_key('riskfactor')
+        if self.descparts.has_key('riskfactor'):
             return self.descparts['riskfactor']
         else:
             return None
