@@ -1,9 +1,19 @@
 from django.db import models
 from django.contrib.contenttypes import generic
 from devices.models import IpAddress
+from plugins.models import *
 
 # Create your models here.
 class ScanResults(models.Model):
+    def get_vuln_plugins(self):   
+        nessusids = [i.split('|')[1] for i in self.vulns.split(',')]
+        plugins = []
+
+        for nid in nessusids:
+            plugins.append(Plugin.objects.filter(nessusid=nid, entered__lte=self.end)[0])
+
+        return plugins
+
     def __unicode__(self):
         return "{0}".format(self.id)
     id = models.IntegerField(primary_key=True)
