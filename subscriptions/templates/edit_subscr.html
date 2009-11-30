@@ -3,31 +3,8 @@
 {% load comparisons %}
 
 {% block extra_head %}
-<!--CSS file (default YUI Sam Skin) -->
-<link type="text/css" rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/autocomplete/assets/skins/sam/autocomplete.css">
-
-<!-- Dependencies -->
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/datasource/datasource-min.js"></script>
-
-<!-- OPTIONAL: Get (required only if using ScriptNodeDataSource) -->
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/get/get-min.js"></script>
-
-<!-- OPTIONAL: Connection (required only if using XHRDataSource) -->
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/connection/connection-min.js"></script>
-
-<!-- OPTIONAL: Animation (required only if enabling animation) -->
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/animation/animation-min.js"></script>
-
-<!-- OPTIONAL: JSON (enables JSON validation) -->
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/json/json-min.js"></script>
-
-<!-- Source file -->
-<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/autocomplete/autocomplete-min.js"></script>
 
 <script type='text/javascript'>
-    var posturl = '{% url subscribe %}';
-
     function check_all() {
         $('input.vlan-chk').attr('checked', true);
     }
@@ -36,22 +13,6 @@
         $('input.vlan-chk').removeAttr('checked');
     }
 
-    var do_add = function(stype, sid) {
-        $.post(posturl, {'type': stype, 'id': sid},
-            function(data, textStatus) {
-                if(textStatus == "success" && data.result == "success") {
-                    alert('Subscribed OK!');
-                } else {
-                    alert(data.error);
-                };
-            },
-            "json"
-            );
-    };
-
-    $(document).ready(function() {
-
-    });
 </script>
 {% endblock %}
 
@@ -64,6 +25,9 @@ Use this page to change your subscription settings</p></h1>
     <h2>Subscribed to...</h2>
     <div class="vlan_list">
         <h2>VLANs <sub style="float:right;">(Select <a href="javascript:check_all();">All</a> or <a href="javascript:check_none();">None</a>)</sub></h2>
+        <div class="{{vlan_msg_type}}" id="vlan_list_messages">
+            {{vlan_msg}}
+        </div>
         <form method="POST">
             {% for v in vlans %}
             {% ifequal forloop.counter0|mod:10 0 %}
@@ -75,7 +39,7 @@ Use this page to change your subscription settings</p></h1>
                 </li>
 
             {%if forloop.last%}
-                <li><input type="submit" value="Save"></li>
+                <li><input id="vlan-submit" type="submit" value="Save"></li>
             </ul>
             {% else %}
                 {% ifequal forloop.counter|mod:10 0 %}

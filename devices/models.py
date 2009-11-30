@@ -79,6 +79,9 @@ class Vlan(models.Model):
         ip_list = [int(i) for i in ipaddr.IPNetwork(self.network).iterhosts()]
         return IpAddress.objects.filter(ip__in = ip_list)
 
+    def __unicode__(self):
+        return u'VLAN {0}'.format(self.vlan_id)
+
     vlan_id = models.IntegerField(max_length=4)
     entered = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

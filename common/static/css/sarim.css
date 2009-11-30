@@ -141,8 +141,23 @@ div.vlan_list {
 
 ul.vlans {
     float:left;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 ul.vlans > li {
     list-style: none;
 }
 
+div#vlan_list_messages {
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+div#vlan_list_messages.error {
+    background: pink;
+}
+
+div#vlan_list_messages.success {
+    background: lightGreen;
+}
