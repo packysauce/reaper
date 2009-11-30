@@ -64,51 +64,6 @@ def plugin_info_view(request, plugin, version):
                 href = 'http://rhn.redhat.com/errata/%s.html' % rhsaid
                 render_dict['xref_list'].append( (type, id, href) )
 
-    #get everything ready to work on
-    desc = p.description
-    ldesc = desc.lower()
-    index = []
-    #words to look for
-    words = ['synopsis','description','solution','risk factor']
-    #build a list of tuples of format (<word position>, <word>)
-    for word in words:
-        try:
-            index.append( (ldesc.index(word), word) )
-        except:
-            index.append( (-1, word) )
-    #sort the aforementioned list according to word position
-    import operator
-    sindex = sorted(index, key=operator.itemgetter(0))
-
-    for pos, word in sindex:
-        #Get the tuple's position in the list of tuples
-        mappos = sindex.index( (pos, word) )
-        #-1 means the word wasn't found...
-        if pos == -1:
-            #All this does is go find the next word without a -1 position
-            #and copy all of the text from the start of the description to the
-            #first position found
-            if word == 'description':
-                x = -1
-                for i in range(mappos,len(sindex)):
-                    if sindex[i][0] != -1:
-                        x = sindex[i][0]
-                s = desc[0:x]
-            else:
-                continue
-        else:
-            if mappos == len(sindex)-1:
-                s = desc[pos+len(word):]
-            else:
-                s = desc[pos+len(word):sindex[mappos+1][0]]
-
-        #The nessus plugin info has some stupid escaping going on
-        s = s.replace(':\\n\\n', '')
-        s = s.replace('\\n', ' ')
-        s = s.replace(': ', '', 1)
-        #Take care of dictionary names with spaces in them
-        render_dict[word.replace(' ', '')] = s
-
     return render_to_response('plugin_info.html', render_dict, context_instance=RequestContext(request))
 
 @login_required

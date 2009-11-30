@@ -79,35 +79,35 @@
             {% endautoescape %}
         </div>
         {% endif %}
-        {% if synopsis %}
+        {% if plugin.synopsis %}
         <div id="synopsis">
             <h3>Synopsis</h3>
             {% autoescape off %}
-            {{synopsis}}
+            {{ plugin.synopsis }}
             {% endautoescape %}
         </div>
         {% endif %}
-        {% if description %}
+        {% if plugin.desc %}
         <div id="description">
             <h3>Description</h3>
             {% autoescape off %}
-            {{description}}
+            {{ plugin.desc }}
             {% endautoescape %}
         </div>
         {% endif %}
-        {% if solution %}
+        {% if plugin.solution %}
         <div id="solution">
             <h3>Solution</h3>
             {% autoescape off %}
-            {{solution}}
+            {{ plugin.solution }}
             {% endautoescape %}
         </div>
         {% endif %}
-        {% if riskfactor %}
+        {% if plugin.riskfactor %}
         <div id="riskfactor">
             <h3>Risk Factor</h3>
             {% autoescape off %}
-            {{riskfactor}}
+            {{ plugin.riskfactor }}
             {% endautoescape %}
         </div>
         {% endif %}

@@ -5,6 +5,79 @@ from sarim.models import Comment
 
 # Create your models here.
 class Plugin(models.Model):
+    def __init__(self, *args, **kwargs):
+        super(Plugin,self).__init__(*args, **kwargs)
+        self.parsed = False
+        self.descparts = {}
+
+    def __parse_desc(self):
+        #get everything ready to work on
+        if self.parsed:
+            return
+        desc = self.description
+        ldesc = desc.lower()
+        index = []
+        #words to look for
+        words = ['synopsis','description','solution','risk factor']
+        #build a list of tuples of format (<word position>, <word>)
+        for word in words:
+            try:
+                index.append( (ldesc.index(word), word) )
+            except:
+                index.append( (-1, word) )
+        #sort the aforementioned list according to word position
+        import operator
+        sindex = sorted(index, key=operator.itemgetter(0))
+
+        for pos, word in sindex:
+            #Get the tuple's position in the list of tuples
+            mappos = sindex.index( (pos, word) )
+            #-1 means the word wasn't found...
+            if pos == -1:
+                #All this does is go find the next word without a -1 position
+                #and copy all of the text from the start of the description to the
+                #first position found
+                if word == 'description':
+                    x = -1
+                    for i in range(mappos,len(sindex)):
+                        if sindex[i][0] != -1:
+                            x = sindex[i][0]
+                    s = desc[0:x]
+                else:
+                    continue
+            else:
+                if mappos == len(sindex)-1:
+                    s = desc[pos+len(word):]
+                else:
+                    s = desc[pos+len(word):sindex[mappos+1][0]]
+
+            #The nessus plugin info has some stupid escaping going on
+            s = s.replace(':\\n\\n', '')
+            s = s.replace('\\n', ' ')
+            s = s.replace(': ', '', 1)
+            #Take care of dictionary names with spaces in them
+            self.descparts[word.replace(' ', '')] = s
+
+        self.parsed = True
+
+    def __get_synopsis(self):
+        self.__parse_desc()
+        return self.descparts['synopsis']
+    def __get_desc(self):
+        self.__parse_desc()
+        return self.descparts['description']
+    def __get_solution(self):
+        self.__parse_desc()
+        return self.descparts['solution']
+    def __get_riskfactor(self):
+        self.__parse_desc()
+        return self.descparts['riskfactor']
+
+    desc = property(__get_desc)
+    synopsis = property(__get_synopsis)
+    solution = property(__get_solution)
+    riskfactor = property(__get_riskfactor)
+
     def __unicode__(self):
         return u'nessus plugin {0}'.format(self.nessusid)
     id = models.IntegerField(primary_key=True)
