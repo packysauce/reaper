@@ -5,6 +5,11 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 DEBUG_HOST = "tonystark"
 
+if DEBUG:
+    SITE_URL = "http://tonystark.jlab.org"
+else:
+    SITE_URL = "https://jsl8.jlab.org/sarim"
+
 ADMINS = (
     ('Patrick White', 'pdwhite@jlab.org.'),
     # ('Your Name', 'your_email@domain.com'),

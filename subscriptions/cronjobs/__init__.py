@@ -3,6 +3,9 @@ from vulnerabilities.models import *
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import F
+from django.template.loader import render_to_string
+from utils.gatorlink import *
+from django.conf import settings
 import datetime as dt
 
 def get_vulns_in_vlan(vlan, days_back):
@@ -59,6 +62,10 @@ def get_mac_vulns(user, days_back):
 def get_host_vulns(user, days_back):
     """Gets the vulnerabilities for all the User's subscribed Hostnames"""
     sub_hosts = [i.content_object for i in user.subscriptions.filter(content_type=ContentType.objects.get_for_model(Hostname))]
+    owned_hosts = get_hosts_by_user(user.username)
+    diff_hosts = [i for i in owned_hosts if i not in sub_hosts]
+    sub_hosts += list(Hostname.objects.filter(hostname__in=diff_hosts))
+            
     delta = dt.datetime.now() - dt.timedelta(days=days_back)
 
     results = {}
@@ -79,7 +86,7 @@ def assemble_email(user, days_back=7):
     the list of vulnerabilities. In the case of a VLAN, the key is the VLAN id
     and the value is the dictionary of IPs"""
 
-    render_dict = {}
+    render_dict = {'SITE_URL': settings.SITE_URL}
     
     ip_vulns = get_ip_vulns(user, days_back)
     mac_vulns = get_mac_vulns(user, days_back)
@@ -99,7 +106,7 @@ def assemble_email(user, days_back=7):
     render_dict['machines'].update(mac_vulns)
     render_dict['machines'].update(host_vulns)
     render_dict['vlans'] = vlan_vulns
+    render_dict['days_back'] = days_back
     render_dict['other_vlans'] = separate_vlans
 
-    import pprint
-    pprint.pprint(render_dict)
+    return render_to_string('email/vuln_template.html', render_dict)

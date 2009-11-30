@@ -1,0 +1,27 @@
+<html>
+<body>
+    <h1>Vulnerabilities for the past {{ days_back }} days.</h1>
+
+    <p>
+    {% for m, vulns in machines.items %}
+    <h2>
+        <a href="{{SITE_URL}}{% url device m %}">{{ m }}</a>
+    </h2>
+    <ul>
+        {% for vuln in vulns %}
+        <li>{{ vuln.end|date:"F j, Y" }}<ul>
+            {% for p in vuln.get_vulns %}
+                <li><a href="{{SITE_URL}}{% url plugin p.nessusid 'latest' %}">{{ p.name }}</a></li>
+            {% endfor %}
+        </li></ul>
+        {% empty %}
+            <li><b>No vulnerabilities</b></li>
+        </li></ul>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+    </p>     
+
+    The preceeding list of vulnerabilities was generated based on the subscription settings in your SARIM profile page. To change your subscriptions, please visit <a href="{{SITE_URL}}{% url edit_subscriptions %}">your profile</a>.
+</body>
+</html>
