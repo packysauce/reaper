@@ -62,16 +62,28 @@ class Plugin(models.Model):
 
     def __get_synopsis(self):
         self.__parse_desc()
-        return self.descparts['synopsis']
+        if self.descparts.has_key('synopsis'):
+            return self.descparts['synopsis']
+        else:
+            return None
     def __get_desc(self):
         self.__parse_desc()
-        return self.descparts['description']
+        if self.descparts.has_key('description')
+            return self.descparts['description']
+        else:
+            return None
     def __get_solution(self):
         self.__parse_desc()
-        return self.descparts['solution']
+        if self.descparts.has_key('solution')
+            return self.descparts['solution']
+        else:
+            return None
     def __get_riskfactor(self):
         self.__parse_desc()
-        return self.descparts['riskfactor']
+        if self.descparts.has_key('riskfactor')
+            return self.descparts['riskfactor']
+        else:
+            return None
 
     desc = property(__get_desc)
     synopsis = property(__get_synopsis)
