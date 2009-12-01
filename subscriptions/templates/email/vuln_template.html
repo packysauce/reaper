@@ -1,12 +1,10 @@
-<html>
-<body>
-    <h1>Vulnerabilities for the past {{ days_back }} days.</h1>
-
-    <p>
+{% if machines %}
+<div>
+    <h2>Subscribed Devices</h2>
     {% for m, vulns in machines.items %}
-    <h2>
+    <h3>
         <a href="{{SITE_URL}}{% url device m %}">{{ m }}</a>
-    </h2>
+    </h3>
     <ul>
         {% for vuln in vulns %}
         <li>{{ vuln.end|date:"F j, Y" }}<ul>
@@ -20,8 +18,5 @@
         {% endfor %}
     </ul>
     {% endfor %}
-    </p>     
-
-    The preceeding list of vulnerabilities was generated based on the subscription settings in your SARIM profile page. To change your subscriptions, please visit <a href="{{SITE_URL}}{% url edit_subscriptions %}">your profile</a>.
-</body>
-</html>
+</div>
+{% endif %}

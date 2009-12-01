@@ -17,7 +17,7 @@ def get_vulns_in_vlan(vlan, days_back):
     end_ipn = int(network[-1])
     delta = dt.datetime.now() - dt.timedelta(days=days_back)
     
-    results = {}
+    results = {} # {ip: (vuln, vuln, vuln)}
     for i in ScanResults.objects.filter(ip__range=[start_ipn, end_ipn], vulns__isnull=False, end__gte=delta).order_by('ip'):
         if results.has_key(i.ip):
             results[i.ip].append(i)
@@ -80,6 +80,10 @@ def get_host_vulns(user, days_back):
             results[host] = tmp
 
     return results
+
+def assemble_vlan_email(user, vlans, days_back=7):
+    """Assembles an email specifically for large vlan reports (>20)"""
+    
     
 def assemble_email(user, days_back=7):
     """Returns a dictionary where the key is the device ID, the value is 
@@ -109,4 +113,7 @@ def assemble_email(user, days_back=7):
     render_dict['days_back'] = days_back
     render_dict['other_vlans'] = separate_vlans
 
-    return render_to_string('email/vuln_template.html', render_dict)
+    return render_to_string('email/wrapper.html', render_dict)
+
+#def email_users(days_back=7):
+#    for user in User.objects.filter(is_staff=True, email__isnull=False)

@@ -1,0 +1,13 @@
+<html>
+    <style type="text/css">
+        li {
+            list-style:none;
+        }
+    </style>
+    <body>
+    <h1>Vulnerabilities for the past {{ days_back }} days.</h1>
+        {% include 'email/vuln_template.html' %}
+        {% include 'email/vlan_template.html' %}
+    The preceeding list of vulnerabilities was generated based on the subscription settings in your SARIM profile page. To change your subscriptions, please visit <a href="{{SITE_URL}}{% url edit_subscriptions %}">your profile</a>.
+    </body>
+</html>
