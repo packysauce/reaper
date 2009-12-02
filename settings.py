@@ -26,6 +26,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 
 EMAIL_HOST = 'smtpmail.jlab.org'
 EMAIL_PORT = '25'
+EMAIL_FROM = 'sarim@jlab.org'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

@@ -6,6 +6,7 @@ from django.db.models import F
 from django.template.loader import render_to_string
 from utils.gatorlink import *
 from django.conf import settings
+from django.core import mail
 import datetime as dt
 
 def get_vulns_in_vlan(vlan, days_back):
@@ -80,15 +81,9 @@ def get_host_vulns(user, days_back):
             results[host] = tmp
 
     return results
-
-def assemble_vlan_email(user, vlans, days_back=7):
-    """Assembles an email specifically for large vlan reports (>20)"""
-    
     
 def assemble_email(user, days_back=7):
-    """Returns a dictionary where the key is the device ID, the value is 
-    the list of vulnerabilities. In the case of a VLAN, the key is the VLAN id
-    and the value is the dictionary of IPs"""
+    """Returns the email report for the user's susbscribed devices"""
 
     render_dict = {'SITE_URL': settings.SITE_URL}
     
@@ -100,20 +95,31 @@ def assemble_email(user, days_back=7):
     for v in [i.content_object for i in user.subscriptions.filter(content_type=ContentType.objects.get_for_model(Vlan))]:
         vlan_vulns[v.vlan_id] = get_vulns_in_vlan(v, days_back)
 
-    separate_vlans = {}
-    for vid in vlan_vulns.keys():
-        if len(vlan_vulns[vid]) > 20:
-            separate_vlans[vid] = vlan_vulns[vid]
-            del vlan_vulns[vid]
-
     render_dict['machines'] = ip_vulns.copy()
     render_dict['machines'].update(mac_vulns)
     render_dict['machines'].update(host_vulns)
     render_dict['vlans'] = vlan_vulns
     render_dict['days_back'] = days_back
-    render_dict['other_vlans'] = separate_vlans
 
     return render_to_string('email/wrapper.html', render_dict)
 
-#def email_users(days_back=7):
-#    for user in User.objects.filter(is_staff=True, email__isnull=False)
+def debug_email_user(user, to, days_back=7):
+    msg = mail.EmailMessage("SARIM Subscribed Vulnerabilities", assemble_email(user, days_back), settings.EMAIL_FROM, (to,))
+    msg.content_subtype = "html"
+    msg.send()
+
+def email_user(user, days_back=7):
+    msg = mail.EmailMessage("SARIM Subscribed Vulnerabilities", assemble_email(user, days_back), settings.EMAIL_FROM, (user.email,))
+    msg.content_subtype = "html"
+    msg.send()
+
+def email_users(days_back=7):
+    messages = []
+    for user in User.objects.filter(is_staff=True, email__isnull=False):
+        msg = mail.EmailMessage("SARIM Subscribed Vulnerabilities", assemble_email(user, days_back), settings.EMAIL_FROM, (user.email,))
+        msg.content_subtype = "html"
+        messages.append(msg)
+
+    cx = mail.get_connection()
+    cx.send_message(messages)
+    

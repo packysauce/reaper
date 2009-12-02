@@ -1,3 +1,4 @@
+{% load deviceutils %}
 {% if vlans %}
 <div>
     <h2>Subscribed VLANs</h2>
@@ -5,7 +6,7 @@
     <h3>{{ vlan }}</h3>
         <ul>
             {% for ip, vulns in ips.items %}
-            <li><a href="{{SITE_URL}}{% url device ip %}">{{ ip }}</a></li>
+            <li><a href="{{SITE_URL}}{% url device ip %}">{{ ip }} ({{ip|to_hostname}})</a></li>
                 {% for vuln in vulns %}
                 <ul>
                     <li>{{ vuln.end|date:"F j, Y"}}</li>
