@@ -7,7 +7,8 @@
     <body>
     <p>The following list of vulnerabilities was generated based on the subscription settings in your SARIM profile page. To change your subscriptions, please visit <a href="{{SITE_URL}}{% url edit_subscriptions %}">your profile</a>.</p>
     <h1>Vulnerabilities for the past {{ days_back }} days.</h1>
-        {% include 'email/vuln_template.html' %}
-        {% include 'email/vlan_template.html' %}
+        {% include 'email/vuln.html' %}
+        {% include 'email/vlan.html' %}
+        {% include 'email/subscription_list.html' %}
     </body>
 </html>
