@@ -81,7 +81,23 @@ def get_host_vulns(user, days_back):
             results[host] = tmp
 
     return results
-    
+
+def get_subscriptions(user):
+    """Gets all the active subscriptions for the user"""
+    get_ct = ContentType.objects.get_for_model
+    ip_type = get_ct(IpAddress)
+    hostname_type = get_ct(Hostname)
+    mac_type = get_ct(Mac)
+    vlan_type = get_ct(Vlan)
+
+    get_subs = lambda x:user.subscriptions.filter(content_type=x)
+
+    return (('IP Addresses', get_subs(ip_type)),
+            ('Hostnames', get_subs(hostname_type)),
+            ('MACs', get_subs(mac_type)),
+            ('VLANs', get_subs(vlan_type))
+            )
+
 def assemble_email(user, days_back=7):
     """Returns the email report for the user's susbscribed devices"""
 
@@ -100,6 +116,7 @@ def assemble_email(user, days_back=7):
     render_dict['machines'].update(host_vulns)
     render_dict['vlans'] = vlan_vulns
     render_dict['days_back'] = days_back
+    render_dict['subscriptions'] = get_subscriptions(user)
 
     return render_to_string('email/wrapper.html', render_dict)
 

@@ -1,0 +1,21 @@
+<div>
+    <h1>Current Subscriptions</h1>
+    <p>Listed below are all of the devices and vlans you are currently subscribed to</p>
+
+    {% for x, dev in subscriptions %}
+        {% ifchanged x %}
+            <h2>{{ x }}</h2>
+        {% endifchanged %}
+
+        {% for y in dev %}
+            {% with y.content_object as d %}
+                {% ifnotequal x 'VLANs' %}
+                <a href="{{SITE_URL}}{%url device d%}">{{ d }}</a>    
+                {% else %}
+                {{ d }}    
+                {% endifnotequal %}
+                {% if forloop.counter|divisibleby:8 %}</br>{%endif%}
+            {% endwith %}
+        {% endfor %}
+    {% endfor %}
+</div>
