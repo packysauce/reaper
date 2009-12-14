@@ -16,6 +16,10 @@ class Activity(models.Model):
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    default_days_back = models.IntegerField(max_length=2, default=7)
+    default_days_back = models.IntegerField(max_length=3, default=7)
+    report_frequency = models.IntegerField(max_length=3, default=7)
+    show_fp = models.BooleanField("Show False Positives?", default=True)
+
+    report_last_sent = models.DateField(null=True, blank=True)
     comments = generic.GenericRelation('sarim.Comment')
 

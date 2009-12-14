@@ -133,10 +133,13 @@ def email_user(user, days_back=7):
 def email_users(days_back=7):
     messages = []
     for user in User.objects.filter(is_staff=True, email__isnull=False):
-        msg = mail.EmailMessage("SARIM Subscribed Vulnerabilities", assemble_email(user, days_back), settings.EMAIL_FROM, (user.email,))
-        msg.content_subtype = "html"
-        messages.append(msg)
+        prof = user.get_profile()
+        if dt.date.today() >= prof.report_last_sent + dt.timedelta(days=prof.report_frequency):
+            msg = mail.EmailMessage("SARIM Subscribed Vulnerabilities", assemble_email(user, prof.report_frequency), settings.EMAIL_FROM, (user.email,))
+            msg.content_subtype = "html"
+            messages.append(msg)
+            prof.report_last_sent = dt.date.today()
+            prof.save()
 
-    cx = mail.get_connection()
-    cx.send_message(messages)
-    
+    cx = mail.SMTPConnection()
+    cx.send_messages(messages)
