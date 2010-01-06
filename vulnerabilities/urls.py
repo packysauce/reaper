@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from reaper.vulnerabilities import views
+from vulnerabilities import views
 
 urlpatterns = patterns('',
     url(r'^by_vuln/$', views.ips_by_vuln, name='ips_by_vuln'),

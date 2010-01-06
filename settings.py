@@ -1,7 +1,7 @@
 # Django settings for reaper project.
-import os
+import os, sys
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 DEBUG_HOST = "tonystark"
 
@@ -57,7 +57,7 @@ PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 if not DEBUG:
-    MEDIA_URL = 'https://jsl8.jlab.org/sarim/site_media/'
+    MEDIA_URL = 'https://jsl8.jlab.org/static/site_media/'
 else:
     MEDIA_URL = 'http://' + DEBUG_HOST + '/site_media/'
 
@@ -102,7 +102,6 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'django_extensions',
     'django.contrib.databrowse',
     'reaper.common',
     'reaper.devices',

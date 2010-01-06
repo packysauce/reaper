@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from reaper.scans import views
+from scans import views
 
 urlpatterns = patterns('',
     url(r'^(\d*)/$', views.scan_view, name='scan'),
