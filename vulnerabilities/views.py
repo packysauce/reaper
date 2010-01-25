@@ -46,6 +46,9 @@ def ips_by_vuln(request):
     timespan = date.today()-timedelta(days=days_back)
     results = ScanResults.objects.filter(end__range=(timespan, datetime.now()), state='up', vulns__isnull=False)
 
+    if len(results) == 0:
+        return render_to_response('ips_by_vuln.html', render_dict, context_instance=RequestContext(request))
+
     run_set_map = set([ (i.scanrun_id, i.scanrun.scanset_id) for i in results])
     sets = zip(*run_set_map)[1]
     scansets = ScanSet.objects.filter(id__in = set(sets))
