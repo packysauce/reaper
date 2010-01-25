@@ -50,7 +50,10 @@ def ips_by_vuln(request):
         return render_to_response('ips_by_vuln.html', render_dict, context_instance=RequestContext(request))
 
     run_set_map = set([ (i.scanrun_id, i.scanrun.scanset_id) for i in results])
-    sets = zip(*run_set_map)[1]
+    try:
+        sets = zip(*run_set_map)[1]
+    except:
+        sets = None
     scansets = ScanSet.objects.filter(id__in = set(sets))
 
     scan_types = {}
