@@ -1,14 +1,14 @@
 # Django settings for reaper project.
-import os, sys
+import os, sys, socket
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-DEBUG_HOST = "tonystark"
 
-if DEBUG:
-    SITE_URL = "http://tonystark.jlab.org"
-else:
-    SITE_URL = "https://jsl8.jlab.org/sarim"
+HOST = socket.gethostname()
+PROT = 'https'
+PATH = 'sarim'
+
+SITE_URL = "%s://%s/%s" % (PROT, HOST, PATH)
 
 ADMINS = (
     ('Patrick White', 'pdwhite@jlab.org.'),
@@ -56,18 +56,23 @@ PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-if not DEBUG:
-    MEDIA_URL = 'https://jsl8.jlab.org/static/site_media/'
+
+MEDIA_URL = '%s://%s' % (PROT, HOST)
+
+if 'jsl8' in HOST:
+    MEDIA_URL += '/static/site_media/'
 else:
-    MEDIA_URL = 'http://' + DEBUG_HOST + '/site_media/'
+    MEDIA_URL += "/site_media/"
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
+
+ADMIN_MEDIA_PREFIX = '%s://%s' % (PROT, HOST)
 if not DEBUG:
-    ADMIN_MEDIA_PREFIX = '/media/'
+    ADMIN_MEDIA_PREFIX += "/media/"
 else:
-    ADMIN_MEDIA_PREFIX = 'http://' + DEBUG_HOST + '/admin_media/'
+    ADMIN_MEDIA_PREFIX += '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'x)a51zz(%*mr=0&jfkrg1u^x=622+1icq#tc-30*%k#b%y*j-j'

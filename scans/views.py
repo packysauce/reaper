@@ -64,6 +64,12 @@ def scan_search(request):
     render_dict = {'pagetitle': 'Scans', 'subtitle': 'Search'}
     render_dict['category'] = "Scan"
     render_dict['search_header'] = "Enter a Scan ID"
+    render_dict['results'] = []
+    results = ScanRun.objects.filter( end__gte = date.today() - timedelta(days=7) ).order_by('-end')
+
+    for r in results:
+        render_dict['results'].append( {'url':reverse('scan', args=[r.id]), 'description': r.end, 'summary': r.id })
+
     what = ''
     for i in request.GET.keys():
         if i.lower() == 'q':
