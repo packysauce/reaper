@@ -44,7 +44,7 @@ def get_most_frequent_user_list(ip = None):
 
     user = 'secsys_r'
     db = 'secsys'
-    host = 'ccdevdb.jlab.org'
+    host = 'jsdb.jlab.org'
     password = 'SS-readonly'
 
     n_ip = anyton(ip)

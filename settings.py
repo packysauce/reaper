@@ -19,9 +19,9 @@ MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'sarim'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'sarimrw'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'vs-script,rw'         # Not used with sqlite3.
-DATABASE_HOST = 'ccdevdb'             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_USER = 'sarim_rw_jsl8'             # Not used with sqlite3.
+DATABASE_PASSWORD = '9WXLSyEMfJe8GaKM'         # Not used with sqlite3.
+DATABASE_HOST = 'jsdb'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 EMAIL_HOST = 'smtpmail.jlab.org'
@@ -72,7 +72,7 @@ ADMIN_MEDIA_PREFIX = '%s://%s' % (PROT, HOST)
 if not DEBUG:
     ADMIN_MEDIA_PREFIX += "/media/"
 else:
-    ADMIN_MEDIA_PREFIX += '/admin_media/'
+    ADMIN_MEDIA_PREFIX += '/static/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'x)a51zz(%*mr=0&jfkrg1u^x=622+1icq#tc-30*%k#b%y*j-j'
@@ -125,3 +125,11 @@ INSTALLED_APPS = (
 )
 
 LOGIN_URL = '/loginrequired'
+
+import logging
+logging.basicConfig(
+    level = logging.DEBUG,
+    format = '%(asctime)s %(levelname)s %(message)s',
+    filename = '/tmp/myapp.log',
+    filemode = 'w'
+)

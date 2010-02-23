@@ -18,6 +18,8 @@ from utils import gatorlink
 
 @login_required
 def device_search(request):
+    import logging
+    logging.debug("search")
     render_dict = {'pagetitle': 'Devices', 'subtitle': 'Search'}
     render_dict['category'] = "Device"
     render_dict['search_header'] = "Enter an IP or MAC address, or hostname"
@@ -69,6 +71,8 @@ def device_search(request):
 
 @login_required
 def device_view(request, what):
+    import logging
+    logging.debug("View device")
     days_back = 7
     if what == 'search':
         what = request.GET['q']
@@ -76,7 +80,8 @@ def device_view(request, what):
     for i in request.GET.keys():
         if 'days' == i.lower():
             days_back = int(request.GET[i])
-
+    
+    logging.debug("view %s" % what)
     return device_view_core(request, what, days_back)
 
 @login_required
