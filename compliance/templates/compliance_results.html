@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load deviceutils %}
+
+{% block extra_head %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var visible = null;
+        $("tr.result").toggle(
+            function() {
+                $(this).next().show();
+                },
+            function() {
+                $(this).next().hide();
+                }
+            );
+    }
+    );
+</script>
+{% endblock %}
+
+{% block sidebar %}
+{% include 'compliance_sidebar.html' %}
+{% endblock %}
+
+{% block main_body %}
+<h1>Compliance Scan Results</h1>
+<h2>All compliance results from the past {{ user.get_profile.default_days_back }} days.</h2>
+<table class='block'>
+    {% for i in results %}
+    {% if forloop.first %}
+    <tr>
+        <th>Host</th>
+        <th>Plugin</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    {% endif %}
+        <tr class="result">
+            <td>{{ i.ip_address|to_hostname }}</td>
+            {% if i.plugin %}<td>{{ i.plugin }}</td>{%else%}<td>N/A</td>{%endif%}
+            <td>{{ i.type }}</td>
+            <td>{{ i.description|truncatewords:5 }}</td>
+        </tr>
+        <tr class="hidden">
+            <td class='textresult' colspan=4>
+{{i.description}}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td><center>There are no compliance issues.</center></td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

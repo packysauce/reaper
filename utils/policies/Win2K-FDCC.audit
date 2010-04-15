@@ -1,0 +1,2944 @@
+# (C) 2008 Tenable Network Security
+#
+# This script is released under the Tenable Subscription License and
+# may not be used from within scripts released under another license
+# without authorization from Tenable Network Security Inc.
+#
+# See the following licenses for details:
+#
+# http://cgi.tenablesecurity.com/Nessus_3_SLA_and_Subscription_Agreement.pdf
+# http://cgi.tenablesecurity.com/Subscription_Agreement.pdf
+#
+# @PROFESSIONALFEED@
+#
+# Synopsis: This file will be read by compliance_check.nbin
+#           to check compliance of a Windows host to
+#           tests derived from an XCCDF xml file.
+#
+# Logic to test for CPE platform cpe:/o:microsoft:windows_2000
+# Created 9/22/2008
+#
+   <check_type: "Windows" version:"2">
+   <group_policy: "XCCDF to Tenable Audit file">
+
+#####CPE checking
+<if>
+<condition type:"and">
+<if>
+<condition type:"or">
+<custom_item>
+type: REGISTRY_SETTING
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "5.0"
+reg_key: "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+reg_item: "CurrentVersion"
+</item>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+</condition>
+<then>
+#####CPE checking
+
+
+##### File ACLs
+
+
+
+
+##### End of File ACLs
+
+
+<report type:"PASSED">
+   description: "Xccdf_Scan_Check"
+   info: "cpe: o:microsoft:windows_2000"
+   info: "Benchmark xmlns= http:  checklists.nist.gov xccdf 1.1  xmlns:xsi= http:  www.w3.org 2001 XMLSchema-instance  xmlns:cdf= http:  checklists.nist.gov xccdf 1.1  xmlns:cpe= http:  cpe.mitre.org dictionary 2.0  xmlns:dc= http:  purl.org dc elements 1.1   xmlns:xhtml= http:  www.w3.org 1999 xhtml  xmlns:dsig= http:  www.w3.org 2000 09 xmldsig   id= scap-windows-2000  resolved= 1  xml:lang= en  xsi:schemaLocation= http:  checklists.nist.gov xccdf 1.1 xccdf-1.1.4.xsd                                http:  cpe.mitre.org dictionary 2.0 cpe-dictionary_2.0.xsd "
+   info: "scap-win2000-xccdf.xml"
+   info: "scap-windows-2000"
+   info: "scap-win2000-profile"
+</report>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "AlerterService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Alerter"
+         reg_option: MUST_EXIST
+         info: "Title - Alerter Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "AlerterService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Alerter"
+         reg_item: "Start"
+         info: "Title - Alerter Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "AlerterService"
+         info: "Title - Alerter Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "AlerterService"
+         info: "Title - Alerter Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "ApplicationManagementService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\ApplicationManagement"
+         reg_option: MUST_EXIST
+         info: "Title - Application Management Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "ApplicationManagementService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Applicationmanagement"
+         reg_item: "Start"
+         info: "Title - Application Management Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ApplicationManagementService"
+         info: "Title - Application Management Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ApplicationManagementService"
+         info: "Title - Application Management Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "ASP.NETStateService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\ASP.NETState"
+         reg_option: MUST_EXIST
+         info: "Title - ASP .NET State Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "ASP.NETStateService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\ASP.NETState"
+         reg_item: "Start"
+         info: "Title - ASP .NET State Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ASP.NETStateService"
+         info: "Title - ASP .NET State Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ASP.NETStateService"
+         info: "Title - ASP .NET State Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "CertificateService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Certificate"
+         reg_option: MUST_EXIST
+         info: "Title - Certificate Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "CertificateService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\ASP.NETState"
+         reg_item: "Start"
+         info: "Title - Certificate Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "CertificateService"
+         info: "Title - Certificate Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "CertificateService"
+         info: "Title - Certificate Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "ClipBookService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\ClipSrv"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - ClipBook Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "ClipBookService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\ClipSrv"
+         reg_item: "Start"
+         info: "Title - ClipBook Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ClipBookService"
+         info: "Title - ClipBook Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ClipBookService"
+         info: "Title - ClipBook Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "DHCPServerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\DHCPServer"
+         reg_option: MUST_EXIST
+         info: "Title - DHCP Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DHCPServerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\DHCPServer"
+         reg_item: "Start"
+         info: "Title - DHCP Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DHCPServerService"
+         info: "Title - DHCP Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DHCPServerService"
+         info: "Title - DHCP Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "DistributedLinkTrackingClientService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\DistributedLinkTrackingClient"
+         reg_option: MUST_EXIST
+         info: "Title - Distributed Link Tracking Client Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DistributedLinkTrackingClientService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\DistributedLinkTrackingClient"
+         reg_item: "Start"
+         info: "Title - Distributed Link Tracking Client Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DistributedLinkTrackingClientService"
+         info: "Title - Distributed Link Tracking Client Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DistributedLinkTrackingClientService"
+         info: "Title - Distributed Link Tracking Client Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "DistributedLinkTrackingServerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\DistributedLinkTrackingServer"
+         reg_option: MUST_EXIST
+         info: "Title - Distributed Link Tracking Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DistributedLinkTrackingServerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\DistributedLinkTrackingServer"
+         reg_item: "Start"
+         info: "Title - Distributed Link Tracking Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DistributedLinkTrackingServerService"
+         info: "Title - Distributed Link Tracking Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DistributedLinkTrackingServerService"
+         info: "Title - Distributed Link Tracking Server Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "DistributedTransactionCoordinatortService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\DistributedTransactionCoordinatort"
+         reg_option: MUST_EXIST
+         info: "Title - Distributed Transaction Coordinator Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DistributedTransactionCoordinatortService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\DistributedTransactionCoordinatort"
+         reg_item: "Start"
+         info: "Title - Distributed Transaction Coordinator Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DistributedTransactionCoordinatortService"
+         info: "Title - Distributed Transaction Coordinator Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DistributedTransactionCoordinatortService"
+         info: "Title - Distributed Transaction Coordinator Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "FaxService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Fax"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Fax Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "FaxService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Fax"
+         reg_item: "Start"
+         info: "Title - Fax Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "FaxService"
+         info: "Title - Fax Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "FaxService"
+         info: "Title - Fax Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "FTPPublishingService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\MSFtpsvc"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - FTP Publishing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "FTPPublishingService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\MSFtpsvc"
+         reg_item: "Start"
+         info: "Title - FTP Publishing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "FTPPublishingService"
+         info: "Title - FTP Publishing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "FTPPublishingService"
+         info: "Title - FTP Publishing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "IISAdminService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\IISADMIN"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - IIS Admin Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IISAdminService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\IISADMIN"
+         reg_item: "Start"
+         info: "Title - IIS Admin Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IISAdminService"
+         info: "Title - IIS Admin Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IISAdminService"
+         info: "Title - IIS Admin Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "IndexingService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\CiSVC"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Indexing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IndexingService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\CiSVC"
+         reg_item: "Start"
+         info: "Title - Indexing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IndexingService"
+         info: "Title - Indexing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IndexingService"
+         info: "Title - Indexing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "InternetConnectionSharingService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\InternetConnectionSharing"
+         reg_option: MUST_EXIST
+         info: "Title - Internet Connection Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "InternetConnectionSharingService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\InternetConnectionSharing"
+         reg_item: "Start"
+         info: "Title - Internet Connection Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "InternetConnectionSharingService"
+         info: "Title - Internet Connection Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "InternetConnectionSharingService"
+         info: "Title - Internet Connection Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "LicenseLoggingService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\LicenseLogging"
+         reg_option: MUST_EXIST
+         info: "Title - License Logging Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "LicenseLoggingService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\LicenseLogging"
+         reg_item: "Start"
+         info: "Title - License Logging Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "LicenseLoggingService"
+         info: "Title - License Logging Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "LicenseLoggingService"
+         info: "Title - License Logging Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "MessengerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Messenger"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Messenger Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "MessengerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Messenger"
+         reg_item: "Start"
+         info: "Title - Messenger Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "MessengerService"
+         info: "Title - Messenger Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "MessengerService"
+         info: "Title - Messenger Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "NetMeetingRemoteDesktopSharingService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\mnmsrvc"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "NetMeetingRemoteDesktopSharingService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\mnmsrvc"
+         reg_item: "Start"
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "NetMeetingRemoteDesktopSharingService"
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "NetMeetingRemoteDesktopSharingService"
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "DDEService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\NetDDE"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Network Dynamic Data Exchange (DDE) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DDEService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\NetDDE"
+         reg_item: "Start"
+         info: "Title - Network Dynamic Data Exchange (DDE) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DDEService"
+         info: "Title - Network Dynamic Data Exchange (DDE) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DDEService"
+         info: "Title - Network Dynamic Data Exchange (DDE) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "DDEdsdmService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\NetDDEdsdm"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Network DDE DDE Share Database Manager (DSDM) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DDEdsdmService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\NetDDEdsdm"
+         reg_item: "Start"
+         info: "Title - Network DDE DDE Share Database Manager (DSDM) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DDEdsdmService"
+         info: "Title - Network DDE DDE Share Database Manager (DSDM) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DDEdsdmService"
+         info: "Title - Network DDE DDE Share Database Manager (DSDM) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "NNTPService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\NNTP"
+         reg_option: MUST_EXIST
+         info: "Title - Network News Transport Protocol Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "NNTPService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\NNTP"
+         reg_item: "Start"
+         info: "Title - Network News Transport Protocol Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "NNTPService"
+         info: "Title - Network News Transport Protocol Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "NNTPService"
+         info: "Title - Network News Transport Protocol Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "PrinterSpoolerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\PrinterSpooler"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Printer Spooler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "PrinterSpoolerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\PrinterSpooler"
+         reg_item: "Start"
+         info: "Title - Printer Spooler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "PrinterSpoolerService"
+         info: "Title - Printer Spooler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "PrinterSpoolerService"
+         info: "Title - Printer Spooler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "RemoteAccessAutoConnectionManagerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\RemoteAccessAutoConnectionManager"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Remote Access Auto Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "RemoteAccessAutoConnectionManagerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\RemoteAccessAutoConnectionManager"
+         reg_item: "Start"
+         info: "Title - Remote Access Auto Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "RemoteAccessAutoConnectionManagerService"
+         info: "Title - Remote Access Auto Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "RemoteAccessAutoConnectionManagerService"
+         info: "Title - Remote Access Auto Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "RemoteAccessConnectionManagerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\RasMan"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Remote Access Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "RemoteAccessConnectionManagerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\RasMan"
+         reg_item: "Start"
+         info: "Title - Remote Access Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "RemoteAccessConnectionManagerService"
+         info: "Title - Remote Access Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "RemoteAccessConnectionManagerService"
+         info: "Title - Remote Access Connection Manager Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "ResultantSetOfPolicyProviderService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\ResultantSetOfPolicyProvider"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Resultant Set of Policy Provider Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "ResultantSetOfPolicyProviderService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\ResultantSetOfPolicyProvider"
+         reg_item: "Start"
+         info: "Title - Resultant Set of Policy Provider Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ResultantSetOfPolicyProviderService"
+         info: "Title - Resultant Set of Policy Provider Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ResultantSetOfPolicyProviderService"
+         info: "Title - Resultant Set of Policy Provider Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "RoutingAndRemoteAccessService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\RemoteAccess"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Routing And Remote Access Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "RoutingAndRemoteAccessService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\RemoteAccess"
+         reg_item: "Start"
+         info: "Title - Routing And Remote Access Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "RoutingAndRemoteAccessService"
+         info: "Title - Routing And Remote Access Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "RoutingAndRemoteAccessService"
+         info: "Title - Routing And Remote Access Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SMTPService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SMTPSVC"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Simple Mail Transfer Protocol (SMTP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SMTPService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SMTPSVC"
+         reg_item: "Start"
+         info: "Title - Simple Mail Transfer Protocol (SMTP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SMTPService"
+         info: "Title - Simple Mail Transfer Protocol (SMTP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SMTPService"
+         info: "Title - Simple Mail Transfer Protocol (SMTP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SimpleTCPIPService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SimpleTCPIP"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Simple TCP/IP Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SimpleTCPIPService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SimpleTCPIP"
+         reg_item: "Start"
+         info: "Title - Simple TCP/IP Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SimpleTCPIPService"
+         info: "Title - Simple TCP/IP Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SimpleTCPIPService"
+         info: "Title - Simple TCP/IP Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SamrtCardService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SamrtCard"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Smart Card Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SamrtCardService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SamrtCard"
+         reg_item: "Start"
+         info: "Title - Smart Card Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SamrtCardService"
+         info: "Title - Smart Card Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SamrtCardService"
+         info: "Title - Smart Card Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SamrtCardHelperService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SamrtCardHelper"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Smart Card Helper Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SamrtCardHelperService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SamrtCardHelper"
+         reg_item: "Start"
+         info: "Title - Smart Card Helper Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SamrtCardHelperService"
+         info: "Title - Smart Card Helper Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SamrtCardHelperService"
+         info: "Title - Smart Card Helper Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SNMPService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SNMP"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Simple Network Management Protocol (SNMP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SNMPService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SNMP"
+         reg_item: "Start"
+         info: "Title - Simple Network Management Protocol (SNMP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SNMPService"
+         info: "Title - Simple Network Management Protocol (SNMP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SNMPService"
+         info: "Title - Simple Network Management Protocol (SNMP) Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SNMPTrap"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SNMPTRAP"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Simple Network Management Protocol (SNMP) Trap Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SNMPTrap"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SNMPTRAP"
+         reg_item: "Start"
+         info: "Title - Simple Network Management Protocol (SNMP) Trap Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SNMPTrap"
+         info: "Title - Simple Network Management Protocol (SNMP) Trap Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SNMPTrap"
+         info: "Title - Simple Network Management Protocol (SNMP) Trap Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "TaskSchedulerService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Schedule"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Task Scheduler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "TaskSchedulerService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Schedule"
+         reg_item: "Start"
+         info: "Title - Task Scheduler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "TaskSchedulerService"
+         info: "Title - Task Scheduler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "TaskSchedulerService"
+         info: "Title - Task Scheduler Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "TelephonyService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Telephony"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Telephony Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "TelephonyService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Telephony"
+         reg_item: "Start"
+         info: "Title - Telephony Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "TelephonyService"
+         info: "Title - Telephony Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "TelephonyService"
+         info: "Title - Telephony Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "TelnetService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\TlntSvr"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Telnet Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "TelnetService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\TlntSvr"
+         reg_item: "Start"
+         info: "Title - Telnet Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "TelnetService"
+         info: "Title - Telnet Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "TelnetService"
+         info: "Title - Telnet Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "UninterruptedPowerSupplyService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\UninterruptedPowerSupply"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Uninterrupted Power Supply Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "UninterruptedPowerSupplyService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\UninterruptedPowerSupply"
+         reg_item: "Start"
+         info: "Title - Uninterrupted Power Supply Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UninterruptedPowerSupplyService"
+         info: "Title - Uninterrupted Power Supply Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UninterruptedPowerSupplyService"
+         info: "Title - Uninterrupted Power Supply Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "WINSService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\WINS"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Windows Internet Name Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "WINSService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\WINS"
+         reg_item: "Start"
+         info: "Title - Windows Internet Name Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "WINSService"
+         info: "Title - Windows Internet Name Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "WINSService"
+         info: "Title - Windows Internet Name Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "WWWPublishingServicesService"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\W3SVC"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - World Wide Web Publishing Services Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "WWWPublishingServicesService"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\W3SVC"
+         reg_item: "Start"
+         info: "Title - World Wide Web Publishing Services Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "WWWPublishingServicesService"
+         info: "Title - World Wide Web Publishing Services Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "WWWPublishingServicesService"
+         info: "Title - World Wide Web Publishing Services Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "WirelessZeroConfiguration"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\W SVC"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Wireless Zero Configuration"
+         info: "Description - Disabling the setting will prevent all wireless wi-fi interfrace from working unless a third partry management software is used to manage the device. This will not be an issue on managed desktops but will impact mobile device."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "WirelessZeroConfiguration"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\W SVC"
+         reg_item: "Start"
+         info: "Title - Wireless Zero Configuration"
+         info: "Description - Disabling the setting will prevent all wireless wi-fi interfrace from working unless a third partry management software is used to manage the device. This will not be an issue on managed desktops but will impact mobile device."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "WirelessZeroConfiguration"
+         info: "Title - Wireless Zero Configuration"
+         info: "Description - Disabling the setting will prevent all wireless wi-fi interfrace from working unless a third partry management software is used to manage the device. This will not be an issue on managed desktops but will impact mobile device."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "WirelessZeroConfiguration"
+         info: "Title - Wireless Zero Configuration"
+         info: "Description - Disabling the setting will prevent all wireless wi-fi interfrace from working unless a third partry management software is used to manage the device. This will not be an issue on managed desktops but will impact mobile device."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "FileSharesRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "EveryoneIncludesAnonymous"
+   info: "Title - File Shares Requirements"
+   info: "Description - File share ACLs have not been reconfigured to remove the 'Everyone' group."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: PASSWORD_POLICY
+         description: "MaximumPasswordAgeRequirements"
+         value_type: TIME_DAY
+         value_data: [0..60]
+         password_policy: MAXIMUM_PASSWORD_AGE
+         info: "Title - Maximum Password Age Requirements"
+         info: "Description - Maximum password age does not meet minimum requirements "
+      </custom_item>
+      <custom_item>
+         type: PASSWORD_POLICY
+         description: "MaximumPasswordAgeRequirements"
+         value_type: TIME_DAY
+         value_data: [1..MAX]
+         password_policy: MAXIMUM_PASSWORD_AGE
+         info: "Title - Maximum Password Age Requirements"
+         info: "Description - Maximum password age does not meet minimum requirements "
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "MaximumPasswordAgeRequirements"
+         info: "Title - Maximum Password Age Requirements"
+         info: "Description - Maximum password age does not meet minimum requirements "
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "MaximumPasswordAgeRequirements"
+         info: "Title - Maximum Password Age Requirements"
+         info: "Description - Maximum password age does not meet minimum requirements "
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "MinimumPasswordAgeRequirements"
+   value_type: TIME_DAY
+   value_data: [1..MAX]
+   password_policy: MINIMUM_PASSWORD_AGE
+   info: "Title - Minimum Password Age Requirements"
+   info: "Description - \Minimum password age does not meet minimum requirements.\"
+</custom_item>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "MinimumPasswordLengthRequirements"
+   value_type: POLICY_DWORD
+   value_data: [12..MAX]
+   password_policy: MINIMUM_PASSWORD_LENGTH
+   info: "Title - Minimum Password Length Requirements"
+   info: "Description - Minimum password length does not meet minimum requirements. "
+</custom_item>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "PasswordUniquenessRequirements"
+   value_type: POLICY_DWORD
+   value_data: [24..MAX]
+   password_policy: ENFORCE_PASSWORD_HISTORY
+   info: "Title - Password Uniqueness Requirements"
+   info: "Description - Password uniqueness does not meet minimum requirements."
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: LOCKOUT_POLICY
+         description: "BadLogonAttemptsRequirements"
+         value_type: POLICY_DWORD
+         value_data: [0..5]
+         lockout_policy: LOCKOUT_THRESHOLD
+         info: "Title - Bad Logon Attempts Requirements"
+         info: "Description - Number of allowed bad logon attempts does not meet minimum requirements."
+      </item>
+      <custom_item>
+         type: LOCKOUT_POLICY
+         description: "BadLogonAttemptsRequirements"
+         value_type: POLICY_DWORD
+         value_data: [1..MAX]
+         lockout_policy: LOCKOUT_THRESHOLD
+         info: "Title - Bad Logon Attempts Requirements"
+         info: "Description - Number of allowed bad logon attempts does not meet minimum requirements."
+      </item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "BadLogonAttemptsRequirements"
+         info: "Title - Bad Logon Attempts Requirements"
+         info: "Description - Number of allowed bad logon attempts does not meet minimum requirements."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "BadLogonAttemptsRequirements"
+         info: "Title - Bad Logon Attempts Requirements"
+         info: "Description - Number of allowed bad logon attempts does not meet minimum requirements."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: LOCKOUT_POLICY
+   description: "BadLogonCounterResetRequirements"
+   value_type: TIME_SECOND
+   value_data: [900..MAX]
+   lockout_policy: LOCKOUT_RESET
+   info: "Title - Bad Logon Counter Reset Requirements"
+   info: "Description - Time before bad-logon counter is reset does not meet minimum requirements. "
+</item>
+
+<custom_item>
+   type: LOCKOUT_POLICY
+   description: "LockoutDurationRequirements"
+   value_type: TIME_SECOND
+   value_data: [900..MAX]
+   lockout_policy: LOCKOUT_DURATION
+   info: "Title - Lockout Duration Requirements"
+   info: "Description - Lockout duration does not meet minimum requirements"
+</item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "AccessComputerFromNetwork-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeNetworkLogonRight
+         info: "Title - Right To Access This Computer From The Network"
+         info: "Description - Verify that the user right 'Access This Computer From The Network' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "AccessComputerFromNetwork-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeNetworkLogonRight
+         info: "Title - Right To Access This Computer From The Network"
+         info: "Description - Verify that the user right 'Access This Computer From The Network' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "AccessComputerFromNetwork-Administrators"
+         info: "Title - Right To Access This Computer From The Network"
+         info: "Description - Verify that the user right 'Access This Computer From The Network' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "AccessComputerFromNetwork-Administrators"
+         info: "Title - Right To Access This Computer From The Network"
+         info: "Description - Verify that the user right 'Access This Computer From The Network' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "ActAsPartOfOperatingSystem-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeTcbPrivilege
+   info: "Title - Right To Act As Part Of The Operating System"
+   info: "Description - Verify that the user right 'Act As Part Of The Operating System' has been granted appropriately."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "AddWorkstationsToDomain-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeMachineAccountPrivilege
+         info: "Title - Right To Add Workstations To Domain"
+         info: "Description - Verify that the user right 'Add Workstations To Domain' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "AddWorkstationsToDomain-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeMachineAccountPrivilege
+         info: "Title - Right To Add Workstations To Domain"
+         info: "Description - Verify that the user right 'Add Workstations To Domain' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "AddWorkstationsToDomain-Administrators"
+         info: "Title - Right To Add Workstations To Domain"
+         info: "Description - Verify that the user right 'Add Workstations To Domain' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "AddWorkstationsToDomain-Administrators"
+         info: "Title - Right To Add Workstations To Domain"
+         info: "Description - Verify that the user right 'Add Workstations To Domain' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ChangeSystemTime-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeSystemTimePrivilege
+         info: "Title - Right To Change the System Time"
+         info: "Description - Verify that the user right 'Change the System Time' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ChangeSystemTime-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeSystemTimePrivilege
+         info: "Title - Right To Change the System Time"
+         info: "Description - Verify that the user right 'Change the System Time' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ChangeSystemTime-Administrators"
+         info: "Title - Right To Change the System Time"
+         info: "Description - Verify that the user right 'Change the System Time' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ChangeSystemTime-Administrators"
+         info: "Title - Right To Change the System Time"
+         info: "Description - Verify that the user right 'Change the System Time' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "CreatePagefile-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeCreatePagefilePrivilege
+         info: "Title - Right To Create A Pagefile"
+         info: "Description - Verify that the user right 'Create A Pagefile' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "CreatePagefile-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeCreatePagefilePrivilege
+         info: "Title - Right To Create A Pagefile"
+         info: "Description - Verify that the user right 'Create A Pagefile' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "CreatePagefile-Administrators"
+         info: "Title - Right To Create A Pagefile"
+         info: "Description - Verify that the user right 'Create A Pagefile' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "CreatePagefile-Administrators"
+         info: "Title - Right To Create A Pagefile"
+         info: "Description - Verify that the user right 'Create A Pagefile' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "CreateTokenObject-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeCreateTokenPrivilege
+   info: "Title - Right To Create A Token Object"
+   info: "Description - Verify that the user right 'Create A Token Object' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "CreateGlobalObjects"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeCreateTokenPrivilege
+   info: "Title - Right To Create Global Objects"
+   info: "Description - Verify that the user right 'Create Global Objects' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "CreatePermanentSharedObjects-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeCreatePermanentPrivilege
+   info: "Title - Right To Create Permanent Shared Objects"
+   info: "Description - Verify that the user right 'Create Permanent Shared Objects' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "DenyAccessFromNetwork-Guests-SUPPORT_388945a0"
+   value_type: USER_RIGHT
+   value_data: "guest" && "SUPPORT_388945a0"
+   right_type: SeDenyNetworkLogonRight
+   info: "Title - Denied Access To This Computer From The Network"
+   info: "Description - Verify that the user right 'Deny Access To This Computer From The Network' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "DenyLogonAsService-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeDenyBatchLogonRight
+   info: "Title - Denied Logon As A Service"
+   info: "Description - Verify that the user right 'Deny Logon As A Service' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "DenyLogonLocally-Guests-SUPPORT_388945a0"
+   value_type: USER_RIGHT
+   value_data: "guest" && "SUPPORT_388945a0"
+   right_type: SeDenyInteractiveLogonRight
+   info: "Title - Denied Logon Locally"
+   info: "Description - Verify that the user right 'Deny Logon Locally' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "AccountsTrustedForDelegation-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeEnableDelegationPrivilege
+   info: "Title - Computer and User Accounts Enabled To Be Trusted For Delegation"
+   info: "Description - Verify that the user right 'Enable Computer and User Accounts To Be Trusted For Delegation' has been granted appropriately."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ShutdownFromRemoteSystem-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeRemoteShutdownPrivilege
+         info: "Title - Right To Force Shutdown From A Remote System"
+         info: "Description - Verify that the user right 'Force Shutdown From A Remote System' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ShutdownFromRemoteSystem-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeRemoteShutdownPrivilege
+         info: "Title - Right To Force Shutdown From A Remote System"
+         info: "Description - Verify that the user right 'Force Shutdown From A Remote System' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ShutdownFromRemoteSystem-Administrators"
+         info: "Title - Right To Force Shutdown From A Remote System"
+         info: "Description - Verify that the user right 'Force Shutdown From A Remote System' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ShutdownFromRemoteSystem-Administrators"
+         info: "Title - Right To Force Shutdown From A Remote System"
+         info: "Description - Verify that the user right 'Force Shutdown From A Remote System' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "GenerateSecurityAudits-LOCAL_SERVICE-NETWORK_SERVICE"
+   value_type: USER_RIGHT
+   value_data: "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeAuditPrivilege
+   info: "Title - Right To Generate Security Audits"
+   info: "Description - Verify that the user right 'Generate Security Audits' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "ImpersonateClientAfterAuthentication"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "SERVICE" && "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeImpersonatePrivilege
+   info: "Title - Impersonate a Client After Authentication"
+   info: "Description - Verify that the user right 'Impersonate a Client After Authentication' has been granted appropriately."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "IncreaseSchedulingPriority-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeIncreaseBasePriorityPrivilege
+         info: "Title - Right To Increase Scheduling Priority"
+         info: "Description - Verify that the user right 'Increase Scheduling Priority' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "IncreaseSchedulingPriority-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeIncreaseBasePriorityPrivilege
+         info: "Title - Right To Increase Scheduling Priority"
+         info: "Description - Verify that the user right 'Increase Scheduling Priority' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IncreaseSchedulingPriority-Administrators"
+         info: "Title - Right To Increase Scheduling Priority"
+         info: "Description - Verify that the user right 'Increase Scheduling Priority' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IncreaseSchedulingPriority-Administrators"
+         info: "Title - Right To Increase Scheduling Priority"
+         info: "Description - Verify that the user right 'Increase Scheduling Priority' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "LoadAndUnloadDeviceDrivers-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeLoadDriverPrivilege
+         info: "Title - Right To Load And Unload Device Drivers"
+         info: "Description - Verify that the user right 'Load And Unload Device Drivers' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "LoadAndUnloadDeviceDrivers-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeLoadDriverPrivilege
+         info: "Title - Right To Load And Unload Device Drivers"
+         info: "Description - Verify that the user right 'Load And Unload Device Drivers' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "LoadAndUnloadDeviceDrivers-Administrators"
+         info: "Title - Right To Load And Unload Device Drivers"
+         info: "Description - Verify that the user right 'Load And Unload Device Drivers' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "LoadAndUnloadDeviceDrivers-Administrators"
+         info: "Title - Right To Load And Unload Device Drivers"
+         info: "Description - Verify that the user right 'Load And Unload Device Drivers' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "LockPagesInMemory-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeLockMemoryPrivilege
+   info: "Title - Right To Lock Pages In Memory"
+   info: "Description - Verify that the user right 'Lock Pages In Memory' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "LogOnAsBatchJob-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeBatchLogonRight
+   info: "Title - Right To Log On As A Batch Job"
+   info: "Description - Verify that the user right 'Log On As A Batch Job' has been granted appropriately."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ModifyFirmwareEnvironmentValues-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeSystemEnvironmentPrivilege
+         info: "Title - Right To Modify Firmware Environment Values"
+         info: "Description - Verify that the user right 'Modify Firmware Environment Values' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ModifyFirmwareEnvironmentValues-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeSystemEnvironmentPrivilege
+         info: "Title - Right To Modify Firmware Environment Values"
+         info: "Description - Verify that the user right 'Modify Firmware Environment Values' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ModifyFirmwareEnvironmentValues-Administrators"
+         info: "Title - Right To Modify Firmware Environment Values"
+         info: "Description - Verify that the user right 'Modify Firmware Environment Values' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ModifyFirmwareEnvironmentValues-Administrators"
+         info: "Title - Right To Modify Firmware Environment Values"
+         info: "Description - Verify that the user right 'Modify Firmware Environment Values' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ProfileSingleProcess-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeProfileSingleProcessPrivilege
+         info: "Title - Right To Profile Single Process"
+         info: "Description - Verify that the user right 'Profile Single Process' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ProfileSingleProcess-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeProfileSingleProcessPrivilege
+         info: "Title - Right To Profile Single Process"
+         info: "Description - Verify that the user right 'Profile Single Process' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ProfileSingleProcess-Administrators"
+         info: "Title - Right To Profile Single Process"
+         info: "Description - Verify that the user right 'Profile Single Process' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ProfileSingleProcess-Administrators"
+         info: "Title - Right To Profile Single Process"
+         info: "Description - Verify that the user right 'Profile Single Process' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ProfileSystemPerformance-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeSystemProfilePrivilege
+         info: "Title - Right To Profile System Performance"
+         info: "Description - Verify that the user right 'Profile System Performance' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "ProfileSystemPerformance-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeSystemProfilePrivilege
+         info: "Title - Right To Profile System Performance"
+         info: "Description - Verify that the user right 'Profile System Performance' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "ProfileSystemPerformance-Administrators"
+         info: "Title - Right To Profile System Performance"
+         info: "Description - Verify that the user right 'Profile System Performance' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "ProfileSystemPerformance-Administrators"
+         info: "Title - Right To Profile System Performance"
+         info: "Description - Verify that the user right 'Profile System Performance' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "RemoveComputerFromDockingStation-Administrators-Users"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Users"
+   right_type: SeUndockPrivilege
+   info: "Title - Right To Remove Computer From Docking Station"
+   info: "Description - Verify that the user right 'Remove Computer From Docking Station' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "ReplaceProcessLevelToken-LOGON_SERVICE-NETWORK_SERVICE"
+   value_type: USER_RIGHT
+   value_data: "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeAssignPrimaryTokenPrivilege
+   info: "Title - Right To Replace A Process Level Token"
+   info: "Description - Verify that the user right 'Replace A Process Level Token' has been granted appropriately."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "RestoreFilesAndDirectories-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeRestorePrivilege
+         info: "Title - Right To Restore Files And Directories"
+         info: "Description - Verify that the user right 'Restore Files And Directories' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "RestoreFilesAndDirectories-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeRestorePrivilege
+         info: "Title - Right To Restore Files And Directories"
+         info: "Description - Verify that the user right 'Restore Files And Directories' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "RestoreFilesAndDirectories-Administrators"
+         info: "Title - Right To Restore Files And Directories"
+         info: "Description - Verify that the user right 'Restore Files And Directories' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "RestoreFilesAndDirectories-Administrators"
+         info: "Title - Right To Restore Files And Directories"
+         info: "Description - Verify that the user right 'Restore Files And Directories' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "ShutDownSystem-Administrators-Users"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Users"
+   right_type: SeShutdownPrivilege
+   info: "Title - Right To Shut Down The System"
+   info: "Description - Verify that the user right 'Shut Down The System' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "SynchronizeDirectoryServiceData-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeSyncAgentPrivilege
+   info: "Title - Right To Synchronize Directory Service Data"
+   info: "Description - Verify that the user right 'Synchronize Directory Service Data' has been granted appropriately."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "TakeOwnershipOfFiles-Administrators"
+         value_type: USER_RIGHT
+         value_data: "Administrators"
+         right_type: SeTakeOwnershipPrivilege
+         info: "Title - Right To Take Ownership Of Files Or Other Objects"
+         info: "Description - Verify that the user right 'Take Ownership Of Files Or Other Objects' has been granted appropriately."
+      </custom_item>
+      <custom_item>
+         type: USER_RIGHTS_POLICY
+         description: "TakeOwnershipOfFiles-Administrators"
+         value_type: USER_RIGHT
+         value_data: ""
+         right_type: SeTakeOwnershipPrivilege
+         info: "Title - Right To Take Ownership Of Files Or Other Objects"
+         info: "Description - Verify that the user right 'Take Ownership Of Files Or Other Objects' has been granted appropriately."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "TakeOwnershipOfFiles-Administrators"
+         info: "Title - Right To Take Ownership Of Files Or Other Objects"
+         info: "Description - Verify that the user right 'Take Ownership Of Files Or Other Objects' has been granted appropriately."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "TakeOwnershipOfFiles-Administrators"
+         info: "Title - Right To Take Ownership Of Files Or Other Objects"
+         info: "Description - Verify that the user right 'Take Ownership Of Files Or Other Objects' has been granted appropriately."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RestrictAnonymousNetworkSharesRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "RestrictAnonymous"
+   info: "Title - Network access: Do not allow anonymous enumeration of SAM accounts and shares"
+   info: "Description - If this setting is disabled, it allows anonymous logon users (null session connections) to list all account names and enumerate all shared resources, thus providing a map of potential points to attack the system."
+</custom_item>
+
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IdleTimeBeforeDisconnectingASessionRequirements"
+         value_type: POLICY_DWORD
+         value_data: [MIN..15]
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "AutoDisconnect"
+         info: "Title - Microsoft network server: Amount of idle time required before suspending session"
+         info: "Description - Administrators should use this setting to control when a computer disconnects an inactive SMB session. If client activity resumes, the session is automatically reestablished."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IdleTimeBeforeDisconnectingASessionRequirements"
+         value_type: POLICY_DWORD
+         value_data: 0
+         check_type: CHECK_NOT_EQUAL
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "AutoDisconnect"
+         info: "Title - Microsoft network server: Amount of idle time required before suspending session"
+         info: "Description - Administrators should use this setting to control when a computer disconnects an inactive SMB session. If client activity resumes, the session is automatically reestablished."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IdleTimeBeforeDisconnectingASessionRequirements"
+         info: "Title - Microsoft network server: Amount of idle time required before suspending session"
+         info: "Description - Administrators should use this setting to control when a computer disconnects an inactive SMB session. If client activity resumes, the session is automatically reestablished."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IdleTimeBeforeDisconnectingASessionRequirements"
+         info: "Title - Microsoft network server: Amount of idle time required before suspending session"
+         info: "Description - Administrators should use this setting to control when a computer disconnects an inactive SMB session. If client activity resumes, the session is automatically reestablished."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ForciblyDisconnectWhenLogonHoursExpireRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+   reg_item: "EnableForcedLogOff"
+   info: "Title - Forcibly Disconnect when Logon Hours Expire Requirements"
+   info: "Description - Users are not forcibly disconnected when logon hours expire. "
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SMBClientPacketSigningAlwaysRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "RequireSecuritySignature"
+   info: "Title - SMB Client Packet Signing Always Requirements:Microsoft network client: Digitally sign communications (always)"
+   info: "Description - This check verifies that the client policy is set to always sign packets."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SMBClientPacketSigningWhenPossibleRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "EnableSecuritySignature"
+   info: "Title - SMB Client Packet Signing When Possible Requirements: Microsoft network client: Digitally sign communications (if server agrees)"
+   info: "Description - This check verifies that the client policy is set to sign packets if the server agrees."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SMBServerPacketSigningAlwaysRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+   reg_item: "RequireSecuritySignature"
+   info: "Title - SMB Server Packet Signing Always Requirements: Microsoft network server: Digitally sign communications (always)"
+   info: "Description - This check verifies that the server policy is set to always sign packets."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SMBServerPacketSigningWhenPossibleRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+   reg_item: "EnableSecuritySignature"
+   info: "Title - Microsoft network server: Digitally sign communications (if client agrees)"
+   info: "Description - Microsoft network server: Digitally sign communications (if client agrees). This check verifies that the server policy is set to sign packets if the client agrees."
+</custom_item>
+
+
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayOfLastUserNameRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "DontDisplayLastUserName"
+   info: "Title - Interactive logon: Do not display last user name"
+   info: "Description - This setting determines whether the name of the last user to log on to the computer will be displayed in the Windows logon dialog box. "
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayLegalNoticeRequirements"
+   value_type: POLICY_TEXT
+   value_data: ".+"
+   check_type: CHECK_REGEX
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "LegalNoticeText"
+   info: "Title - Display Legal Notice Requirements"
+   info: "Description - Legal notice is not configured to display before console logon."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableDeadGatewayDetectionRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "EnableDeadGWDetect"
+   info: "Title - Disable Dead Gateway Detection Requirements"
+   info: "Description - The system is configured to allow dead gateway detection"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableIPSourceRoutingRequirements"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "DisableIPSourceRouting"
+   info: "Title - MSS: (DisableIPSourceRouting) IP source routing protection level"
+   info: "Description - This setting protects against packet spoofing. Set to 2 to completely disable source routing."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableCMPRedirectRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "EnableICMPRedirect"
+   info: "Title - MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes"
+   info: "Description - This check determines whether ICMP redirects are allowed to override OSPF generated routes."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableRouterDiscoveryRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "PerformRouterDiscovery"
+   info: "Title - MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure DefaultGateway addresses"
+   info: "Description - This check verifies that the system is configured to disable the Internet Router Discovery Protocol (IDRP), which could lead to a denial of service."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TCPConnectionKeepAliveTimeRequirements"
+   value_type: POLICY_DWORD
+   value_data: [MIN..30000]
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "KeepAliveTime"
+   info: "Title - MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds"
+   info: "Description - This check verifies that the system is configured to control how often TCP attempts to verify that an idle connection is still intact by sending a keep-alive packet."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "HalfOpenRetriedTCPSocketsRequirements"
+   value_type: POLICY_DWORD
+   value_data: 160
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "TcpMaxHalfOpenRetried"
+   info: "Title - Tcp Max Half Open Retried"
+   info: "Description - This setting specifies the number of connections permitted in the SYN-RCVD state for which at least one retransmission of the SYN has been sent, before SynAttackProtect measures are implemented."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "HalfOpenTCPSocketsRequirements"
+   value_type: POLICY_DWORD
+   value_data: 200
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "TcpMaxHalfOpen"
+   info: "Title - Tcp Max Half Open"
+   info: "Description - This setting specifies the number of connections permitted in the SYN-RCVD state before SynAttackProtect measures are implemented."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "NameReleaseAttacksRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netbt\Parameters"
+   reg_item: "NoNameReleaseOnDemand"
+   info: "Title - MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers"
+   info: "Description - This check verifies that the system is configured to prevent release of its NetBIOS name when a name-release request is received."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SYNAttackProtectionRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "SynAttackProtect"
+   info: "Title - The value for “Network Security: Protect against SYN attacks"
+   info: "Description - This check verifies that the system is configured to protect against Syn attacks. The setting should be set to '“Reduce Transmission Retrys and notify WinSock”."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableAdministratorAutomaticLogonRequirements"
+   value_type: POLICY_TEXT
+   value_data: "0"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "AutoAdminLogon"
+   info: "Title - MSS: (AutoAdminLogon) Enable Automatic Logon Disabled"
+   info: "Description - If enabled, this setting will allow a user to directly log on to the system with administrator privileges when the machine is rebooted. This would give full access to any unauthorized individual who reboots the computer. By default this setting is not enabled. If this setting exists, it should be disabled. If this capability exists, the default password will also be present in the registry, and must be removed."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ResettingComputerAccountPasswordRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "DisablePasswordChange"
+   info: "Title - Resetting Computer Account Password Requirements"
+   info: "Description - The computer account password is prevented from being reset"
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "EnableNotSavingOfDialUpPasswordRASInstalledOnlyRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\RasMan\Parameters"
+   reg_item: "DisableSavePassword"
+   info: "Title - MSS: (DisableSavePassword) Prevent the dial-up password from being saved"
+   info: "Description - This check determines whether the dial-up password is prevented from being saved."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SecurePrintDriverInstallationRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers"
+   reg_item: "AddPrinterDrivers"
+   info: "Title - Secure Print Driver Installation Requirements"
+   info: "Description - Print driver installation privilege is not restricted to administrators."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PasswordExpirationWarningRequirements"
+   value_type: POLICY_DWORD
+   value_data: [14..MAX]
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "PasswordExpiryWarning"
+   info: "Title - Interactive logon: Prompt user to change password before expiration."
+   info: "Description - This setting configures the system to display a warning to users telling them how many days are left before their password expires. By giving the user advanced warning, the user has time to construct a sufficiently strong password."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RecoveryConsoleAutomaticLogonRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole"
+   reg_item: "SecurityLevel"
+   info: "Title - Recovery console: Allow automatic administrative logon"
+   info: "Description - If this option is enabled, the Recovery Console does not require you to provide a password and will automatically log on to the system, giving Administrator access to system files. By default, the Recovery Console requires you to provide the password for the Administrator account before accessing the system."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RecoveryConsoleSetCommandRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole"
+   reg_item: "SetCommand"
+   info: "Title - Recovery console: Allow floppy copy and access to all drives and all folders"
+   info: "Description - Enabling this option enables the Recovery Console SET command, which allows you to set Recovery Console environment variables. This permits floppy copy and access to all drives and folders. It should be disabled."
+</custom_item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "BuiltInAdministratorAccountRenamedRequirements"
+   value_type: POLICY_TEXT
+   value_data: "Administrator"
+   account_type: ADMINISTRATOR_ACCOUNT
+   check_type: CHECK_NOT_EQUAL
+   info: "Title - Accounts: Rename administrator account"
+   info: "Description - The Administrator account is created by default when installing Windows 2000. Associating the Administrator SID with a different name may thwart a potential hacker who is targeting the built-in Administrator account."
+</item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "BuiltInGuestAccountRenamedRequirements"
+   value_type: POLICY_TEXT
+   value_data: "Guest"
+   account_type: GUEST_ACCOUNT
+   check_type: CHECK_NOT_EQUAL
+   info: "Title - Accounts: Rename guest account"
+   info: "Description - The Guest account is created by default when installing Windows 2000, but is disabled. Associating the Guest SID with a different name may thwart a potential hacker who is targeting the built-in Guest account."
+</item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "EncryptingAndSigningOfSecureChannelTrafficRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "RequireSignOrSeal"
+   info: "Title - Digitally encrypt or sign secure channel data (always)"
+   info: "Description - Digitally encrypt or sign secure channel data (always). Requests sent on the secure channel are authenticated, and sensitive information (such as passwords) is encrypted or signed. If this policy is enabled, outgoing secure channel traffic should be encrypted."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "StrongSessionKeyWIN2KW2K3NativeDomainsRequirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "RequireStrongKey"
+   info: "Title - Domain member: Require strong session key"
+   info: "Description - This setting controls the required strength of a session key. Session keys in Windows 2000 are stronger than those in NT and should be used whenever possible."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "UnencryptedPasswordsTo3rdPartySMBServersRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "EnablePlainTextPassword"
+   info: "Title - Microsoft network client: Send unencrypted password to third-party SMB servers"
+   info: "Description - Some non-Microsoft SMB servers only support unencrypted (plain text) password authentication. Sending plain text passwords across the network, when authenticating to an SMB server, reduces the overall security of the environment. Check with the Vendor of the SMB server to see if there is a way to support encrypted password authentication."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SmartCardRemovalOptionRequirements"
+   value_type: POLICY_TEXT
+   value_data: "1"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "ScRemoveOption"
+   info: "Title - Interactive logon: Smart card removal behavior"
+   info: "Description - When the smart card for a logged-on user is removed from the smart card reader, the workstation should be locked."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "GlobalSystemObjectPermissionStrengthRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "AuditBaseObjects"
+   info: "Title - Global System Object Permission Strength Requirements"
+   info: "Description - The default permissions of global system objects are not increased."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AuditLogWarningLevelRequirements"
+   value_type: POLICY_DWORD
+   value_data: [0..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Security"
+   reg_item: "Retention"
+   info: "Title - Audit Log Warning Level Requirements"
+   info: "Description - The system does not generate an audit event when the audit log reaches a percent full threshold."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MaximumApplicationLogSize"
+   value_type: POLICY_DWORD
+   value_data: [16777216..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Application"
+   reg_item: "MaxSize"
+   info: "Title - Maximum Application Log Size"
+   info: "Description - Inadequate log size will cause the log to fill up quickly and require frequent clearing by administrative personnel. An exception is for NT workstations that do not share resources. The smaller size should allow sufficient audit information for supporting the investigation of suspicious events, but since it is overwritten, does not require administrator interaction for clearing the file. Microsoft recommends that the combined size of all the event logs (including DNS logs, Directory Services logs, and Replication logs on Servers or Domain Controllers) should not exceed 300 megabytes. Exceeding the recommended value can impact performance."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MaximumSecurityLogSize"
+   value_type: POLICY_DWORD
+   value_data: [83886080..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Security"
+   reg_item: "MaxSize"
+   info: "Title - Maximum Security Log Size"
+   info: "Description - Inadequate log size will cause the log to fill up quickly and require frequent clearing by administrative personnel. An exception is for NT workstations that do not share resources. The smaller size should allow sufficient audit information for supporting the investigation of suspicious events, but since it is overwritten, does not require administrator interaction for clearing the file. Microsoft recommends that the combined size of all the event logs (including DNS logs, Directory Services logs, and Replication logs on Servers or Domain Controllers) should not exceed 300 megabytes. Exceeding the recommended value can impact performance."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MaximumSystemLogSize"
+   value_type: POLICY_DWORD
+   value_data: [16777216..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\System"
+   reg_item: "MaxSize"
+   info: "Title - Maximum System Log Size"
+   info: "Description - Inadequate log size will cause the log to fill up quickly and require frequent clearing by administrative personnel. An exception is for NT workstations that do not share resources. The smaller size should allow sufficient audit information for supporting the investigation of suspicious events, but since it is overwritten, does not require administrator interaction for clearing the file. Microsoft recommends that the combined size of all the event logs (including DNS logs, Directory Services logs, and Replication logs on Servers or Domain Controllers) should not exceed 300 megabytes. Exceeding the recommended value can impact performance."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PreventGuestApplicationLogAccess"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Application"
+   reg_item: "RestrictGuestAccess"
+   info: "Title - Prevent Local Guests Group From Accessing Application Log"
+   info: "Description - By default, the Windows 2000 event logs may be viewed over the network by an anonymous user. This method of access over the network is communicating through the Server service which has SYSTEM access to the actual log files."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PreventGuestSecurityLogAccess"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Security"
+   reg_item: "RestrictGuestAccess"
+   info: "Title - Prevent Local Guests Group From Accessing Security Log"
+   info: "Description - By default, the Windows 2000 event logs may be viewed over the network by an anonymous user. This method of access over the network is communicating through the Server service which has SYSTEM access to the actual log files."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PreventGuestSystemLogAccess"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\System"
+   reg_item: "RestrictGuestAccess"
+   info: "Title - Prevent Local Guests Group From Accessing System Log"
+   info: "Description - By default, the Windows 2000 event logs may be viewed over the network by an anonymous user. This method of access over the network is communicating through the Server service which has SYSTEM access to the actual log files."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RetentionApplicationLog"
+   value_type: POLICY_DWORD
+   value_data: [0..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Application"
+   reg_item: "Retention"
+   info: "Title - Retention of Events in Application Log"
+   info: "Description - The application log should be configured to correctly handle itself when it reaches the maximum size. The log can be overwritten after a certain number of days, overwritten when it becomes full, or have to be cleared manually."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RetentionSecurityLog"
+   value_type: POLICY_DWORD
+   value_data: [0..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\Security"
+   reg_item: "Retention"
+   info: "Title - Retention of Events in Security Log"
+   info: "Description - The security log should be configured to correctly handle itself when it reaches the maximum size. The log can be overwritten after a certain number of days, overwritten when it becomes full, or have to be cleared manually."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RetentionSystemLog"
+   value_type: POLICY_DWORD
+   value_data: [0..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\System"
+   reg_item: "Retention"
+   info: "Title - Retention of Events in System Log"
+   info: "Description - The system log should be configured to correctly handle itself when it reaches the maximum size. The log can be overwritten after a certain number of days, overwritten when it becomes full, or have to be cleared manually."
+</custom_item>
+
+<custom_item>
+   type: AUDIT_POLICY
+   description: "FileAndDirectoryAuditingRequirements"
+   value_type: AUDIT_SET
+   value_data: "Failure"
+   audit_policy: AUDIT_DIRECTORY_SERVICE_ACCESS
+   info: "Title - Audit Directory Service Access"
+   info: "Description - Audits the event of a user accessing an active directory object that has its own System Access Control List (SACL) specified. This setting is not applicable to Windows 2000 systems."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "NetMeetingDisableRemoteDesktopSharingRequirements"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\mnmsrvc"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "NetMeetingDisableRemoteDesktopSharingRequirements"
+	 value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\mnmsrvc"
+         reg_item: "Start"
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "NetMeetingDisableRemoteDesktopSharingRequirements"
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "NetMeetingDisableRemoteDesktopSharingRequirements"
+         info: "Title - NetMeeting Remote Desktop Sharing Service Disabled"
+         info: "Description - Unnecessary services should not be running on the system. Services typically run under the local System Account, which generally have more permissions than are required by the service. Compromising a service could allow an intruder to obtain System permissions and open the system to a variety of attacks."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IESecurityZonesUseOnlyMachineSettingsRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "Security_HKLM_only"
+   info: "Title - IE - Security Zones: Use Only Machine Settings Requirements"
+   info: "Description - Use of machine based security zone settings is not enforced."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IESecurityZonesDoNotAllowUsersToChangePoliciesRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "Security_options_edit"
+   info: "Title - IE - Security Zones: Do Not Allow Users to Change Policies Requirements"
+   info: "Description - Users are allowed to change the I.E. security policies."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IESecurityZonesDoNotAllowUsersToAddDeleteSitesRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "Security_zones_map_edit"
+   info: "Title - IE - Security Zones: Do Not Allow Users to Add/Delete Sites Requirements"
+   info: "Description - Users are allowed to Add/Delete Sites"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IEMakeProxySettingsPerMachineRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "ProxySettingsPerUser"
+   info: "Title - IE - Make Proxy Settings Per Machine Requirements"
+   info: "Description - Proxy server settings are not per machine"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IEDisableAutomaticInstallOfInternetExplorerComponentsRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Infodelivery\Restrictions"
+   reg_item: "NoJITSetup"
+   info: "Title - IE - Disable Automatic Install of Internet Explorer Components Requirements"
+   info: "Description - Automatic install of I.E. components is not disabled."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IEDisablePeriodicCheckForInternetExplorerSoftwareUpdatesRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Infodelivery\Restrictions"
+   reg_item: "NoUpdateCheck"
+   info: "Title - IE - Disable Periodic Check for Internet Explorer Software Updates Requirements"
+   info: "Description - I.E. automatically checks for program updates"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IEDisableSoftwareUpdateShellNotificationsOnProgramLaunchRequirements"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+   reg_item: "NoMSAppLogo5ChannelNotify"
+   info: "Title - IE - Disable Software Update Shell Notifications on Program Launch Requirements"
+   info: "Description - IE - Disable Software Update Shell Notifications On Program Launch"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "BuiltInGuestAccountDisabledRequirements"
+   value_type: POLICY_SET
+   value_data: "Disabled"
+   account_type: GUEST_ACCOUNT
+   info: "Title - AccouGuestAccountStatunts: Guest account status"
+   info: "Description - A system faces an increased vulnerability threat if the built-in guest account is not disabled. This account is a known account that exists on all Windows systems and cannot be deleted. This account is initialized during the installation of the operating system with no password assigned. This account is a member of the Everyone user group and has all the rights and permissions associated with that group, which could subsequently provide access to system resources to anonymous users. Ensure the built-in guest account is disabled."
+</item>
+
+<custom_item>
+   type: REG_CHECK
+   description: "DCOMObjectAccessPermissionsRequirements"
+   value_type: POLICY_TEXT
+   value_data: "HKLM\Software\Policies\Microsoft\Windows NT\DCOM"
+   key_item: "MachineAccessRestriction"
+   reg_option: MUST_NOT_EXIST
+   info: "Title - DCOM: Machine Access Restrictions in Security Descriptor Definition Language (SDDL) syntax"
+   info: "Description - This check verifies that Windows Server 2000, is configured to restrict DCOM access permissions."
+</custom_item>
+
+<custom_item>
+   type: REG_CHECK
+   description: "DCOMObjectLaunchPermissionsRequirements"
+   value_type: POLICY_TEXT
+   value_data: "HKLM\Software\Policies\Microsoft\Windows NT\DCOM"
+   key_item: "MachineLaunchRestriction"
+   reg_option: MUST_NOT_EXIST
+   info: "Title - DCOM: Machine Launch Restrictions in Security Descriptor Definition Language (SDDL) syntax"
+   info: "Description - This check verifies that Windows Server 2000, is configured to restrict DCOM launch permissions."
+</custom_item>
+
+
+#####CPE checking
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+#####CPE checking
+
+
+   </group_policy>
+   </check_type>

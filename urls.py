@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     (r'^plugins/', include('plugins.urls')),
     (r'^falsepositives/', include('falsepositives.urls')),
     (r'^subscriptions/', include('subscriptions.urls')),
+    (r'^compliance/', include('compliance.urls')),
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     

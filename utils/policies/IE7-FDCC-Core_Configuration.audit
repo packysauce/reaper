@@ -1,0 +1,1984 @@
+# (C) 2008 Tenable Network Security
+#
+# This script is released under the Tenable Subscription License and
+# may not be used from within scripts released under another license
+# without authorization from Tenable Network Security Inc.
+#
+# See the following licenses for details:
+#
+# http://cgi.tenablesecurity.com/Nessus_3_SLA_and_Subscription_Agreement.pdf
+# http://cgi.tenablesecurity.com/Subscription_Agreement.pdf
+#
+# @PROFESSIONALFEED@
+#
+# Synopsis: This file will be read by compliance_check.nbin
+#           to check compliance of a Windows host to
+#           tests derived from an XCCDF xml file.
+#
+# Logic to test for CPE platform cpe:///microsoft:internet_explorer:7
+# Created 9/22/2008
+#
+   <check_type: "Windows" version:"2">
+   <group_policy: "XCCDF to Tenable Audit file">
+
+#####CPE checking
+<if>
+<condition type:"and">
+<if>
+<condition type:"or">
+<custom_item>
+type: REGISTRY_SETTING
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "7.0000"
+reg_key: "HKLM\SOFTWARE\Microsoft\Internet Explorer\Version Vector"
+reg_item: "IE"
+</item>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+</condition>
+<then>
+#####CPE checking
+
+
+##### File ACLs
+
+
+
+
+##### End of File ACLs
+
+
+<report type:"PASSED">
+   description: "Xccdf_Scan_Check"
+   info: "cpe:      microsoft:internet_explorer:7"
+   info: "Benchmark id=  InternetExplorer-7-SCAP   resolved=  1   xml:lang=  en                 xmlns=  http:    checklists.nist.gov  xccdf  1.1                 xmlns:cdf=  http:    checklists.nist.gov  xccdf  1.1                 xmlns:cpe=  http:    cpe.mitre.org  XMLSchema  cpe  1.0                xmlns:dc=  http:    purl.org  dc  elements  1.1                   xmlns:xsi=  http:    www.w3.org  2001  XMLSchema-instance                 xmlns:xhtml=  http:    www.w3.org  1999  xhtml                 xmlns:dsig=  http:    www.w3.org  2000  09  xmldsig                  xsi:schemaLocation=  http:    checklists.nist.gov  xccdf  1.1 xccdf-1.1.xsd http:    cpe.mitre.org  XMLSchema  cpe  1.0 cpe-1.0.xsd  "
+   info: "SCAP-IE7-XCCDF-Beta.xml"
+   info: "InternetExplorer-7-SCAP"
+   info: "Federal-Desktop-Core-Configuration"
+</report>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DisableConfiguringHistory-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+         reg_item: "History"
+         info: "Title - Disable 'Configuring History' - Local Computer"
+         info: "Description - This setting specifies the number of days that Internet Explorer keeps track of the pages viewed in the History List. The delete Browsing History option can be accessed using Tools, Internet Options and General tab. It is also available as Delete History "
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DisableConfiguringHistory-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 40
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Url History"
+         reg_item: "DaysToKeep"
+         info: "Title - Disable 'Configuring History' - Local Computer"
+         info: "Description - This setting specifies the number of days that Internet Explorer keeps track of the pages viewed in the History List. The delete Browsing History option can be accessed using Tools, Internet Options and General tab. It is also available as Delete History "
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DisableConfiguringHistory-LocalComputer"
+         info: "Title - Disable 'Configuring History' - Local Computer"
+         info: "Description - This setting specifies the number of days that Internet Explorer keeps track of the pages viewed in the History List. The delete Browsing History option can be accessed using Tools, Internet Options and General tab. It is also available as Delete History "
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DisableConfiguringHistory-LocalComputer"
+         info: "Title - Disable 'Configuring History' - Local Computer"
+         info: "Description - This setting specifies the number of days that Internet Explorer keeps track of the pages viewed in the History List. The delete Browsing History option can be accessed using Tools, Internet Options and General tab. It is also available as Delete History "
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableAutomaticInstallOfIEComponents-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Infodelivery\Restrictions"
+   reg_item: "NoJITSetup"
+   info: "Title - Disable Automatic Install of Internet Explorer Compoents - Local Computer"
+   info: "Description - This Disable Automatic Install of Internet Explorer components setting prevents Internet Explorer from automatically installing components. Enabling this setting prevents Internet Explorer from downloading a component when users browse to a Web site that "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableChangingAutomaticConfigurationSettings-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+   reg_item: "Autoconfig"
+   info: "Title - Disable Changing Automatic Configuration Settings - Local Computer"
+   info: "Description - This Disable Automatic Install of Internet Explorer components setting prevents Internet Explorer from automatically installing components. Enabling this setting prevents Internet Explorer from downloading a component when users browse to a Web site that "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisablePeriodicCheckForIESoftwareUpdates-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Infodelivery\Restrictions"
+   reg_item: "NoUpdateCheck"
+   info: "Title - Disable Periodic Check For Internet Explorer Software Updates - Local Computer"
+   info: "Description - The Disable Periodic Check for Internet Explorer software updates setting prevents Internet Explorer from more frequently checking whether a new browser update is available. Enabling this policy prevents Internet Explorer from determining whether a new br"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableShowingSplashScreen-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Infodelivery\Restrictions"
+   reg_item: "NoSplash"
+   info: "Title - Disable Showing the Splash Screen - Local Computer"
+   info: "Description - The Disable showing the splash screen setting prevents the Internet Explorer splash screen from appearing when users start the browser. Enabling this policy causes the splash screen, which normally displays the program name, licensing, and copyright infor"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableSoftwareUpdateShellNotifications-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+   reg_item: "NoMSAppLogo5ChannelNotify"
+   info: "Title - Disable Software Update Shell Notifications on Program Launch - Local Computer"
+   info: "Description - The Disable software update shell notifications on program launch setting specifies that programs using the Microsoft Software Distribution Channel will not notify users when they install new components. The Software Distribution Channel is a means of upd"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DoNotAllowUsersEnableDisableAddOns-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Restrictions"
+         reg_item: "NoExtensionManagement"
+         info: "Title - Do Not Allow Users to enable or Disable Add-Ons - Local Computer"
+         info: "Description - The Do not allow users to enable or disable add-ons policy setting allows you to manage whether users have the ability to allow or deny add-ons through Manage Add-ons. If you configure this policy setting to Enabled, users cannot enable or disable add-ons"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "DoNotAllowUsersEnableDisableAddOns-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Internet Explorer\Restrictions"
+         key_item: "NoExtensionManagement"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Do Not Allow Users to enable or Disable Add-Ons - Local Computer"
+         info: "Description - The Do not allow users to enable or disable add-ons policy setting allows you to manage whether users have the ability to allow or deny add-ons through Manage Add-ons. If you configure this policy setting to Enabled, users cannot enable or disable add-ons"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DoNotAllowUsersEnableDisableAddOns-LocalComputer"
+         info: "Title - Do Not Allow Users to enable or Disable Add-Ons - Local Computer"
+         info: "Description - The Do not allow users to enable or disable add-ons policy setting allows you to manage whether users have the ability to allow or deny add-ons through Manage Add-ons. If you configure this policy setting to Enabled, users cannot enable or disable add-ons"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DoNotAllowUsersEnableDisableAddOns-LocalComputer"
+         info: "Title - Do Not Allow Users to enable or Disable Add-Ons - Local Computer"
+         info: "Description - The Do not allow users to enable or disable add-ons policy setting allows you to manage whether users have the ability to allow or deny add-ons through Manage Add-ons. If you configure this policy setting to Enabled, users cannot enable or disable add-ons"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MakeProxySettingsPerMachine-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "ProxySettingsPerUser"
+   info: "Title - Make proxy settings per-machine (rather than per-user) - Local Computer"
+   info: "Description - The Make proxy settings per – machine (rather than per-user) setting ensures proxy settings for all users of the same computer are the same. Enabling this setting prevents users from setting user – specific proxy settings, and requires them to use the zon"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PreventParticipationInCustomerExperienceImprovementPrograms-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\SQM"
+   reg_item: "DisableCustomerImprovementProgram"
+   info: "Title - Prevent participation in the Customer Experience Improvement Programs - Local Computer"
+   info: "Description - This policy setting prevents users from participating in the Customer Experience Improvement Program (CEIP). If you enable this policy setting, it prevents users from participating in the CEIP and removes the 'Customer Feedback Options' menu item from the"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PreventPerformanceOfFirstRunCustomizeSettings-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main"
+   reg_item: "DisableFirstRunCustomize"
+   info: "Title - Prevent performance of First Run Customize settings - Local Computer"
+   info: "Description - This policy setting prevents performance of the First Run Customize settings ability and controls what the user will see when they launch Internet Explorer for the first time after installation of Internet Explorer. If you enable this policy setting, user"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DoNotAllowUsersAddDeleteSites-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "Security_zones_map_edit"
+   info: "Title - Security Zones: Do Not Allow Users to Add/Delete Sites - Local Computer"
+   info: "Description - The Security Zones: Do not allow users to add/delete sites setting prevents users from adding or removing sites from security zones. A security zone is a group of Web sites with the same security level. Enabling this policy causes the site management sett"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DoNotAllowUsersChangePolicies-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "Security_options_edit"
+   info: "Title - Security Zones: Do Not Allow Users to Change Policies - Local Computer"
+   info: "Description - The Security Zones: Do not allow users to change policies setting prevents users from changing security zone settings. A security zone is a group of Web sites with the same security level. Enabling this setting disables the Custom Level button and the sec"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "UseOnlyMachineSettings-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "Security_HKLM_only"
+   info: "Title - Security Zones: Use Only Machine Settings - Local Computer"
+   info: "Description - Applies security zone information to all users of the same computer. A security zone is a group of Web sites with the same security level. If you enable this policy, changes that the user makes to a security zone will apply to all users of that computer. "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffDeleteBrowsingHistoryFunctionality-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+   reg_item: "DisableDeleteBrowsingHistory"
+   info: "Title - Turn Off 'Delete Browsing History' functionality - Local Computer"
+   info: "Description - This policy setting prevents users from performing the 'Delete Browsing History' action in Internet Explorer. If you enable this policy setting, users cannot perform the 'Delete Browsing History' action in Internet Options for Internet Explorer 7. If you"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffCrashDetection-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Restrictions"
+   reg_item: "NoCrashDetection"
+   info: "Title - Turn Off Crash Detection - Local Computer"
+   info: "Description - The Turn off Crash Detection policy setting allows you to manage the crash detection feature of add-on management in Internet Explorer. If you enable this policy setting, a crash in Internet Explorer will be similar to one on a computer running Windows XP"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "TurnOffManagingPhishingFilter-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\PhishingFilter"
+         reg_item: "Enabled"
+         info: "Title - Turn Off Managing Phishing Filter - Local Computer"
+         info: "Description - This policy setting allows the user to enable a phishing filter that will warn if the Web site being visited is known for fraudulent attempts to gather personal information through 'phishing.' If you enable this policy setting, the user will not be prompt"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "TurnOffManagingPhishingFilter-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Internet Explorer\PhishingFilter"
+         key_item: "Enabled"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Turn Off Managing Phishing Filter - Local Computer"
+         info: "Description - This policy setting allows the user to enable a phishing filter that will warn if the Web site being visited is known for fraudulent attempts to gather personal information through 'phishing.' If you enable this policy setting, the user will not be prompt"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "TurnOffManagingPhishingFilter-LocalComputer"
+         info: "Title - Turn Off Managing Phishing Filter - Local Computer"
+         info: "Description - This policy setting allows the user to enable a phishing filter that will warn if the Web site being visited is known for fraudulent attempts to gather personal information through 'phishing.' If you enable this policy setting, the user will not be prompt"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "TurnOffManagingPhishingFilter-LocalComputer"
+         info: "Title - Turn Off Managing Phishing Filter - Local Computer"
+         info: "Description - This policy setting allows the user to enable a phishing filter that will warn if the Web site being visited is known for fraudulent attempts to gather personal information through 'phishing.' If you enable this policy setting, the user will not be prompt"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffSecuritySettingsCheckFeature-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Security"
+   reg_item: "DisableSecuritySettingsCheck"
+   info: "Title - Turn Off the Security Settings Check Feature - Local Computer"
+   info: "Description - This policy setting turns off the Security Settings Check feature, which checks Internet Explorer security settings to determine when the settings put Internet Explorer at risk. If you enable this policy setting, the security settings check will not be pe"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "PreventIgnoringCertificateErrors-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "PreventIgnoreCertErrors"
+   info: "Title - Prevent ignoring certificate errors - Local Computer"
+   info: "Description - Internet Explorer treats as fatal any Secure Socket Layer/Transport Layer Security (SSL/TLS) certificate errors that interrupt navigation (such as 'expired,' 'revoked,' or 'name mismatch' errors). If you enable this policy setting, the user is not permitt"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowActiveContentFromCD-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_LOCALMACHINE_LOCKDOWN\Settings"
+   reg_item: "LOCALMACHINE_CD_UNLOCK"
+   info: "Title - Allow Active Content from CDs to Run on User Machine - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users receive a dialog requesting permission for active content on a CD to run. If you enable this policy setting, active content on a CD will run without a prompt. If you disable this policy setting, activ"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowSoftwareToRununOrInstallEvenIfSignatureInvalid-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Download"
+   reg_item: "RunInvalidSignatures"
+   info: "Title - Allow software to run or install even if the signature is invalid - Local Computer"
+   info: "Description - This policy setting allows you to manage whether software, such as ActiveX controls and file downloads, can be installed or run by the user even though the signature is invalid. An invalid signature might indicate that someone has tampered with the file."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AutomaticallyCheckIEUpdates-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main"
+   reg_item: "NoUpdateCheck"
+   info: "Title - Automatically Check for Internet Explorer Updates - Local Computer"
+   info: "Description - This policy setting allows you to manage whether Internet Explorer checks the Internet for newer versions. When Internet Explorer is set to do this, the checks occur approximately every 30 days, and users are prompted to install new versions as they becom"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "CheckServerCertificateRevocation-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "CertificateRevocation"
+   info: "Title - Check for Server Certificate Revocation - Local Computer"
+   info: "Description - This policy setting allows you to manage whether Internet Explorer will check revocation status of servers' certificates. Certificates are revoked when they have been compromised or are no longer valid, and this option protects users from submitting confi"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "CheckSignatureDownloadedPrograms-LocalComputer"
+   value_type: POLICY_TEXT
+   value_data: "yes"
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Download"
+   reg_item: "CheckExeSignatures"
+   info: "Title - Check for signatures on downloaded programs - Local Computer - variable"
+   info: "Description - This policy setting allows you to manage whether Internet Explorer checks for digital signatures (which identifies the publisher of signed software and verifies it hasn't been modified or tampered with) on user computers before downloading executable prog"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DoNotAllowResettingIESettings-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+   reg_item: "DisableRIED"
+   info: "Title - Do Not Allow Resetting Internet Explorer Settings - Local Computer"
+   info: "Description - This policy setting prevents users from using the Reset Internet Explorer Settings feature. Reset Internet Explorer Settings will allow the users to reset all settings changed since install, delete browsing history and disable add-ons that are not preappr"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "IncludeAllNetworkPaths-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap"
+   reg_item: "UNCAsIntranet"
+   info: "Title - Intranet Sites: Include all network paths (UNCs) - Local Computer"
+   info: "Description - This policy setting controls whether URLs representing UNCs are mapped into the local Intranet security zone. If you enable this policy setting, all network paths are mapped into the Intranet Zone. If you disable this policy setting, network paths are not"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AccessDataSourcesAcrossDomains-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1406"
+   info: "Title - Access Data Sources Across Domains - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether Internet Explorer can access data from another security zone using the Microsoft XML Parser (MSXML) or ActiveX Data Objects (ADO). If you enable this policy setting, users can load a page in the zone that u"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowCutCopyPasteOperationsFromClipboardViaScript-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1407"
+   info: "Title - Allow cut, copy or paste operations from the clipboard via script - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether scripts can perform a clipboard operation (for example, cut, copy, and paste) in a specified region. If you enable this policy setting, a script can perform a clipboard operation. If you select Prompt in th"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowDragDropOrCopyPasteFiles-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1802"
+   info: "Title - Allow drag and drop or copy and paste files - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can drag files or copy and paste files from a source within the zone. If you enable this policy setting, users can drag files or copy and paste files from this zone automatically. If you select Prompt"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowFontDownloads-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1604"
+   info: "Title - Allow Font Downloads - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether pages of the zone may download HTML fonts. If you enable this policy setting, HTML fonts can be downloaded automatically. If you enable this policy setting and Prompt is selected in the drop-down box, users"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowInstallationOfDesktopItems-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1800"
+   info: "Title - Allow installation of desktop items - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can install Active Desktop items from this zone. The settings for this option are: If you enable this policy setting, users can install desktop items from this zone automatically. If you select Prompt"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowScriptInitiatedWindowsWithoutSizeOrPositionConstraints-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "2102"
+   info: "Title - Allow script-initiated windows without size or position constraints - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage restrictions on script-initiated pop-up windows and windows that include the title and status bars. If you enable this policy setting, Windows Restrictions security will not apply in this zone. The security zone ru"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowScriptlets-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1209"
+   info: "Title - Allow Scriptlets - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether scriptlets can be allowed. If you enable this policy setting, users will be able to run scriptlets. If you disable this policy setting, users will not be able to run scriptlets. If you do not configure this"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "AllowStatusBarUpdatesViaScript-InternetZone-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+         reg_item: "2103"
+         info: "Title - Allow status bar updates via script - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "AllowStatusBarUpdatesViaScript-InternetZone-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+         key_item: "2103"
+         reg_option: MUST_EXIST
+         info: "Title - Allow status bar updates via script - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "AllowStatusBarUpdatesViaScript-InternetZone-LocalComputer"
+         info: "Title - Allow status bar updates via script - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "AllowStatusBarUpdatesViaScript-InternetZone-LocalComputer"
+         info: "Title - Allow status bar updates via script - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AutomaticPromptingFileDownloads-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "2200"
+   info: "Title - Automatic prompting for file downloads - Internet Zone - Local Computer"
+   info: "Description - This policy setting determines whether users will be prompted for non user-initiated file downloads. Regardless of this setting, users will receive file download dialogs for user-initiated downloads. If you enable this setting, users will receive a file d"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DownloadSignedActiveXControls-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1001"
+   info: "Title - Download signed ActiveX controls - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users may download signed ActiveX controls from a page in the zone. If you enable this policy, users can download signed controls without user intervention. If you select Prompt in the drop-down box, users"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DownloadUnsignedActiveXControls-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1004"
+   info: "Title - Download unsigned ActiveX controls - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users may download unsigned ActiveX controls from the zone. Such code is potentially harmful, especially when coming from an untrusted zone. If you enable this policy setting, users can run unsigned control"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "InitializeScriptActiveXControlsNotMarkedAsSafe-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1201"
+   info: "Title - Initialize and script ActiveX controls not marked as safe - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage ActiveX controls not marked as safe. If you enable this policy setting, ActiveX controls are run, loaded with parameters, and scripted without setting object safety for untrusted data or scripts. This setting is no"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LaunchingApplicationsAndFilesInIFRAME-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1804"
+   info: "Title - Launching applications and files in an IFRAME - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether applications may be run and files may be downloaded from an IFRAME reference in the HTML of the pages in this zone. If you enable this policy setting, users can run applications and download files from IFRA"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LogonOptions-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 65536
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1A00"
+   info: "Title - Logon Options - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage settings for logon options. If you enable this policy setting, you can choose from the following logon options. Anonymous logon to disable HTTP authentication and use the guest account only for the Common Internet "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LooseXAMLFiles-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "2402"
+   info: "Title - Loose or un-compiled XAML files - Internet Zone - Local Computer"
+   info: "Description - These are eXtensible Application Markup Language (XAML) files. XAML is an XML-based declarative markup language commonly used for creating rich user interfaces and graphics that leverage the Windows Presentation Foundation. If you enable this policy setti"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "NavigateSub-framesAcrossDifferentDomains-InternetZone-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+         reg_item: "1607"
+         info: "Title - Navigate sub-frames across different domains - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage the opening of sub-frames and access of applications across different domains. If you enable this policy setting, users can open sub-frames from other domains and access applications from other domains. If you sele"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "NavigateSub-framesAcrossDifferentDomains-InternetZone-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+         key_item: "1607"
+         reg_option: MUST_EXIST
+         info: "Title - Navigate sub-frames across different domains - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage the opening of sub-frames and access of applications across different domains. If you enable this policy setting, users can open sub-frames from other domains and access applications from other domains. If you sele"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "NavigateSub-framesAcrossDifferentDomains-InternetZone-LocalComputer"
+         info: "Title - Navigate sub-frames across different domains - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage the opening of sub-frames and access of applications across different domains. If you enable this policy setting, users can open sub-frames from other domains and access applications from other domains. If you sele"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "NavigateSub-framesAcrossDifferentDomains-InternetZone-LocalComputer"
+         info: "Title - Navigate sub-frames across different domains - Internet Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage the opening of sub-frames and access of applications across different domains. If you enable this policy setting, users can open sub-frames from other domains and access applications from other domains. If you sele"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "OpenFilesBasedOnContent-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "2100"
+   info: "Title - Open files based on content, not file extension - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage MIME sniffing for file promotion from one type to another based on a MIME sniff. A MIME sniff is the recognition by Internet Explorer of the file type based on a bit signature. If you enable this policy setting, th"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SoftwareChannelPermissions-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 65536
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1E05"
+   info: "Title - Software channel permissions - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage software channel permissions. If you enable this policy setting, you can choose the following options from the drop-down box. Low safety to allow users to be notified of software updates by e-mail, software package"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffFirst-RunOpt-In-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1208"
+   info: "Title - Turn Off First-Run Opt-In - Internet Zone - Local Computer"
+   info: "Description - Turn Off First-Run Opt-In"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "UsePop-upBlocker-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1809"
+   info: "Title - Use Pop-up Blocker - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether unwanted pop-up windows appear. Pop-up windows that are opened when the end user clicks a link are not blocked. If you enable this policy setting, most unwanted pop-up windows are prevented from appearing. "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "UserdataPersistence-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "1606"
+   info: "Title - Userdata Persistence - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage the preservation of information in the browser's history, in favorites, in an XML store, or directly within a Web page saved to disk. When a user returns to a persisted page, the state of the page can be restored i"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "WebBrowserApplications-InternetZone-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+         reg_item: "2400"
+         info: "Title - Web Browser Applications - Internet Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "WebBrowserApplications-InternetZone-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+         key_item: "2400"
+         reg_option: MUST_EXIST
+         info: "Title - Web Browser Applications - Internet Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "WebBrowserApplications-InternetZone-LocalComputer"
+         info: "Title - Web Browser Applications - Internet Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "WebBrowserApplications-InternetZone-LocalComputer"
+         info: "Title - Web Browser Applications - Internet Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "WebSitesInLessPrivilegedWebContentZonesCanNavigateIntoThisZone-InternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+   reg_item: "2101"
+   info: "Title - Web sites in less privileged Web content zones can navigate into this zone - Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether Web sites from less privileged zones, such as Restricted Sites, can navigate into this zone. If you enable this policy setting, Web sites from less privileged zones can open new windows in, or navigate into"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-IntranetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Intranet Zone - Local Compute"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-IntranetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Intranet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-LocalMachineZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\0"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Local Machine Zone - Local Compute"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-LocalMachineZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\0"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Local Machine Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-LockedDownInternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\3"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Locked Down Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-LockedDownInternetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\3"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Locked Down Internet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-LockedDownIntranetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\1"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Locked Down Intranet Zone - Local Compute"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-LockedDownIntranetZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\1"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Locked Down Intranet Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-LockedDownLocalMachineZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\0"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Locked Down Local Machine Zone - Local Compute"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-LockedDownLocalMachineZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\0"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Locked Down Local Machine - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-LockedDownRestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\4"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Locked Down Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-LockedDownRestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\4"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Locked Down Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-LockedDownTrustedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\2"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Locked Down Trusted Sites Zone - LocalComputer"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-LockedDownTrustedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Lockdown_Zones\2"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Locked Down Trusted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AccessDataSourcesAcrossDomains-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1406"
+   info: "Title - Access Data Sources Across Domains - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether Internet Explorer can access data from another security zone using the Microsoft XML Parser (MSXML) or ActiveX Data Objects (ADO). If you enable this policy setting, users can load a page in the zone that u"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowActiveScripting-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1400"
+   info: "Title - Allow Active Scripting - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether script code on pages in the zone is run. If you enable this policy setting, script code on pages in the zone can run automatically. If you select Prompt in the drop-down box, users are queried to choose whe"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowBinaryAndScriptBehaviors-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2000"
+   info: "Title - Allow Binary and Script Behaviors - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage dynamic binary and script behaviors: components that encapsulate specific functionality for HTML elements to which they were attached. If you enable this policy setting, binary and script behaviors are available. I"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowCutCopyPasteOperationsFromClipboardViaScript-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1407"
+   info: "Title - Allow cut, copy or paste operations from the clipboard via script - Restricted SitesZone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether scripts can perform a clipboard operation (for example, cut, copy, and paste) in a specified region. If you enable this policy setting, a script can perform a clipboard operation. If you select Prompt in th"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowDragDropOrCopyPasteFiles-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1802"
+   info: "Title - Allow drag and drop or copy and paste files - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can drag files or copy and paste files from a source within the zone. If you enable this policy setting, users can drag files or copy and paste files from this zone automatically. If you select Prompt"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowFileDownloads-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1803"
+   info: "Title - Allow File Downloads - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether file downloads are permitted from the zone. This option is determined by the zone of the page with the link causing the download, not the zone from which the file is delivered. If you enable this policy set"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowFontDownloads-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1604"
+   info: "Title - Allow Font Downloads - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether pages of the zone may download HTML fonts. If you enable this policy setting, HTML fonts can be downloaded automatically. If you enable this policy setting and Prompt is selected in the drop-down box, users"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowInstallationOfDesktopItems-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1800"
+   info: "Title - Allow installation of desktop items - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can install Active Desktop items from this zone. The settings for this option are: If you enable this policy setting, users can install desktop items from this zone automatically. If you select Prompt"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowMETAREFRESH-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1608"
+   info: "Title - Allow META REFRESH - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether a user's browser can be redirected to another Web page if the author of the Web page uses the Meta Refresh setting (tag) to redirect browsers to another Web page. If you enable this policy setting, a user's"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllowScriptInitiatedWindowsWithoutSizeOrPositionConstraints-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2102"
+   info: "Title - Allow script-initiated windows without size or position constraints - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage restrictions on script-initiated pop-up windows and windows that include the title and status bars. If you enable this policy setting, Windows Restrictions security will not apply in this zone. The security zone ru"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "AllowStatusBarUpdatesViaScript-RestrictedSitesZone-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+         reg_item: "2103"
+         info: "Title - Allow status bar updates via script - Restricted Sites Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "AllowStatusBarUpdatesViaScript-RestrictedSitesZone-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+         key_item: "2103"
+         reg_option: MUST_EXIST
+         info: "Title - Allow status bar updates via script - Restricted Sites Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "AllowStatusBarUpdatesViaScript-RestrictedSitesZone-LocalComputer"
+         info: "Title - Allow status bar updates via script - Restricted Sites Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "AllowStatusBarUpdatesViaScript-RestrictedSitesZone-LocalComputer"
+         info: "Title - Allow status bar updates via script - Restricted Sites Zone - Local Computer"
+         info: "Description - This policy setting allows you to manage whether script is allowed to update the status bar within the zone. If you enable this policy setting, script is allowed to update the status bar. If you disable this policy setting, script is not allowed to update"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AutomaticPromptingFileDownloads-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2200"
+   info: "Title - Automatic prompting for file downloads - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting determines whether users will be prompted for non user-initiated file downloads. Regardless of this setting, users will receive file download dialogs for user-initiated downloads. If you enable this setting, users will receive a file d"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DownloadSignedActiveXControls-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1001"
+   info: "Title - Download signed ActiveX controls - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users may download signed ActiveX controls from a page in the zone. If you enable this policy, users can download signed controls without user intervention. If you select Prompt in the drop-down box, users"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DownloadUnsignedActiveXControls-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1004"
+   info: "Title - Download unsigned ActiveX controls - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users may download unsigned ActiveX controls from the zone. Such code is potentially harmful, especially when coming from an untrusted zone. If you enable this policy setting, users can run unsigned control"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "InitializeScriptActiveXControlsNotMarkedAsSafe-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1201"
+   info: "Title - Initialize and script ActiveX controls not marked as safe - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage ActiveX controls not marked as safe. If you enable this policy setting, ActiveX controls are run, loaded with parameters, and scripted without setting object safety for untrusted data or scripts. This setting is no"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LaunchingApplicationsAndFilesInIFRAME-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1804"
+   info: "Title - Launching applications and files in an IFRAME - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether applications may be run and files may be downloaded from an IFRAME reference in the HTML of the pages in this zone. If you enable this policy setting, users can run applications and download files from IFRA"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LogonOptions-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 196608
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1A00"
+   info: "Title - Logon Options - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage settings for logon options. If you enable this policy setting, you can choose from the following logon options. Anonymous logon to disable HTTP authentication and use the guest account only for the Common Internet "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LooseXAMLFiles-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2402"
+   info: "Title - Loose or un-compiled XAML files - Restricted Sites Zone - Local Computer"
+   info: "Description - These are eXtensible Application Markup Language (XAML) files. XAML is an XML-based declarative markup language commonly used for creating rich user interfaces and graphics that leverage the Windows Presentation Foundation. If you enable this policy setti"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "NavigateSub-framesAcrossDifferentDomains-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1607"
+   info: "Title - Navigate sub-frames across different domains - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage the opening of sub-frames and access of applications across different domains. If you enable this policy setting, users can open sub-frames from other domains and access applications from other domains. If you sele"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "OpenFilesBasedOnContent-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2100"
+   info: "Title - Open files based on content, not file extension - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage MIME sniffing for file promotion from one type to another based on a MIME sniff. A MIME sniff is the recognition by Internet Explorer of the file type based on a bit signature. If you enable this policy setting, th"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RunNETFrameworkReliantComponentsNotSignedWithAuthenticode-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2004"
+   info: "Title - Run .NET Framework-reliant components not signed with Authenticode - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether .NET Framework components that are not signed with Authenticode can be executed from Internet Explorer. These components include managed controls referenced from an object tag and managed executables refere"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RunNETFrameworkReliantComponentsSignedWithAuthenticode-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2001"
+   info: "Title - Run .NET Framework-reliant components signed with Authenticode - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether .NET Framework components that are signed with Authenticode can be executed from Internet Explorer. These components include managed controls referenced from an object tag and managed executables referenced"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RunActiveXControlsAndPlugins-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1200"
+   info: "Title - Run ActiveX controls and plugins - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether ActiveX controls and plug-ins can be run on pages from the specified zone. If you enable this policy setting, controls and plug-ins can run without user intervention. If you selected Prompt in the drop-down"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ScriptActiveXControlsMarkedSafeForScripting-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1405"
+   info: "Title - Script ActiveX controls marked safe for scripting - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether an ActiveX control marked safe for scripting can interact with a script. If you enable this policy setting, script interaction can occur automatically without user intervention. If you select Prompt in the "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ScriptingOfJavaApplets-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1402"
+   info: "Title - Scripting of Java Applets - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether applets are exposed to scripts within the zone. If you enable this policy setting, scripts can access applets automatically without user intervention. If you select Prompt in the drop-down box, users are qu"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SoftwareChannelPermissions-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 65536
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1E05"
+   info: "Title - Software channel permissions - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage software channel permissions. If you enable this policy setting, you can choose the following options from the drop-down box. Low safety to allow users to be notified of software updates by e-mail, software package"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffFirst-RunOpt-In-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1208"
+   info: "Title - Turn Off First-Run Opt-In - Restricted Sites Zone - Local Computer"
+   info: "Description - Turn Off First-Run Opt-In"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "UsePop-upBlocker-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1809"
+   info: "Title - Use Pop-up Blocker - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether unwanted pop-up windows appear. Pop-up windows that are opened when the end user clicks a link are not blocked. If you enable this policy setting, most unwanted pop-up windows are prevented from appearing. "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "UserdataPersistence-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "1606"
+   info: "Title - Userdata Persistence - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage the preservation of information in the browser's history, in favorites, in an XML store, or directly within a Web page saved to disk. When a user returns to a persisted page, the state of the page can be restored i"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "WebBrowserApplications-RestrictedSitesZone-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+         reg_item: "2400"
+         info: "Title - Web Browser Applications - Restricted Sites Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "WebBrowserApplications-RestrictedSitesZone-LocalComputer"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+         key_item: "2400"
+         reg_option: MUST_EXIST
+         info: "Title - Web Browser Applications - Restricted Sites Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "WebBrowserApplications-RestrictedSitesZone-LocalComputer"
+         info: "Title - Web Browser Applications - Restricted Sites Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "WebBrowserApplications-RestrictedSitesZone-LocalComputer"
+         info: "Title - Web Browser Applications - Restricted Sites Zone - Local Computer"
+         info: "Description - These are browser-hosted, ClickOnce-deployed applications built using WinFX. These applications execute in a security sandbox and harness the power of the Windows Presentation Foundation platform for the Web. If you enable this policy setting and the drop"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "WebSitesInLessPrivilegedWebContentZonesCanNavigateIntoThisZone-RestrictedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\4"
+   reg_item: "2101"
+   info: "Title - Web sites in less privileged Web content zones can navigate into this zone - Restricted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether Web sites from less privileged zones, such as Restricted Sites, can navigate into this zone. If you enable this policy setting, Web sites from less privileged zones can open new windows in, or navigate into"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMixedContent-TrustedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\2"
+   reg_item: "1609"
+   info: "Title - Display Mixed Content - Trusted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage whether users can display nonsecure items and manage whether users receive a security information message to display pages containing both secure and nonsecure items. If you enable this policy setting, and the drop"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "JavaPermissions-TrustedSitesZone-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\2"
+   reg_item: "1C00"
+   info: "Title - Java permissions - Trusted Sites Zone - Local Computer"
+   info: "Description - This policy setting allows you to manage permissions for Java applets. If you enable this policy setting, you can choose options from the drop-down box. Custom, to control permissions settings individually. Low Safety enables applets to perform all operat"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffChangingURLDisplay-LocalComputer"
+   value_type: POLICY_TEXT
+   value_data: ""
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main"
+   reg_item: "Update_Check_Page"
+   info: "Title - Turn Off changing the URL to be displayed for checking updates to Internet Explorer and Internet Tools - Local Computer"
+   info: "Description - This policy setting allows checking for updates for Internet Explorer from the specified URL, included by default in Internet Explorer. If you enable this policy setting, users will not be able to change the URL to be displayed for checking updates to Int"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffConfiguringUpdateCheckInterval-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 30
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main"
+   reg_item: "Update_Check_Interval"
+   info: "Title - Turn Off Configuring the Update Check Interval (In Days) - Local Computer"
+   info: "Description - This setting specifies the update check interval. The default value is 30 days. If you enable this policy setting, the user will not be able to configure the update check interval. You have to specify the update check interval. If you disable or do not co"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "EnableNativeXMLHttpSupport-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main"
+   reg_item: "XMLHTTP"
+   info: "Title - Enable Native XMLHttp Support - Local Computer"
+   info: "Description - Enable Native XMLHttp Support - Local Computer"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ConsistentMimeHandling-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MIME_HANDLING"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - Consistent Mime Handling - Local Computer"
+         info: "Description - Internet Explorer uses Multipurpose Internet Mail Extensions (MIME) data to determine file handling procedures for files received through a Web server. The Consistent MIME Handling\Internet Explorer Processes policy setting determines whether Internet Exp"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ConsistentMimeHandling-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MIME_HANDLING"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - Consistent Mime Handling - Local Computer"
+         info: "Description - Internet Explorer uses Multipurpose Internet Mail Extensions (MIME) data to determine file handling procedures for files received through a Web server. The Consistent MIME Handling\Internet Explorer Processes policy setting determines whether Internet Exp"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ConsistentMimeHandling-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MIME_HANDLING"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - Consistent Mime Handling - Local Computer"
+         info: "Description - Internet Explorer uses Multipurpose Internet Mail Extensions (MIME) data to determine file handling procedures for files received through a Web server. The Consistent MIME Handling\Internet Explorer Processes policy setting determines whether Internet Exp"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-ConsistentMimeHandling-LocalComputer"
+         info: "Title - Internet Explorer Processes - Consistent Mime Handling - Local Computer"
+         info: "Description - Internet Explorer uses Multipurpose Internet Mail Extensions (MIME) data to determine file handling procedures for files received through a Web server. The Consistent MIME Handling\Internet Explorer Processes policy setting determines whether Internet Exp"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-ConsistentMimeHandling-LocalComputer"
+         info: "Title - Internet Explorer Processes - Consistent Mime Handling - Local Computer"
+         info: "Description - Internet Explorer uses Multipurpose Internet Mail Extensions (MIME) data to determine file handling procedures for files received through a Web server. The Consistent MIME Handling\Internet Explorer Processes policy setting determines whether Internet Exp"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-MimeSniffingSafetyFeature-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MIME_SNIFFING"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - Mime Sniffing Safety Feature - Local Computer"
+         info: "Description - MIME sniffing is the process of examining the content of a MIME file to determine its context — whether it is a data file, an executable file, or some other type of file. This policy setting determines whether Internet Explorer MIME sniffing will prevent "
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-MimeSniffingSafetyFeature-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MIME_SNIFFING"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - Mime Sniffing Safety Feature - Local Computer"
+         info: "Description - MIME sniffing is the process of examining the content of a MIME file to determine its context — whether it is a data file, an executable file, or some other type of file. This policy setting determines whether Internet Explorer MIME sniffing will prevent "
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-MimeSniffingSafetyFeature-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MIME_SNIFFING"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - Mime Sniffing Safety Feature - Local Computer"
+         info: "Description - MIME sniffing is the process of examining the content of a MIME file to determine its context — whether it is a data file, an executable file, or some other type of file. This policy setting determines whether Internet Explorer MIME sniffing will prevent "
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-MimeSniffingSafetyFeature-LocalComputer"
+         info: "Title - Internet Explorer Processes - Mime Sniffing Safety Feature - Local Computer"
+         info: "Description - MIME sniffing is the process of examining the content of a MIME file to determine its context — whether it is a data file, an executable file, or some other type of file. This policy setting determines whether Internet Explorer MIME sniffing will prevent "
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-MimeSniffingSafetyFeature-LocalComputer"
+         info: "Title - Internet Explorer Processes - Mime Sniffing Safety Feature - Local Computer"
+         info: "Description - MIME sniffing is the process of examining the content of a MIME file to determine its context — whether it is a data file, an executable file, or some other type of file. This policy setting determines whether Internet Explorer MIME sniffing will prevent "
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-MKProtocolSecurityRestriction-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_DISABLE_MK_PROTOCOL"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - MK Protocol Security Restriction - Local Computer"
+         info: "Description - The MK Protocol Security Restriction policy setting reduces attack surface area by blocking the seldom used MK protocol. Some older Web applications use the MK protocol to retrieve information from compressed files. Setting this policy to Enabled blocks t"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-MKProtocolSecurityRestriction-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_DISABLE_MK_PROTOCOL"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - MK Protocol Security Restriction - Local Computer"
+         info: "Description - The MK Protocol Security Restriction policy setting reduces attack surface area by blocking the seldom used MK protocol. Some older Web applications use the MK protocol to retrieve information from compressed files. Setting this policy to Enabled blocks t"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-MKProtocolSecurityRestriction-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_DISABLE_MK_PROTOCOL"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - MK Protocol Security Restriction - Local Computer"
+         info: "Description - The MK Protocol Security Restriction policy setting reduces attack surface area by blocking the seldom used MK protocol. Some older Web applications use the MK protocol to retrieve information from compressed files. Setting this policy to Enabled blocks t"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-MKProtocolSecurityRestriction-LocalComputer"
+         info: "Title - Internet Explorer Processes - MK Protocol Security Restriction - Local Computer"
+         info: "Description - The MK Protocol Security Restriction policy setting reduces attack surface area by blocking the seldom used MK protocol. Some older Web applications use the MK protocol to retrieve information from compressed files. Setting this policy to Enabled blocks t"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-MKProtocolSecurityRestriction-LocalComputer"
+         info: "Title - Internet Explorer Processes - MK Protocol Security Restriction - Local Computer"
+         info: "Description - The MK Protocol Security Restriction policy setting reduces attack surface area by blocking the seldom used MK protocol. Some older Web applications use the MK protocol to retrieve information from compressed files. Setting this policy to Enabled blocks t"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ProtectionFromZoneElevation-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_ZONE_ELEVATION"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - Protection From Zone Elevation - Local Computer"
+         info: "Description - Internet Explorer places restrictions on each Web page it opens that are dependent upon the location of the Web page (such as Internet zone, Intranet zone, or Local Machine zone). Web pages on a local computer have the fewest security restrictions and res"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ProtectionFromZoneElevation-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_ZONE_ELEVATION"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - Protection From Zone Elevation - Local Computer"
+         info: "Description - Internet Explorer places restrictions on each Web page it opens that are dependent upon the location of the Web page (such as Internet zone, Intranet zone, or Local Machine zone). Web pages on a local computer have the fewest security restrictions and res"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ProtectionFromZoneElevation-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_ZONE_ELEVATION"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - Protection From Zone Elevation - Local Computer"
+         info: "Description - Internet Explorer places restrictions on each Web page it opens that are dependent upon the location of the Web page (such as Internet zone, Intranet zone, or Local Machine zone). Web pages on a local computer have the fewest security restrictions and res"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-ProtectionFromZoneElevation-LocalComputer"
+         info: "Title - Internet Explorer Processes - Protection From Zone Elevation - Local Computer"
+         info: "Description - Internet Explorer places restrictions on each Web page it opens that are dependent upon the location of the Web page (such as Internet zone, Intranet zone, or Local Machine zone). Web pages on a local computer have the fewest security restrictions and res"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-ProtectionFromZoneElevation-LocalComputer"
+         info: "Title - Internet Explorer Processes - Protection From Zone Elevation - Local Computer"
+         info: "Description - Internet Explorer places restrictions on each Web page it opens that are dependent upon the location of the Web page (such as Internet zone, Intranet zone, or Local Machine zone). Web pages on a local computer have the fewest security restrictions and res"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-RestrictActiveXInstall-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_RESTRICT_ACTIVEXINSTALL"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - Restrict ActiveX Install - Local Computer"
+         info: "Description - The Restrict ActiveX Install\Internet Explorer Processes policy setting enables blocking of ActiveX control installation prompts for Internet Explorer processes. If you enable this policy setting, prompting for ActiveX control installations will be blocke"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-RestrictActiveXInstall-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_RESTRICT_ACTIVEXINSTALL"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - Restrict ActiveX Install - Local Computer"
+         info: "Description - The Restrict ActiveX Install\Internet Explorer Processes policy setting enables blocking of ActiveX control installation prompts for Internet Explorer processes. If you enable this policy setting, prompting for ActiveX control installations will be blocke"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-RestrictActiveXInstall-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_RESTRICT_ACTIVEXINSTALL"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - Restrict ActiveX Install - Local Computer"
+         info: "Description - The Restrict ActiveX Install\Internet Explorer Processes policy setting enables blocking of ActiveX control installation prompts for Internet Explorer processes. If you enable this policy setting, prompting for ActiveX control installations will be blocke"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-RestrictActiveXInstall-LocalComputer"
+         info: "Title - Internet Explorer Processes - Restrict ActiveX Install - Local Computer"
+         info: "Description - The Restrict ActiveX Install\Internet Explorer Processes policy setting enables blocking of ActiveX control installation prompts for Internet Explorer processes. If you enable this policy setting, prompting for ActiveX control installations will be blocke"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-RestrictActiveXInstall-LocalComputer"
+         info: "Title - Internet Explorer Processes - Restrict ActiveX Install - Local Computer"
+         info: "Description - The Restrict ActiveX Install\Internet Explorer Processes policy setting enables blocking of ActiveX control installation prompts for Internet Explorer processes. If you enable this policy setting, prompting for ActiveX control installations will be blocke"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-RestrictFileDownload-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_RESTRICT_FILEDOWNLOAD"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - Restrict File Download - Local Computer"
+         info: "Description - In certain circumstances, Web sites can initiate file download prompts without interaction from users. This technique can allow Web sites to put unauthorized files on users' hard drives if they click the wrong button and accept the download. If you config"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-RestrictFileDownload-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_RESTRICT_FILEDOWNLOAD"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - Restrict File Download - Local Computer"
+         info: "Description - In certain circumstances, Web sites can initiate file download prompts without interaction from users. This technique can allow Web sites to put unauthorized files on users' hard drives if they click the wrong button and accept the download. If you config"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-RestrictFileDownload-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_RESTRICT_FILEDOWNLOAD"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - Restrict File Download - Local Computer"
+         info: "Description - In certain circumstances, Web sites can initiate file download prompts without interaction from users. This technique can allow Web sites to put unauthorized files on users' hard drives if they click the wrong button and accept the download. If you config"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-RestrictFileDownload-LocalComputer"
+         info: "Title - Internet Explorer Processes - Restrict File Download - Local Computer"
+         info: "Description - In certain circumstances, Web sites can initiate file download prompts without interaction from users. This technique can allow Web sites to put unauthorized files on users' hard drives if they click the wrong button and accept the download. If you config"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-RestrictFileDownload-LocalComputer"
+         info: "Title - Internet Explorer Processes - Restrict File Download - Local Computer"
+         info: "Description - In certain circumstances, Web sites can initiate file download prompts without interaction from users. This technique can allow Web sites to put unauthorized files on users' hard drives if they click the wrong button and accept the download. If you config"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ScriptedWindowSecurityRestrictions-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_WINDOW_RESTRICTIONS"
+         reg_item: "(Reserved)"
+         info: "Title - Internet Explorer Processes - Scripted Window Security Restrictions - Local Computer"
+         info: "Description - Internet Explorer allows scripts to programmatically open, resize, and reposition various types of windows. Often, disreputable Web sites will resize windows to either hide other windows or force you to interact with a window that contains malicious code."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ScriptedWindowSecurityRestrictions-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_WINDOW_RESTRICTIONS"
+         reg_item: "explorer.exe"
+         info: "Title - Internet Explorer Processes - Scripted Window Security Restrictions - Local Computer"
+         info: "Description - Internet Explorer allows scripts to programmatically open, resize, and reposition various types of windows. Often, disreputable Web sites will resize windows to either hide other windows or force you to interact with a window that contains malicious code."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "IEProcesses-ScriptedWindowSecurityRestrictions-LocalComputer"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_WINDOW_RESTRICTIONS"
+         reg_item: "iexplore.exe"
+         info: "Title - Internet Explorer Processes - Scripted Window Security Restrictions - Local Computer"
+         info: "Description - Internet Explorer allows scripts to programmatically open, resize, and reposition various types of windows. Often, disreputable Web sites will resize windows to either hide other windows or force you to interact with a window that contains malicious code."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "IEProcesses-ScriptedWindowSecurityRestrictions-LocalComputer"
+         info: "Title - Internet Explorer Processes - Scripted Window Security Restrictions - Local Computer"
+         info: "Description - Internet Explorer allows scripts to programmatically open, resize, and reposition various types of windows. Often, disreputable Web sites will resize windows to either hide other windows or force you to interact with a window that contains malicious code."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "IEProcesses-ScriptedWindowSecurityRestrictions-LocalComputer"
+         info: "Title - Internet Explorer Processes - Scripted Window Security Restrictions - Local Computer"
+         info: "Description - Internet Explorer allows scripts to programmatically open, resize, and reposition various types of windows. Often, disreputable Web sites will resize windows to either hide other windows or force you to interact with a window that contains malicious code."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DisableAutoCompleteForForms-LocalUser"
+         value_type: POLICY_TEXT
+         value_data: "no"
+         reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Main"
+         reg_item: "Use FormSuggest"
+         info: "Title - Disable AutoComplete for forms - Local User"
+         info: "Description - This AutoComplete feature suggests possible matches when users are filling up forms. If you enable this setting, the user is not suggested matches when filling forms. The user cannot change it. If you disable this setting, the user is suggested possible m"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "DisableAutoCompleteForForms-LocalUser"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+         reg_item: "FormSuggest"
+         info: "Title - Disable AutoComplete for forms - Local User"
+         info: "Description - This AutoComplete feature suggests possible matches when users are filling up forms. If you enable this setting, the user is not suggested matches when filling forms. The user cannot change it. If you disable this setting, the user is suggested possible m"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "DisableAutoCompleteForForms-LocalUser"
+         info: "Title - Disable AutoComplete for forms - Local User"
+         info: "Description - This AutoComplete feature suggests possible matches when users are filling up forms. If you enable this setting, the user is not suggested matches when filling forms. The user cannot change it. If you disable this setting, the user is suggested possible m"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "DisableAutoCompleteForForms-LocalUser"
+         info: "Title - Disable AutoComplete for forms - Local User"
+         info: "Description - This AutoComplete feature suggests possible matches when users are filling up forms. If you enable this setting, the user is not suggested matches when filling forms. The user cannot change it. If you disable this setting, the user is suggested possible m"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableExternalBrandingOfIE-LocalUser"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Restrictions"
+   reg_item: "NoExternalBranding"
+   info: "Title - Disable external branding of Internet Explorer - Local User"
+   info: "Description - Prevents branding of Internet programs, such as customization of Internet Explorer and Outlook Express logos and title bars, by another party. If you enable this policy, it prevents customization of the browser by another party, such as an Internet servic"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableInternetConnectionWizard-LocalUser"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+   reg_item: "Connwiz Admin Lock"
+   info: "Title - Disable Internet Connection wizard - Local User"
+   info: "Description - Prevents users from running the Internet Connection Wizard. If you enable this policy, the Setup button on the Connections tab in the Internet Options dialog box appears dimmed. Users will also be prevented from running the wizard by clicking the Connect "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableResetWebSettingsFeature-LocalUser"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+   reg_item: "ResetWebSettings"
+   info: "Title - Disable the Reset Web Settings feature - Local User"
+   info: "Description - Prevents users from restoring default settings for home and search pages. If you enable this policy, the Reset Web Settings button on the Programs tab in the Internet Options dialog box appears dimmed. If you disable this policy or do not configure it, us"
+   reg_option: CAN_BE_NULL 
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "TurnOnAutoCompleteFeatureForUserNamesAndPasswords-LocalUser"
+         value_type: POLICY_TEXT
+         value_data: "no"
+         reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Main"
+         reg_item: "FormSuggest Passwords"
+         info: "Title - Turn on the auto-complete feature for user names and passwords on forms - Local User"
+         info: "Description - This AutoComplete feature can remember and suggest User names and passwords on Forms. If you enable this setting, the user cannot change 'User name and passwords on forms' or 'prompt me to save passwords'. The Auto Complete feature for User names and pass"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "TurnOnAutoCompleteFeatureForUserNamesAndPasswords-LocalUser"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Control Panel"
+         reg_item: "FormSuggest Passwords"
+         info: "Title - Turn on the auto-complete feature for user names and passwords on forms - Local User"
+         info: "Description - This AutoComplete feature can remember and suggest User names and passwords on Forms. If you enable this setting, the user cannot change 'User name and passwords on forms' or 'prompt me to save passwords'. The Auto Complete feature for User names and pass"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "TurnOnAutoCompleteFeatureForUserNamesAndPasswords-LocalUser"
+         info: "Title - Turn on the auto-complete feature for user names and passwords on forms - Local User"
+         info: "Description - This AutoComplete feature can remember and suggest User names and passwords on Forms. If you enable this setting, the user cannot change 'User name and passwords on forms' or 'prompt me to save passwords'. The Auto Complete feature for User names and pass"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "TurnOnAutoCompleteFeatureForUserNamesAndPasswords-LocalUser"
+         info: "Title - Turn on the auto-complete feature for user names and passwords on forms - Local User"
+         info: "Description - This AutoComplete feature can remember and suggest User names and passwords on Forms. If you enable this setting, the user cannot change 'User name and passwords on forms' or 'prompt me to save passwords'. The Auto Complete feature for User names and pass"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOffPageTransitions-LocalUser"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Internet Explorer\Main"
+   reg_item: "Page_Transitions"
+   info: "Title - Turn off page transitions - Local User"
+   info: "Description - This policy setting specifies if, as you move from one Web page to another, Internet Explorer fades out of the page you are leaving and fades into the page to which you are going. If you enable this policy setting, page transitions will be turned off. The"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TurnOnInternetConnectionWizardAutoDetect-LocalUser"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Internet Connection Wizard"
+   reg_item: "DisableICW"
+   info: "Title - Turn on the Internet Connection Wizard Auto Detect - Local User"
+   info: "Description - This policy setting determines if the Internet Connection Wizard was completed. If it was not completed, it launches the Internet Connection Wizard. If you enable this policy setting, the Internet Connection Wizard is launched automatically if it was not "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+
+#####CPE checking
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+#####CPE checking
+
+
+   </group_policy>
+   </check_type>

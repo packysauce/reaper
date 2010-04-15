@@ -1,0 +1,414 @@
+# (C) 2008 Tenable Network Security
+#
+# This script is released under the Tenable Subscription License and
+# may not be used from within scripts released under another license
+# without authorization from Tenable Network Security Inc.
+#
+# See the following licenses for details:
+#
+# http://cgi.tenablesecurity.com/Nessus_3_SLA_and_Subscription_Agreement.pdf
+# http://cgi.tenablesecurity.com/Subscription_Agreement.pdf
+#
+# @PROFESSIONALFEED@
+#
+# Synopsis: This file will be read by compliance_check.nbin
+#           to check compliance of a Windows host to
+#           tests derived from an XCCDF xml file.
+#
+# Logic to test for CPE platform cpe:///microsoft:office:2007
+# Created 9/22/2008
+#
+   <check_type: "Windows" version:"2">
+   <group_policy: "XCCDF to Tenable Audit file">
+
+#####CPE checking
+<if>
+<condition type:"and">
+<if>
+<condition type:"or">
+<custom_item>
+type: REG_CHECK
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "HKLM\SOFTWARE\Microsoft\Office\12.0\Common\ProductVersion"
+key_item: "LastProduct"
+reg_option: MUST_EXIST
+</item>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check: It appears that you are likely not running Office 2007 on this system."
+</report>
+</else>
+</if>
+</condition>
+<then>
+#####CPE checking
+
+
+##### File ACLs
+
+
+
+
+##### End of File ACLs
+
+
+<report type:"PASSED">
+   description: "Xccdf_Scan_Check"
+   info: "cpe:   microsoft:office:2007"
+   info: "Benchmark id= Office-2007-SCAP  resolved= 1  xml:lang= en  xmlns= http:  checklists.nist.gov xccdf 1.1  xmlns:cdf= http:  checklists.nist.gov xccdf 1.1  xmlns:cpe= http:  cpe.mitre.org XMLSchema cpe 1.0  xmlns:dc= http:  purl.org dc elements 1.1   xmlns:xsi= http:  www.w3.org 2001 XMLSchema-instance  xmlns:xhtml= http:  www.w3.org 1999 xhtml  xmlns:dsig= http:  www.w3.org 2000 09 xmldsig   xsi:schemaLocation= http:  checklists.nist.gov xccdf 1.1 xccdf-1.1.xsd http:  cpe.mitre.org XMLSchema cpe 1.0 cpe-1.0.xsd "
+   info: "SCAP-Office2007-XCCDF-Beta-v4.xml"
+   info: "Office-2007-SCAP"
+   info: "Specializaed-Security-Limited-Functionality-rev2"
+</report>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableVBAForOfficeApplications"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Office\12.0\Common"
+   reg_item: "VbaOff"
+   info: "Title - Disable VBA for Office Applications"
+   info: "Description - This setting will prevent Excel, SharePoint Designer, Outlook, PowerPoint, Publisher and Word from using Visual Basic for Applications (VBA), despite whether or not the VBA feature is installed. Changing this setting will not install or remove the VBA files from the machine."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ActiveXControlInitialization"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\Common\Security"
+   reg_item: "UFIControls"
+   info: "Title - ActiveX Control Initialization"
+   info: "Description - Specifies ActiveX initialization security for all Office applications."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "EnableCustomerExperienceImprovementProgram"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Common"
+   reg_item: "QMEnable"
+   info: "Title - Enable Customer Experience Improvement Program"
+   info: "Description - You are participating in the Office Customer Experience Improvement Program. Data is collected anonymously and is used to improve Microsoft Office.  This feature does not collect your name, address, or any other contact information except the IP address used to send you the file. The feature is controlled by the user through the application options dialog box. However, it can be disabled by group policy.\n\nNote: Each user will be shown an Opt-in Wizard on first run. The Opt-in Wizard will provide choices to the user to opt into services such as Microsoft Update, Customer Experience Improvement Program, Office Diagnostics (Automatically receive small updates to improve reliability) and Online Help (Online content options) that will help improve their Office experience. To turn off the Opt-in Wizard on first run you will need to turn off or disable all of the individual options. To disable the Microsoft Update option you will need to use the Group Policy Object Editor (Gpedit.msc). The corresponding policy is located in 'Administrative Templates\Windows Components\Windows Update'."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AutomaticallyReceiveSmallUpdatesToImproveReliability"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Common"
+   reg_item: "UpdateReliabilityData"
+   info: "Title - Automatically Receive Small Updates To Improve Reliability"
+   info: "Description - You have the option of periodically downloading a small file to your computer that enables Microsoft to provide you with help if you are experiencing an abnormal number of program errors. When available, new Help information about the errors will also be automatically downloaded. This feature does not collect your name, address, or any other contact information except the IP address used to send you the file. The feature is controlled by the user through the application options dialog box. However, it can be disabled by group policy.\n\nNote: Each user will be shown an Opt-in Wizard on first run. The Opt-in Wizard will provide choices to the user to opt into services such as Microsoft Update, Customer Experience Improvement Program, Office Diagnostics (Automatically receive small updates to improve reliability) and Online Help (Online content options) that will help improve their Office experience. To turn off the Opt-in Wizard on first run you will need to turn off or disable all of the individual options. To disable the Microsoft Update option you will need to use the Group Policy Object Editor (Gpedit.msc). The corresponding policy is located in 'Administrative Templates\Windows Components\Windows Update'."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "OnlineContentOptions"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Common\Internet"
+   reg_item: "UseOnlineContent"
+   info: "Title - Online Content Options"
+   info: "Description - Never show online content or entry points' unchecks 'Show content and links from Microsoft Office Online'. 'Search only offline content whenever available' unchecks 'Search online content when connected'. 'Search online content whenever available' checks 'Search online content when connected'.  Note: Each user will be shown an Opt-in Wizard on first run. The Opt-in Wizard will provide choices to the user to opt into services such as Microsoft Update, Customer Experience Improvement Program, Office Diagnostics (Automatically receive small updates to improve reliability) and Online Help (Online content options) that will help improve their Office experience. To turn off the Opt-in Wizard on first run you will need to turn off or disable all of the individual options. To disable the Microsoft Update option you will need to use the Group Policy Object Editor (Gpedit.msc). The corresponding policy is located in 'Administrative Templates\Windows Components\Windows Update"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "VBAMacroWarningSettings-Access"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Access\Security"
+   reg_item: "VBAWarnings"
+   info: "Title - VBA Macro Warning Settings - Access"
+   info: "Description - Office 2007 system introduces a new security user model which has two goals, (1) improve the security notification events by avoiding blocking modal dialogs when a user opens a document and rather open the document but provide a Trust Bar to allow interested users change the security settings for the document, (2) simplify security settings by providing discrete settings for Macros, Application Extensions and Trusted Locations. This policy key allows you configure what notifications users see around VBA macros specifically, there are separate settings for Trusted Locations and Application extensions (such as Com Add-ins etc.)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "VBAMacroWarningSettings-Excel"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Excel\Security"
+   reg_item: "VBAWarnings"
+   info: "Title - VBA Macro Warning Settings - Excel"
+   info: "Description - Office 2007 system introduces a new security user model which has two goals, (1) improve the security notification events by avoiding blocking modal dialogs when a user opens a document and rather open the document but provide a Trust Bar to allow interested users change the security settings for the document, (2) simplify security settings by providing discrete settings for Macros, Application Extensions and Trusted Locations. This policy key allows you configure what notifications users see around VBA macros specifically, there are separate settings for Trusted Locations and Application extensions (such as Com Add-ins etc.)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TrustAccessToVisualBasicProject-Excel"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Excel\Security"
+   reg_item: "AccessVBOM"
+   info: "Title - Trust Access To Visual Basic Project - Excel"
+   info: "Description - Trust Access To Visual Basic Project - Excel"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "VBAMacroWarningSettings-PowerPoint"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\PowerPoint\Security"
+   reg_item: "VBAWarnings"
+   info: "Title - VBA Macro Warning Settings - PowerPoint"
+   info: "Description - Office 2007 system introduces a new security user model which has two goals, (1) improve the security notification events by avoiding blocking modal dialogs when a user opens a document and rather open the document but provide a Trust Bar to allow interested users change the security settings for the document, (2) simplify security settings by providing discrete settings for Macros, Application Extensions and Trusted Locations. This policy key allows you configure what notifications users see around VBA macros specifically, there are separate settings for Trusted Locations and Application extensions (such as Com Add-ins etc.)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TrustAccessToVisualBasicProject-PowerPoint"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\PowerPoint\Security"
+   reg_item: "AccessVBOM"
+   info: "Title - Trust Access To Visual Basic Project - PowerPoint"
+   info: "Description - Checks/Unchecks the corresponding UI option."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableRememberPassword"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "EnableRememberPwd"
+   info: "Title - Disable Remember Password"
+   info: "Description - Use this option to hide your user's ability to cache passwords locally in the computer's registry. When configured, this policy will hide the ''Remember Password'' checkbox and not allow users to have Outlook remember their password."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ConfigureAddInTrustLevel"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "AddinTrust"
+   info: "Title - Configure Add-In Trust Level"
+   info: "Description - All installed trusted COM addins can be trusted.  Exchange Settings for the addins still override if present and this option is selected."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisableRememberPasswordForInternetEmailAccounts"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "EnableRememberPwd"
+   info: "Title - Disable 'Remember Password' For Internet E-mail Accounts"
+   info: "Description - Use this option to hide your user's ability to cache passwords locally in the computer's registry. When configured, this policy will hide the 'Remember Password' checkbox and not allow users to have Outlook remember their password.\n\nNote that POP3, IMAP, and HTTP e-mail accounts are all considered Internet e-mail accounts in Outlook. E-mail account options are listed on the Server Type dialog box when users choose 'New' under Tools | Account Settings."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MinimumEncryptionSettings"
+   value_type: POLICY_DWORD
+   value_data: 168
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "MinEncKey"
+   info: "Title - Minimum Encryption Settings"
+   info: "Description - Sets the value for the corresponding UI option."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DoNotCheckEmailAddressAgainstAddressOfCertificatesBeingUsed"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "SupressNameChecks"
+   info: "Title - Do Not Check E-mail Address Against Address Of Certificates Being Used"
+   info: "Description - Sets the value for the corresponding UI option."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SendAllSignedMessagesAsClearSignedMessages"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "ClearSign"
+   info: "Title - Send All Signed Messages As Clear Signed Messages"
+   info: "Description - Send all signed messages as clear signed messages"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "RequestAnSMIMEReceiptForAllSMIMESignedMessages"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "RequestSecureReceipt"
+   info: "Title - Request An S/MIME Receipt For All S/MIME Signed Messages"
+   info: "Description - Request an S/MIME receipt for all S/MIME signed messages"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DoNotDisplayPublishToGALButton"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "PublishToGalDisabled"
+   info: "Title - Do Not Display 'Publish to GAL' Button"
+   info: "Description - By default, users can publish certificates to the Global Address List (GAL) by clicking Trust Center on the Tools menu, and then clicking Publish to GAL on the E-mail Security page. You can prevent Publish to GAL from appearing on the E-mail Security page by enabling this setting"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "SignatureWarning"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "WarnAboutInvalid"
+   info: "Title - Signature Warning"
+   info: "Description - Signature Warning 0 = Let user decide if they want to be warned;  1 = Always warn about invalid signatures; 2 = Never warn about invalid signatures"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "EnableCryptographyIcons"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+   reg_item: "ConvertSMIMEBlobSignedIcons"
+   info: "Title - Enable Cryptography Icons"
+   info: "Description - Sets the value for the corresponding UI option."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "RetrievingCRLs"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+         reg_item: "UseCRLChasing"
+         info: "Title - Retrieving CRLs"
+         info: "Description - When a certificate includes a URL from which you can download a Certificate Revocation List (CRL), by default, Outlook will retrieve the CRL from the provided URL whenever the user is online. You can change this behavior so that Outlook follows the computer configuration default to determine whether to retrieve the CRL from the URL provided, or so that Outlook will never retrieve the CRL from the provided URL."
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "RetrievingCRLs"
+         value_type: POLICY_TEXT
+         value_data: "HKCU\Software\Policies\Microsoft\Office\12.0\Outlook\Security"
+         key_item: "UseCRLChasing"
+         reg_option: MUST_EXIST
+         info: "Title - Retrieving CRLs"
+         info: "Description - When a certificate includes a URL from which you can download a Certificate Revocation List (CRL), by default, Outlook will retrieve the CRL from the provided URL whenever the user is online. You can change this behavior so that Outlook follows the computer configuration default to determine whether to retrieve the CRL from the URL provided, or so that Outlook will never retrieve the CRL from the provided URL."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "RetrievingCRLs"
+         info: "Title - Retrieving CRLs"
+         info: "Description - When a certificate includes a URL from which you can download a Certificate Revocation List (CRL), by default, Outlook will retrieve the CRL from the provided URL whenever the user is online. You can change this behavior so that Outlook follows the computer configuration default to determine whether to retrieve the CRL from the URL provided, or so that Outlook will never retrieve the CRL from the provided URL."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "RetrievingCRLs"
+         info: "Title - Retrieving CRLs"
+         info: "Description - When a certificate includes a URL from which you can download a Certificate Revocation List (CRL), by default, Outlook will retrieve the CRL from the provided URL whenever the user is online. You can change this behavior so that Outlook follows the computer configuration default to determine whether to retrieve the CRL from the URL provided, or so that Outlook will never retrieve the CRL from the provided URL."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "VBMacroWarningSettings-Word"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Word\Security"
+   reg_item: "VBAWarnings"
+   info: "Title - VBA Macro Warning Settings - Word"
+   info: "Description - Office 2007 system introduces a new security user model which has two goals, (1) improve the security notification events by avoiding blocking modal dialogs when a user opens a document and rather open the document but provide a Trust Bar to allow interested users change the security settings for the document, (2) simplify security settings by providing discrete settings for Macros, Application Extensions and Trusted Locations. This policy key allows you configure what notifications users see around VBA macros specifically, there are separate settings for Trusted Locations and Application extensions (such as Com Add-ins etc.)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "TrustAccessToVisualBasicProject-Word"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Word\Security"
+   reg_item: "AccessVBOM"
+   info: "Title - Trust Access To Visual Basic Project - Word"
+   info: "Description - Checks/Unchecks the corresponding UI option."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "WarnBeforePrintingSavingOrSendingAFileThatContainsTrackedChangesOrComments"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\12.0\Word\Options\vpref"
+   reg_item: "fWarnRevisions_1805_1"
+   info: "Title - Warn Before Printing, Saving Or Sending A File That Contains Tracked Changes Or Comments"
+   info: "Description - Checks/Unchecks the corresponding UI option."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "BlockUpdatesFromTheOfficeUpdateSiteFromApplying"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKCU\Software\Policies\Microsoft\Office\Common\OfficeUpdate"
+   reg_item: "BlockUpdates"
+   info: "Title - Block Updates From The Office Update Site From Applying"
+   info: "Description - Setting this policy also disables the Check for Updates menu and  task pane items."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+
+#####CPE checking
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check: It appears that you are likely not running Office 2007 on this system."
+</report>
+</else>
+</if>
+#####CPE checking
+
+
+   </group_policy>
+   </check_type>

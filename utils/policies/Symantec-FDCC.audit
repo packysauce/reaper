@@ -1,0 +1,1758 @@
+# (C) 2008 Tenable Network Security
+#
+# This script is released under the Tenable Subscription License and
+# may not be used from within scripts released under another license
+# without authorization from Tenable Network Security Inc.
+#
+# See the following licenses for details:
+#
+# http://cgi.tenablesecurity.com/Nessus_3_SLA_and_Subscription_Agreement.pdf
+# http://cgi.tenablesecurity.com/Subscription_Agreement.pdf
+#
+# @PROFESSIONALFEED@
+#
+# Synopsis: This file will be read by compliance_check.nbin
+#           to check compliance of a Windows host to
+#           tests derived from an XCCDF xml file.
+#
+# Logic to test for CPE platform cpe://microsoft:windows:xp:pro:sp2
+# Created 9/22/2008
+#
+   <check_type: "Windows" version:"2">
+   <group_policy: "XCCDF to Tenable Audit file">
+
+#####CPE checking
+<if>
+<condition type:"and">
+<if>
+<condition type:"or">
+<if>
+<condition type:"and">
+<custom_item>
+type: REGISTRY_SETTING
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "5.1"
+reg_key: "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+reg_item: "CurrentVersion"
+</item>
+<custom_item>
+type: REGISTRY_SETTING
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "Service Pack 2"
+reg_key: "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+reg_item: "CSDVersion"
+</item>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "FAILED">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+</condition>
+<then>
+#####CPE checking
+
+
+##### File ACLs
+
+
+
+
+##### End of File ACLs
+
+
+<report type:"PASSED">
+   description: "Xccdf_Scan_Check"
+   info: "cpe:  microsoft:windows:xp:pro:sp2"
+   info: "Benchmark id= Windows-XP-SP-800-68-1  resolved= 1  xml:lang= en  xmlns= http:  checklists.nist.gov xccdf 1.1  xmlns:cdf= http:  checklists.nist.gov xccdf 1.1  xmlns:cpe= http:  cpe.mitre.org XMLSchema cpe 1.0  xmlns:dc= http:  purl.org dc elements 1.1   xmlns:xsi= http:  www.w3.org 2001 XMLSchema-instance  xmlns:xhtml= http:  www.w3.org 1999 xhtml  xmlns:dsig= http:  www.w3.org 2000 09 xmldsig   xsi:schemaLocation= http:  checklists.nist.gov xccdf 1.1 xccdf-1.1.xsd http:  cpe.mitre.org XMLSchema cpe 1.0 cpe-1.0.xsd "
+   info: "SCAP Symantec XCCDF 1.1.xml"
+   info: "Windows-XP-SP-800-68-1"
+   info: "DISA-Gold"
+</report>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Restart"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "ConfigRestart"
+   info: "Title - DTAS002: Antivirus Auto Protect - Restart"
+   info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Enabled"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "OnOff"
+   info: "Title - DTAS003: Antivirus Auto Protect - Enabled"
+   info: "Description - Configure the Symantec Antivirus autoprotect parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "AllFiles"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "FileType"
+   info: "Title - DTAS004: Antivirus Auto Protect - All Files"
+   info: "Description - Configure the Symantec Antivirus auto protect parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "DisplayMessage"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "MessageBox"
+   info: "Title - DTAS006: Antivirus Auto Protect - Display MEssage"
+   info: "Description - Configure the Symantec Antivirus display message parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ExcludeFiles"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "ExcludedByExtensions"
+   info: "Title - DTAS007: Antivirus Auto Protect - Exclude Files"
+   info: "Description - Configure the Symantec Antivirus exclude files configuration."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MacroVirusAction"
+   value_type: POLICY_DWORD
+   value_data: 5
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "FirstMacroAction"
+   info: "Title - DTAS008: Antivirus Auto Protect - Macro Virus Action"
+   info: "Description - Configure the Symantec Antivirus Macro Virus Action parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MacroVirusActionSecondary"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "SecondMacroAction"
+   info: "Title - DTAS009: Antivirus Auto Protect - Macro Virus Action Secondary"
+   info: "Description - Configure the Symantec Antivirus Secondary Macro Virus Action parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "NonMacroVirusAction"
+   value_type: POLICY_DWORD
+   value_data: 5
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "FirstAction"
+   info: "Title - DTAS010: Antivirus Auto Protect - Non Macro Virus Action"
+   info: "Description - Configure the Symantec Antivirus Non Macro Virus action parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "NonMacroVirusActionSecondary"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "SecondAction"
+   info: "Title - DTAS011: Antivirus Auto Protect - Non Macro Virus Action Secondary"
+   info: "Description - Configure the Symantec Antivirus Secondary Non-Macro Virus action parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "FilesAccessed"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "Reads"
+   info: "Title - DTAS012: AntiVirus AutoProtect - Files Accessed"
+   info: "Description - Configure the Symantec Antivirus secondary autoprotect read parameter."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "BackupOptions"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "BackupToQuarantine"
+   info: "Title - DTAS013: AntiVirus AutoProtect - Backup Options"
+   info: "Description - Configure the Symantec Antivirus autoprotect parameter for backup options."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "AutoEnabler"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+         reg_item: "APEOn"
+         info: "Title - DTAS014: AntiVirus AutoProtect - AutoEnabler"
+         info: "Description - Configure the Symantec Antivirus autoprotect parameter for autoenabler."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "AutoEnabler"
+	 value_type: POLICY_DWORD
+         value_data: [5..MAX]
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+         reg_item: "APESleep"
+         info: "Title - DTAS014: AntiVirus AutoProtect - AutoEnabler"
+         info: "Description - Configure the Symantec Antivirus autoprotect parameter for autoenabler."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "AutoEnabler"
+         info: "Title - DTAS014: AntiVirus AutoProtect - AutoEnabler"
+         info: "Description - Configure the Symantec Antivirus autoprotect parameter for autoenabler."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "AutoEnabler"
+         info: "Title - DTAS014: AntiVirus AutoProtect - AutoEnabler"
+         info: "Description - Configure the Symantec Antivirus autoprotect parameter for autoenabler."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Floppy"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "ScanFloppyBRonAccess"
+   info: "Title - DTAS015: AntiVirus AutoProtect - Floppy"
+   info: "Description - Configure the Symantec Antivirus autoprotect parameter for floppies."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "BootVirusAction"
+   value_type: POLICY_DWORD
+   value_data: 5
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "FloppyBRAction"
+   info: "Title - DTAS016: AntiVirus AutoProtect - Boot Virus Action"
+   info: "Description - Configure the Symantec Antivirus autoprotect parameter for Boot virus."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "CheckFloppyAtShutdown"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\Filesystem\RealTimeScan"
+   reg_item: "SkipShutdownFloppyCheck"
+   info: "Title - DTAS017: AntiVirus AutoProtect - Check Floppy at Shutdown"
+   info: "Description - Configure the Symantec Antivirus autoprotect parameter for check floppy at shutdown."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "HistoryFile"
+	 value_type: POLICY_DWORD
+         value_data: [30..MAX]
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion"
+         reg_item: "LogFileRollOverDays"
+         info: "Title - DTAS030: AntiVirus AutoProtect - History Files"
+         info: "Description - Check whether the Symantec Antivirus email clientCE History Options parameter are configuered as required."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "HistoryFile"
+	 value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion"
+         reg_item: "LogFrequency"
+         info: "Title - DTAS030: AntiVirus AutoProtect - History Files"
+         info: "Description - Check whether the Symantec Antivirus email clientCE History Options parameter are configured as required."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "HistoryFile"
+         info: "Title - DTAS030: AntiVirus AutoProtect - History Files"
+         info: "Description - Check whether the Symantec Antivirus email clientCE History Options parameter are configured as required."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "HistoryFile"
+         info: "Title - DTAS030: AntiVirus AutoProtect - History Files"
+         info: "Description - Check whether the Symantec Antivirus email clientCE History Options parameter are configured as required."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailEnabled"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "OnOff"
+         info: "Title - DTAS020: AntiVirus AutoProtect - Email - Enabled"
+         info: "Description - Check whether the Symantec Antivirus email parameter is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailEnabled"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "OnOff"
+         info: "Title - DTAS020: AntiVirus AutoProtect - Email - Enabled"
+         info: "Description - Check whether the Symantec Antivirus email parameter is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailEnabled"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "OnOff"
+         info: "Title - DTAS020: AntiVirus AutoProtect - Email - Enabled"
+         info: "Description - Check whether the Symantec Antivirus email parameter is correct."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailEnabled"
+         info: "Title - DTAS020: AntiVirus AutoProtect - Email - Enabled"
+         info: "Description - Check whether the Symantec Antivirus email parameter is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailEnabled"
+         info: "Title - DTAS020: AntiVirus AutoProtect - Email - Enabled"
+         info: "Description - Check whether the Symantec Antivirus email parameter is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailAllFiles"
+	 value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "FileType"
+         info: "Title - DTAS021: AntiVirus AutoProtect - Email - All Files"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailAllFiles"
+	 value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "FileType"
+         info: "Title - DTAS021: AntiVirus AutoProtect - Email - All Files"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailAllFiles"
+	 value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "FileType"
+         info: "Title - DTAS021: AntiVirus AutoProtect - Email - All Files"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailAllFiles"
+         info: "Title - DTAS021: AntiVirus AutoProtect - Email - All Files"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailAllFiles"
+         info: "Title - DTAS021: AntiVirus AutoProtect - Email - All Files"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailWarningEmail"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "InsertWarning"
+         info: "Title - DTAS024: AntiVirus AutoProtect - Email - Warning Email"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailWarningEmail"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "InsertWarning"
+         info: "Title - DTAS024: AntiVirus AutoProtect - Email - Warning Email"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailWarningEmail"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "InsertWarning"
+         info: "Title - DTAS024: AntiVirus AutoProtect - Email - Warning Email"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailWarningEmail"
+         info: "Title - DTAS024: AntiVirus AutoProtect - Email - Warning Email"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailWarningEmail"
+         info: "Title - DTAS024: AntiVirus AutoProtect - Email - Warning Email"
+         info: "Description - Check whether the Symantec Antivirus is configured to restart for configuration changes."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailMacroVirusAction"
+	 value_type: POLICY_DWORD
+         value_data: 5
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "FirstMacroAction"
+         info: "Title - DTAS025: AntiVirus AutoProtect - Email - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailMacroVirusAction"
+	 value_type: POLICY_DWORD
+         value_data: 5
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "FirstMacroAction"
+         info: "Title - DTAS025: AntiVirus AutoProtect - Email - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailMacroVirusAction"
+	 value_type: POLICY_DWORD
+         value_data: 5
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "FirstMacroAction"
+         info: "Title - DTAS025: AntiVirus AutoProtect - Email - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for macro virus is correct."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailMacroVirusAction"
+         info: "Title - DTAS025: AntiVirus AutoProtect - Email - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailMacroVirusAction"
+         info: "Title - DTAS025: AntiVirus AutoProtect - Email - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailMacroVirusActionSecondary"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "SecondMacroAction"
+         info: "Title - DTAS026: AntiVirus AutoProtect - Email - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailMacroVirusActionSecondary"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "SecondMacroAction"
+         info: "Title - DTAS026: AntiVirus AutoProtect - Email - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailMacroVirusActionSecondary"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "secondMacroAction"
+         info: "Title - DTAS026: AntiVirus AutoProtect - Email - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for macro virus is correct."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailMacroVirusActionSecondary"
+         info: "Title - DTAS026: AntiVirus AutoProtect - Email - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailMacroVirusActionSecondary"
+         info: "Title - DTAS026: AntiVirus AutoProtect - Email - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailNonMacroVirusAction"
+	 value_type: POLICY_DWORD
+         value_data: 5
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "FirstAction"
+         info: "Title - DTAS027: AntiVirus AutoProtect - Email - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for non-macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailNonMacroVirusAction"
+	 value_type: POLICY_DWORD
+         value_data: 5
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "FirstAction"
+         info: "Title - DTAS027: AntiVirus AutoProtect - Email - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for non-macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailNonMacroVirusAction"
+	 value_type: POLICY_DWORD
+         value_data: 5
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "FirstAction"
+         info: "Title - DTAS027: AntiVirus AutoProtect - Email - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for non-macro virus is correct."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailNonMacroVirusAction"
+         info: "Title - DTAS027: AntiVirus AutoProtect - Email - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for non-macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailNonMacroVirusAction"
+         info: "Title - DTAS027: AntiVirus AutoProtect - Email - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for non-macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailNonMacroVirusActionSecondary"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: "SecondAction"
+         info: "Title - DTAS028: AntiVirus AutoProtect - Email - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for non-macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailNonMacroVirusActionSecondary"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: "SecondAction"
+         info: "Title - DTAS028: AntiVirus AutoProtect - Email - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for non-macro virus is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailNonMacroVirusActionSecondary"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: "SecondAction"
+         info: "Title - DTAS028: AntiVirus AutoProtect - Email - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for non-macro virus is correct."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailNonMacroVirusActionSecondary"
+         info: "Title - DTAS028: AntiVirus AutoProtect - Email - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for non-macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailNonMacroVirusActionSecondary"
+         info: "Title - DTAS028: AntiVirus AutoProtect - Email - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus email client secondary parameter for non-macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailCompressedFiles"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\InternetMail\RealTimeScan"
+         reg_item: " pFile"
+         info: "Title - DTAS029: AntiVirus AutoProtect - Email - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for compressed files is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailCompressedFiles"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\LotusNotes\RealTimeScan"
+         reg_item: " pFile"
+         info: "Title - DTAS029: AntiVirus AutoProtect - Email - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for compressed files is correct."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "EmailCompressedFiles"
+	 value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\Storages\MicrosoftExchangeClient\RealTimeScan"
+         reg_item: " pFile"
+         info: "Title - DTAS029: AntiVirus AutoProtect - Email - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for compressed files is correct."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "EmailCompressedFiles"
+         info: "Title - DTAS029: AntiVirus AutoProtect - Email - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for compressed files is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "EmailCompressedFiles"
+         info: "Title - DTAS029: AntiVirus AutoProtect - Email - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus email client parameter for compressed files is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "UserStartupTasks"
+	 value_type: POLICY_DWORD
+         value_data: [1..2]
+         check_type: CHECK_REGEX
+         reg_key: "HKCU\"
+         reg_item: "Type"
+         info: "Title - DTAS032: AntiVirus AutoProtect - Startup or Scheduled Tasks"
+         info: "Description - Check whether the Symantec Antivirus has scheduled or starup scans configured to scan local drive (s) at least weekly."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "UserStartupTasks"
+	 value_type: POLICY_DWORD
+         value_data: [1..2]
+         check_type: CHECK_REGEX
+         reg_key: "HKCU\"
+         reg_item: "Type"
+         info: "Title - DTAS032: AntiVirus AutoProtect - Startup or Scheduled Tasks"
+         info: "Description - Check whether the Symantec Antivirus has scheduled or starup scans configured to scan local drive (s) at least weekly."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserStartupTasks"
+         info: "Title - DTAS032: AntiVirus AutoProtect - Startup or Scheduled Tasks"
+         info: "Description - Check whether the Symantec Antivirus has scheduled or starup scans configured to scan local drive (s) at least weekly."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserStartupTasks"
+         info: "Title - DTAS032: AntiVirus AutoProtect - Startup or Scheduled Tasks"
+         info: "Description - Check whether the Symantec Antivirus has scheduled or starup scans configured to scan local drive (s) at least weekly."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserAllFiles"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserAllFiles"
+	       value_type: POLICY_DWORD
+               value_data: 0
+               reg_key: "HKCU\"
+               reg_item: "FileType"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserAllFiles"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserAllFiles"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserAllFiles"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserAllFiles"
+	       value_type: POLICY_DWORD
+               value_data: 0
+               reg_key: "HKCU\"
+               reg_item: "FileType"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserAllFiles"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserAllFiles"
+               info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserAllFiles"
+         info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserAllFiles"
+         info: "Title - DTAS037: AntiVirus AutoProtect - All Files"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for all files is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMemory"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMemory"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "ScanMemory"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserMemory"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserMemory"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMemory"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMemory"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "ScanMemory"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserMemory"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserMemory"
+               info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserMemory"
+         info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserMemory"
+         info: "Title - DTAS040: AntiVirus AutoProtect - Memory"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for memory is enabled correctly."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserExcludeFiles"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserExcludeFiles"
+	       value_type: POLICY_DWORD
+               value_data: 0
+               reg_key: "HKCU\"
+               reg_item: "ExcludedByExtensions"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserExcludeFiles"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserExcludeFiles"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserExcludeFiles"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserExcludeFiles"
+	       value_type: POLICY_DWORD
+               value_data: 0
+               reg_key: "HKCU\"
+               reg_item: "ExcludedByExtensions"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserExcludeFiles"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserExcludeFiles"
+               info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserExcludeFiles"
+         info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserExcludeFiles"
+         info: "Title - DTAS042: AntiVirus AutoProtect - Exclude Files"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for exclude files is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: 5
+               reg_key: "HKCU\"
+               reg_item: "FirstMacroAction"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserMacroVirusAction"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserMacroVirusAction"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: 5
+               reg_key: "HKCU\"
+               reg_item: "FirstMacroAction"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserMacroVirusAction"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserMacroVirusAction"
+               info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserMacroVirusAction"
+         info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserMacroVirusAction"
+         info: "Title - DTAS043: AntiVirus AutoProtect - Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "SecondMacroAction"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserMacroVirusActionSecondary"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserMacroVirusActionSecondary"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "SecondMacroAction"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserMacroVirusActionSecondary"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserMacroVirusActionSecondary"
+               info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserMacroVirusActionSecondary"
+         info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserMacroVirusActionSecondary"
+         info: "Title - DTAS044: AntiVirus AutoProtect - Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: 5
+               reg_key: "HKCU\"
+               reg_item: "FirstAction"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserNonMacroVirusAction"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserNonMacroVirusAction"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusAction"
+	       value_type: POLICY_DWORD
+               value_data: 5
+               reg_key: "HKCU\"
+               reg_item: "FirstAction"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserNonMacroVirusAction"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserNonMacroVirusAction"
+               info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserNonMacroVirusAction"
+         info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserNonMacroVirusAction"
+         info: "Title - DTAS045: AntiVirus AutoProtect - Non-Macro Virus Action"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for non-macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "SecondAction"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserNonMacroVirusActionSecondary"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserNonMacroVirusActionSecondary"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserNonMacroVirusActionSecondary"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "SecondAction"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserNonMacroVirusActionSecondary"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserNonMacroVirusActionSecondary"
+               info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+               info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserNonMacroVirusActionSecondary"
+         info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserNonMacroVirusActionSecondary"
+         info: "Title - DTAS046: AntiVirus AutoProtect - Non-Macro Virus Action Secondary"
+         info: "Description - Check whether the Symantec Antivirus weekly scan secondary parameter for non-macro virus is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserCompressedFiles"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserCompressedFiles"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: " pFile"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserCompressedFiles"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserCompressedFiles"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserCompressedFiles"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserCompressedFiles"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: " pFile"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserCompressedFiles"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserCompressedFiles"
+               info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserCompressedFiles"
+         info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserCompressedFiles"
+         info: "Title - DTAS047: AntiVirus AutoProtect - Compressed Files"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for compressed files is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserBackupOptions"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserBackupOptions"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "BackupToQuarantine"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserBackupOptions"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserBackupOptions"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserBackupOptions"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserBackupOptions"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "BackupToQuarantine"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserBackupOptions"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserBackupOptions"
+               info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserBackupOptions"
+         info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserBackupOptions"
+         info: "Title - DTAS048: AntiVirus AutoProtect - Backup Options"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for backup files is correct."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserScanLocked"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserScanLocked"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "ScanLocked"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserScanLocked"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserScanLocked"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </report>
+         </else>
+      </if>
+      <if>
+         <condition type:"and">
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserScanLocked"
+	       value_type: POLICY_DWORD
+               value_data: [1..2]
+               check_type: CHECK_REGEX
+               reg_key: "HKCU\"
+               reg_item: "Type"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </custom_item>
+            <custom_item>
+               type: REGISTRY_SETTING
+               description: "UserScanLocked"
+	       value_type: POLICY_DWORD
+               value_data: 1
+               reg_key: "HKCU\"
+               reg_item: "ScanLocked"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </custom_item>
+         </condition>
+         <then>
+            <report type:"PASSED">
+               description: "UserScanLocked"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </report>
+         </then>
+         <else>
+            <report type:"FAILED">
+               description: "UserScanLocked"
+               info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+               info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+            </report>
+         </else>
+      </if>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UserScanLocked"
+         info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UserScanLocked"
+         info: "Title - DTAS050: AntiVirus AutoProtect - Scan Locked"
+         info: "Description - Check whether the Symantec Antivirus weekly scan parameter for scan lock is correct."
+      </report>
+   </else>
+</if>
+
+
+#####CPE checking
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+#####CPE checking
+
+
+   </group_policy>
+   </check_type>

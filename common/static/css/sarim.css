@@ -161,3 +161,18 @@ div#vlan_list_messages.error {
 div#vlan_list_messages.success {
     background: lightGreen;
 }
+
+.hidden {
+    display:none;
+}
+
+tr.result:hover {
+    background-color: lightyellow;
+}
+
+tr.hidden > td.textresult {
+    white-space: pre-wrap;   
+    width: 40px;
+    background-color: #E4DFD1;
+}
+

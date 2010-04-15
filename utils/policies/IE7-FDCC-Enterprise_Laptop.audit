@@ -1,0 +1,99 @@
+# (C) 2008 Tenable Network Security
+#
+# This script is released under the Tenable Subscription License and
+# may not be used from within scripts released under another license
+# without authorization from Tenable Network Security Inc.
+#
+# See the following licenses for details:
+#
+# http://cgi.tenablesecurity.com/Nessus_3_SLA_and_Subscription_Agreement.pdf
+# http://cgi.tenablesecurity.com/Subscription_Agreement.pdf
+#
+# @PROFESSIONALFEED@
+#
+# Synopsis: This file will be read by compliance_check.nbin
+#           to check compliance of a Windows host to
+#           tests derived from an XCCDF xml file.
+#
+# Logic to test for CPE platform cpe:///microsoft:internet_explorer:7
+# Created 9/22/2008
+#
+   <check_type: "Windows" version:"2">
+   <group_policy: "XCCDF to Tenable Audit file">
+
+#####CPE checking
+<if>
+<condition type:"and">
+<if>
+<condition type:"or">
+<custom_item>
+type: REGISTRY_SETTING
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "7.0000"
+reg_key: "HKLM\SOFTWARE\Microsoft\Internet Explorer\Version Vector"
+reg_item: "IE"
+</item>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+</condition>
+<then>
+#####CPE checking
+
+
+##### File ACLs
+
+
+
+
+##### End of File ACLs
+
+
+<report type:"PASSED">
+   description: "Xccdf_Scan_Check"
+   info: "cpe:microsoft:internet_explorer:7"
+   info: "Benchmark id=InternetExplorer-7-SCAP resolved=1 xml:lang=en     xmlns=http:checklists.nist.gov xccdf1.1    xmlns:cdf=http:checklists.nist.gov xccdf1.1     xmlns:cpe=http:cpe.mitre.org XMLSchema cpe 1.0    xmlns:dc=http:url.org dc elements 1.1    xmlns:xsi=  http:    www.w3.org  2001  XMLSchema-instance      xmlns:xhtml=  http:    www.w3.org  1999  xhtml       xmlns:dsig=  http:    www.w3.org  2000  09  xmldsig      xsi:schemaLocation=  http:    checklists.nist.gov  xccdf  1.1 xccdf-1.1.xsd http:    cpe.mitre.org  XMLSchema  cpe  1.0 cpe-1.0.xsd  "
+   info: "SCAP-IE7-XCCDF-Beta.xml"
+   info: "InternetExplorer-7-SCAP"
+   info: "Enterprise-Laptop"
+</report>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "MakeProxySettingsPerMachine-LocalComputer"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings"
+   reg_item: "ProxySettingsPerUser"
+   info: "Title - Make proxy settings per-machine (rather than per-user) - Local Computer"
+   info: "Description - The Make proxy settings per – machine (rather than per-user) setting ensures proxy settings for all users of the same computer are the same. Enabling this setting prevents users from setting user – specific proxy settings, and requires them to use the machine settings"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+
+#####CPE checking
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+#####CPE checking
+
+
+   </group_policy>
+   </check_type>

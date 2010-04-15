@@ -21,6 +21,9 @@ def is_hostname(x):
 @register.filter
 def to_hostname(x):
 
+    if isinstance(x, int):
+        return IpHostname.objects.filter(ip = x).latest().hostname.hostname
+
     if isinstance(x, IpAddress):
         return IpHostname.objects.filter(ip = x).latest().hostname.hostname
 

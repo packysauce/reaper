@@ -1,0 +1,2724 @@
+# (C) 2008 Tenable Network Security
+#
+# This script is released under the Tenable Subscription License and
+# may not be used from within scripts released under another license
+# without authorization from Tenable Network Security Inc.
+#
+# See the following licenses for details:
+#
+# http://cgi.tenablesecurity.com/Nessus_3_SLA_and_Subscription_Agreement.pdf
+# http://cgi.tenablesecurity.com/Subscription_Agreement.pdf
+#
+# @PROFESSIONALFEED@
+#
+# Synopsis: This file will be read by compliance_check.nbin
+#           to check compliance of a Windows host to
+#           tests derived from an XCCDF xml file.
+#
+# Logic to test for CPE platform cpe://microsoft:windows:vista
+# Created 9/22/2008
+#
+   <check_type: "Windows" version:"2">
+   <group_policy: "XCCDF to Tenable Audit file">
+
+#####CPE checking
+<if>
+<condition type:"and">
+<if>
+<condition type:"or">
+<custom_item>
+type: REGISTRY_SETTING
+description: "CPE Platform Check"
+value_type: POLICY_TEXT
+value_data: "6.0"
+reg_key: "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+reg_item: "CurrentVersion"
+</item>
+</condition>
+<then>
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+</condition>
+<then>
+#####CPE checking
+
+
+##### File ACLs
+
+
+
+
+##### End of File ACLs
+
+
+<report type:"PASSED">
+   description: "Xccdf_Scan_Check"
+   info: "cpe:  microsoft:windows:vista"
+   info: "Benchmark xmlns:cdf= http:  checklists.nist.gov xccdf 1.1 zj     xmlns= http:  checklists.nist.gov xccdf 1.1  zj     xmlns:xsi= http:  www.w3.org 2001 XMLSchema-instance  zj     xmlns:htm= http:  www.w3.org 1999 xhtml  zj     xmlns:xhtml= http:  www.w3.org 1999 xhtml  zj     xmlns:dc= http:  purl.org dc elements 1.1   zj     xmlns:dsig= http:  www.w3.org 2000 09 xmldsig   zj     xmlns:cpe= http:  cpe.mitre.org XMLSchema cpe 1.0 zj     id= Windows-VISTA  zj     resolved= 1  zj     xml:lang= en  zj     xsi:schemaLocation= http:  purl.org dc elements 1.1  simpledc20021212.xsd http:  cpe.mitre.org XMLSchema cpe 1.0 cpe-1.0.xsd http:  checklists.nist.gov xccdf 1.1 xccdf-1.1.xsd "
+   info: "SCAP-WinVista-XCCDF.xml"
+   info: "Windows-VISTA"
+   info: "FDCC-Desktop"
+</report>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "enforce-password-history"
+   value_type: POLICY_DWORD
+   value_data: [24..MAX]
+   password_policy: ENFORCE_PASSWORD_HISTORY
+   info: "Title - Enforce Password History"
+   info: "Description - This setting determines how many old passwords the system will remember for each account. Users will be prevented from reusing any of the old passwords. For example, if this is set to 24, then the system will not allow users to reuse any of their last 24 passwords. Old passwords may have been compromised, or an attacker may have taken a long time to crack encrypted passwords. Reusing an old password could inadvertently give attackers access to the system."
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: PASSWORD_POLICY
+         description: "maximum-password-age"
+         value_type: TIME_DAY
+         value_data: [0..60]
+         password_policy: MAXIMUM_PASSWORD_AGE
+         info: "Title - Maximum Password Age"
+         info: "Description - This forces users to change their passwords regularly. The lower this value is set, the more likely users will be to choose poor passwords that are easier for them to remember (e.g., Mypasswd1, Mypasswd2, Mypasswd3). The higher this value is set, the more likely the password will be compromised and used by unauthorized parties."
+      </custom_item>
+      <custom_item>
+         type: PASSWORD_POLICY
+         description: "maximum-password-age"
+         value_type: TIME_DAY
+         value_data: [1..MAX]
+         password_policy: MAXIMUM_PASSWORD_AGE
+         info: "Title - Maximum Password Age"
+         info: "Description - This forces users to change their passwords regularly. The lower this value is set, the more likely users will be to choose poor passwords that are easier for them to remember (e.g., Mypasswd1, Mypasswd2, Mypasswd3). The higher this value is set, the more likely the password will be compromised and used by unauthorized parties."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "maximum-password-age"
+         info: "Title - Maximum Password Age"
+         info: "Description - This forces users to change their passwords regularly. The lower this value is set, the more likely users will be to choose poor passwords that are easier for them to remember (e.g., Mypasswd1, Mypasswd2, Mypasswd3). The higher this value is set, the more likely the password will be compromised and used by unauthorized parties."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "maximum-password-age"
+         info: "Title - Maximum Password Age"
+         info: "Description - This forces users to change their passwords regularly. The lower this value is set, the more likely users will be to choose poor passwords that are easier for them to remember (e.g., Mypasswd1, Mypasswd2, Mypasswd3). The higher this value is set, the more likely the password will be compromised and used by unauthorized parties."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "minimum-password-age"
+   value_type: TIME_DAY
+   value_data: [1..MAX]
+   password_policy: MINIMUM_PASSWORD_AGE
+   info: "Title - Minimum Password Age"
+   info: "Description - This setting requires users to wait for a certain number of days before changing their password again. The setting prevents a user from changing a password when it reaches the maximum age and then immediately changing it back to the previous password. Unfortunately, this setting also prevents users who inadvertently reveal a new password to others from changing it immediately without administrator intervention."
+</custom_item>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "minimum-password-length"
+   value_type: POLICY_DWORD
+   value_data: [12..MAX]
+   password_policy: MINIMUM_PASSWORD_LENGTH
+   info: "Title - Minimum Password Length"
+   info: "Description - This setting specifies the minimum length of a password in characters. The rationale behind this setting is that longer passwords are more difficult to guess and crack than shorter passwords. The downside is that longer passwords are often more difficult for users to remember. Organizations that want to set a relatively large minimum password length should encourage their users to use passphrases, which may be easier to remember than conventional passwords."
+</custom_item>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "password-complexity"
+   value_type: POLICY_SET
+   value_data: "Enabled"
+   password_policy: COMPLEXITY_REQUIREMENTS
+   info: "Title - Password Complexity"
+   info: "Description - Like the Minimum Password Length setting, this setting makes it more difficult to guess or crack passwords. Enabling this setting implements complexity requirements including not having the user account name in the password and using a mixture of character types, including upper case and lower case letters, digits, and special characters such as punctuation marks."
+</custom_item>
+
+<custom_item>
+   type: LOCKOUT_POLICY
+   description: "account-lockout-duration"
+   value_type: TIME_SECOND
+   value_data: [900..MAX]
+   lockout_policy: LOCKOUT_DURATION
+   info: "Title - Account Lockout Duration"
+   info: "Description - This value specifies how long the user account should be locked out. This is often set to a low but substantial value (e.g., 15 minutes), for two reasons. First, a legitimate user that is accidentally locked out only has to wait 15 minutes to regain access, instead of asking an administrator to unlock the account. Second, an attacker who is guessing passwords using brute force methods will only be able to try a small number of passwords at a time, then wait 15 minutes before trying any more. This greatly reduces the chances that the brute force attack will be successful."
+</item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: LOCKOUT_POLICY
+         description: "account-lockout-threshold"
+         value_type: POLICY_DWORD
+         value_data: [0..5]
+         lockout_policy: LOCKOUT_THRESHOLD
+         info: "Title - Account Lockout Threshold"
+         info: "Description - The threshold value specifies the maximum number of failed attempts that can occur before the account is locked out."
+      </item>
+      <custom_item>
+         type: LOCKOUT_POLICY
+         description: "account-lockout-threshold"
+         value_type: POLICY_DWORD
+         value_data: [1..MAX]
+         lockout_policy: LOCKOUT_THRESHOLD
+         info: "Title - Account Lockout Threshold"
+         info: "Description - The threshold value specifies the maximum number of failed attempts that can occur before the account is locked out."
+      </item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "account-lockout-threshold"
+         info: "Title - Account Lockout Threshold"
+         info: "Description - The threshold value specifies the maximum number of failed attempts that can occur before the account is locked out."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "account-lockout-threshold"
+         info: "Title - Account Lockout Threshold"
+         info: "Description - The threshold value specifies the maximum number of failed attempts that can occur before the account is locked out."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: LOCKOUT_POLICY
+   description: "reset-account-lockout-counter"
+   value_type: TIME_SECOND
+   value_data: [900..MAX]
+   lockout_policy: LOCKOUT_DURATION
+   info: "Title - Reset Account Lockout Counter After"
+   info: "Description - This specifies the time period to be used with the lockout threshold value. For example, if the threshold is set to 10 attempts and the duration is set to 15 minutes, then if more than 10 failed login attempts occur with a single user account within a 15-minute period, the account will be disabled."
+</item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Access-Computer-From-Network-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeNetworkLogonRight
+   info: "Title - Right To Access This Computer From The Network"
+   info: "Description - Verify that the user right 'Access This Computer From The Network' has been granted appropriately. (Only Administrators)"
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Act-As-Part-Of-Operating-System-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeTcbPrivilege
+   info: "Title - Right To Act As Part Of The Operating System"
+   info: "Description - Verify that the user right 'Act As Part Of The Operating System' has been granted appropriately. (No One)"
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Adjust-Memory-Quotas-Administrators-LocalService-NetworkService"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeIncreaseQuotaPrivilege
+   info: "Title - Right To Adjust Memory Quotas For A Process"
+   info: "Description - Verify that the user right 'Adjust Memory Quotas For A Process' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Allow-Log-On-Locally-Administrators-Users"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Users"
+   right_type: SeInteractiveLogonRight
+   info: "Title - Right To Log On Locally"
+   info: "Description - Verify that the user right 'Allow Log On Locally' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Allow-Log-On-Through-Terminal-Services-Administrators-RemoteDesktopUsers"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Remote Desktop Users"
+   right_type: SeRemoteInteractiveLogonRight
+   info: "Title - Right To Log On Through Terminal Services"
+   info: "Description - Verify that the user right 'Allow Log On Through Terminal Services' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Back-Up-Files-And-Directories-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeBackupPrivilege
+   info: "Title - Right To Back Up Files and Directories"
+   info: "Description - Verify that the user right 'Back Up Files and Directories' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Bypass-Traverse-Checking-Administrators_Users_LocalService_NetworkService"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Users" && "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeChangeNotifyPrivilege
+   info: "Title - Right To Bypass Traverse Checking"
+   info: "Description - Verify that the user right 'Bypass Traverse Checking' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Change-System-Time-LocalService-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "LOCAL SERVICE"
+   right_type: SeSystemTimePrivilege
+   info: "Title - Right To Change the System Time"
+   info: "Description - Verify that the user right 'Change the System Time' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Create-Token-Object-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeCreateTokenPrivilege
+   info: "Title - Right To Create A Token Object"
+   info: "Description - Verify that the user right 'Create A Token Object' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Create-Permanent-Shared-Objects-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeCreatePermanentPrivilege
+   info: "Title - Right To Create Permanent Shared Objects"
+   info: "Description - Verify that the user right 'Create Permanent Shared Objects' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Debug-Programs-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeDebugPrivilege
+   info: "Title - Right To Debug Programs"
+   info: "Description - Verify that the user right 'Debug Programs' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Deny-Access-From-Network-Guests"
+   value_type: USER_RIGHT
+   value_data: "guest"
+   right_type: SeDenyNetworkLogonRight
+   info: "Title - Denied Access To This Computer From The Network"
+   info: "Description - Verify that the user right 'Deny Access To This Computer From The Network' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Deny-Logon-As-Batch-Job-Guests"
+   value_type: USER_RIGHT
+   value_data: "guest"
+   right_type: SeDenyBatchLogonRight
+   info: "Title - Denied Logon As A Batch Job"
+   info: "Description - Verify that the user right 'Deny Logon As A Batch Job' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Deny-Logon-As-Service-None"
+   value_type: USER_RIGHT
+   value_data: ".*"
+   right_type: SeDenyServiceLogonRight
+   info: "Title - Denied Logon As A Service"
+   info: "Description - Verify that the user right 'Deny Logon As A Service' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Deny-Logon-Locally-Guests"
+   value_type: USER_RIGHT
+   value_data: "guest"
+   right_type: SeDenyInteractiveLogonRight
+   info: "Title - Denied Logon Locally"
+   info: "Description - Verify that the user right 'Deny Logon Locally' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Deny-Logon-Through-Terminal-Services-Guest"
+   value_type: USER_RIGHT
+   value_data: "guest"
+   right_type: SeDenyRemoteInteractiveLogonRight
+   info: "Title - Denied Logon Through Terminal Services"
+   info: "Description - Verify that the user right 'Deny Logon Through Terminal Services' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Force-Shutdown-From-Remote-System-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeRemoteShutdownPrivilege
+   info: "Title - Right To Force Shutdown From A Remote System"
+   info: "Description - Verify that the user right 'Force Shutdown From A Remote System' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Generate-Security-Audits-LocalService-NetworkService"
+   value_type: USER_RIGHT
+   value_data: "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeAuditPrivilege
+   info: "Title - Right To Generate Security Audits"
+   info: "Description - Verify that the user right 'Generate Security Audits' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Impersonate-Client-After-Authentication-Administrators-SERVICE-LocalService-NetworkService"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "SERVICE" && "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeImpersonatePrivilege
+   info: "Title - Impersonate a Client After Authentication"
+   info: "Description - Verify that the user right 'Impersonate a Client After Authentication' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Increase-Scheduling-Priority-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeIncreaseBasePriorityPrivilege
+   info: "Title - Right To Increase Scheduling Priority"
+   info: "Description - Verify that the user right 'Increase Scheduling Priority' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Load-And-Unload-Device-Drivers-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeLoadDriverPrivilege
+   info: "Title - Right To Load And Unload Device Drivers"
+   info: "Description - Verify that the user right 'Load And Unload Device Drivers' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Lock-Pages-In-Memory-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeLockMemoryPrivilege
+   info: "Title - Right To Lock Pages In Memory"
+   info: "Description - Verify that the user right 'Lock Pages In Memory' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Log-On-As-Batch-Job-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeBatchLogonRight
+   info: "Title - Right To Log On As A Batch Job"
+   info: "Description - Verify that the user right 'Log On As A Batch Job' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Log-On-As-Service-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeServiceLogonRight
+   info: "Title - Right To Log On As A Service"
+   info: "Description - Verify that the user right 'Log On As A Service' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Manage-Auditing-And-Security-Log-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeSecurityPrivilege
+   info: "Title - Right To Manage Auditing And Security Log"
+   info: "Description - Verify that the user right 'Manage Auditing And Security Log' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Modify-Firmware-Environment-Values-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeSystemEnvironmentPrivilege
+   info: "Title - Right To Modify Firmware Environment Values"
+   info: "Description - Verify that the user right 'Modify Firmware Environment Values' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Perform-Volume-Maintenance-Tasks-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeManageVolumePrivilege
+   info: "Title - Right To Perform Volume Maintenance Tasks"
+   info: "Description - Verify that the user right 'Perform Volume Maintenance Tasks' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Profile-Single-Process-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeProfileSingleProcessPrivilege
+   info: "Title - Right To Profile Single Process"
+   info: "Description - Verify that the user right 'Profile Single Process' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Profile-System-Performance-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeSystemProfilePrivilege
+   info: "Title - Right To Profile System Performance"
+   info: "Description - Verify that the user right 'Profile System Performance' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Remove-Computer-From-Docking-Station-Administrators-Users"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Users"
+   right_type: SeUndockPrivilege
+   info: "Title - Right To Remove Computer From Docking Station"
+   info: "Description - Verify that the user right 'Remove Computer From Docking Station' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Replace-Process-Level-Token-NetworkService-LocalService"
+   value_type: USER_RIGHT
+   value_data: "LOCAL SERVICE" && "NETWORK SERVICE"
+   right_type: SeAssignPrimaryTokenPrivilege
+   info: "Title - Right To Replace A Process Level Token"
+   info: "Description - Verify that the user right 'Replace A Process Level Token' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Restore-Files-And-Directories-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeRestorePrivilege
+   info: "Title - Right To Restore Files And Directories"
+   info: "Description - Verify that the user right 'Restore Files And Directories' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Shut-Down-System-Administrators-Users"
+   value_type: USER_RIGHT
+   value_data: "Administrators" && "Users"
+   right_type: SeShutdownPrivilege
+   info: "Title - Right To Shut Down The System"
+   info: "Description - Verify that the user right 'Shut Down The System' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Synchronize-Directory-Service-Data-None"
+   value_type: USER_RIGHT
+   value_data: ""
+   right_type: SeSyncAgentPrivilege
+   info: "Title - Right To Synchronize Directory Service Data"
+   info: "Description - Verify that the user right 'Synchronize Directory Service Data' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: USER_RIGHTS_POLICY
+   description: "Take-Ownership-Of-Files-Administrators"
+   value_type: USER_RIGHT
+   value_data: "Administrators"
+   right_type: SeTakeOwnershipPrivilege
+   info: "Title - Right To Take Ownership Of Files Or Other Objects"
+   info: "Description - Verify that the user right 'Take Ownership Of Files Or Other Objects' has been granted appropriately."
+</custom_item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "administrator-account-status"
+   value_type: POLICY_SET
+   value_data: "Disabled"
+   account_type: ADMINISTRATOR_ACCOUNT
+   info: "Title - Accounts: Administrator account status"
+   info: "Description - The Administrator account status is enabled to allow the administrator to perform configuration control of the system."
+</item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "guest-account-status"
+   value_type: POLICY_SET
+   value_data: "Disabled"
+   account_type: GUEST_ACCOUNT
+   info: "Title - Accounts: Guest account status"
+   info: "Description - A system faces an increased vulnerability threat if the built-in guest account is not disabled. This account is a known account that exists on all Windows systems and cannot be deleted. This account is initialized during the installation of the operating system with no password assigned. This account is a member of the Everyone user group and has all the rights and permissions associated with that group, which could subsequently provide access to system resources to anonymous users. Ensure the built-in guest account is disabled."
+</item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "limit-blank-password-use"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\Currentcontrolset\Control\Lsa"
+   reg_item: "Limitblankpassworduse"
+   info: "Title - Accounts: Limit local account use to blank passwords to console logon only"
+   info: "Description - In Windows Vista, accounts with null or blank passwords can only be used to log on at the physical system’s logon screen. This means that accounts with blank or null passwords cannot be used over networks or with the secondary logon service (RunAs). This feature prevents attackers and malware from gaining remote access through blank passwords. Section 6 contains information on other recommended password settings."
+</custom_item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "rename-administrator"
+   value_type: POLICY_TEXT
+   value_data: "Administrator"
+   account_type: ADMINISTRATOR_ACCOUNT
+   check_type: CHECK_NOT_EQUAL
+   info: "Title - Accounts: Rename administrator account"
+   info: "Description - The Administrator account is created by default when installing Windows Vista, but is disabled. Associating the Administrator SID with a different name may thwart a potential hacker who is targeting the built-in Administrator account."
+</item>
+
+<custom_item>
+   type: CHECK_ACCOUNT
+   description: "rename-guest"
+   value_type: POLICY_TEXT
+   value_data: "Guest"
+   account_type: GUEST_ACCOUNT
+   check_type: CHECK_NOT_EQUAL
+   info: "Title - Accounts: Rename guest account"
+   info: "Description - The Guest account is created by default when installing Windows Vista, but is disabled. Associating the Guest SID with a different name may thwart a potential hacker who is targeting the built-in Guest account."
+</item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "audit-access-global-system-objects"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\Currentcontrolset\Control\Lsa"
+   reg_item: "AuditBaseObjects"
+   info: "Title - Audit: Audit the access of global system objects"
+   info: "Description - Controls the ability to audit access of global systems objects. When this setting is enabled, system objects such as mutexes, events, semaphores, and DOS devices, are created with a default system access control list (SACL)."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "audit-use-backup-restore-privilege"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\Currentcontrolset\Control\Lsa"
+   reg_item: "FullPrivilegeAuditing"
+   info: "Title - Audit: Audit the use of Backup and Restore privilege"
+   info: "Description - Controls the ability to audit the use of all user privileges, including Backup and Restore. If this policy is disabled, certain user rights will not be audited even if 'Audit privilege use' audit policy is enabled."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "override-audit-policy-settings"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\Currentcontrolset\Control\Lsa"
+   reg_item: "scenoapplylegacyauditpolicy"
+   info: "Title - Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings"
+   info: "Description - Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "shutdown-system-unable-log-audits"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\Currentcontrolset\Control\Lsa"
+   reg_item: "CrashOnAuditFail"
+   info: "Title - Audit: Shut down system immediately if unable to log security audits"
+   info: "Description - If events cannot be written to the security log, the system is halted immediately. If the system halts as a result of a full log, an administrator must log ont the system and clear the log."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "allow-undock-no-logon"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "UndockWithoutLogon"
+   info: "Title - Devices: Allow undock without having to log on"
+   info: "Description - Since the removal of a computer should be controlled, users should have to log on before undocking the computer to ensure that they have the appropriate rights to undock the system."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "allow-format-eject-removable-media"
+   value_type: POLICY_TEXT
+   value_data: "0"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "AllocateDASD"
+   info: "Title - Devices: Allow only administrators to format and eject removable media"
+   info: "Description - Verifies that only the correct users are allowed to format and eject removable media>"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "prevent-users-installing-printers"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers"
+   reg_item: "AddPrinterDrivers"
+   info: "Title - Devices: Prevent users from installing printer drivers"
+   info: "Description - This setting determines who is allowed to install a printer driver as part of adding a network printer."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "restrict-cdrom-access-local-users-only"
+   value_type: POLICY_TEXT
+   value_data: "0"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "AllocateCDRoms"
+   info: "Title - Devices: Restrict CD-ROM access to locally logged-on user only"
+   info: "Description - Removable media devices (CD-ROM) are readable by others on the network if they are not properly configured. A process can remain running in the background after a user logs off, thereby, permitting access to the media, while another user is logged on to the system."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "restrict-floppy-access-local-users-only"
+   value_type: POLICY_TEXT
+   value_data: "0"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "AllocateFloppies"
+   info: "Title - Devices: Restrict floppy access to locally logged-on user only"
+   info: "Description - Removable media devices (floppy disks) are readable by others on the network if they are not properly configured. A process can remain running in the background after a user logs off, thereby, permitting access to the media, while another user is logged on to the system."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-encrypt-or-sign-secure-channel-data-always"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "RequireSignOrSeal"
+   info: "Title - Domain member: Digitally encrypt or sign secure channel data (always)"
+   info: "Description - Domain member: Digitally encrypt or sign secure channel data (always). Requests sent on the secure channel are authenticated, and sensitive information (such as passwords) is encrypted or signed. If this policy is enabled, outgoing secure channel traffic should be encrypted."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-encrypt-secure-channel-data-when-possible"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "SealSecureChannel"
+   info: "Title - Domain member: Digitally encrypt secure channel data (when possible)"
+   info: "Description - Requests sent on the secure channel are authenticated, and sensitive information (such as passwords) is encrypted, but not all information is encrypted. If this policy is enabled, outgoing secure channel traffic should be encrypted."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-sign-secure-channel-data-when-possible"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "SignSecureChannel"
+   info: "Title - Domain member: Digitally sign secure channel data (when possible)"
+   info: "Description - Requests sent on the secure channel are authenticated, and sensitive information (such as passwords) is encrypted, but the channel is not integrity checked. If this policy is enabled, all outgoing secure channel traffic should be signed."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "disable-machine-account-password-changes"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "DisablePasswordChange"
+   info: "Title - Domain member: Disable machine account password changes"
+   info: "Description - Computer account passwords are changed automatically every seven days. Enabling this policy to disable automatic password changes can make the system more vulnerable to malicious access. Frequent password changes can be a significant safeguard for your system. If this policy is disabled, a new password for the computer account will be generated every week."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "maximum-machine-account-password-age"
+   value_type: POLICY_DWORD
+   value_data: 30
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "MaximumPasswordAge"
+   info: "Title - Domain member: Maximum machine account password age"
+   info: "Description - This setting controls the maximum password age that a machine account may have. This setting should be set to no more that 7 days, ensuring that the machine changes its password monthly."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "require-strong-session-key"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netlogon\Parameters"
+   reg_item: "RequireStrongKey"
+   info: "Title - Domain member: Require strong session key"
+   info: "Description - This setting controls the required strength of a session key."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "do-not-display-last-user-name"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "DontDisplayLastUserName"
+   info: "Title - Interactive logon: Do not display last user name"
+   info: "Description - This setting determines whether the name of the last user to log on to the computer will be displayed in the Windows logon dialog box."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "do-not-require-ctrlaltdel"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "DisableCAD"
+   info: "Title - Interactive logon: Do not require CTRL+ALT+DEL"
+   info: "Description - Disabling the Ctrl+Alt+Del security attention sequence can compromise system security. Because only Windows responds to the Ctrl+Alt+Del security sequence, you can be assured that any passwords you enter following that sequence are sent only to Windows. If you eliminate the sequence requirement, malicious programs can request and receive your Windows password. Disabling this sequence also suppresses a custom logon banner."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "message-text-users-attempting-logon"
+   value_type: POLICY_TEXT
+   value_data: ".+"
+   check_type: CHECK_REGEX
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "LegalNoticeText"
+   info: "Title - Interactive logon: Message text for users attempting to log on"
+   info: "Description - Failure to display the logon banner prior to a logon attempt will negate legal proceedings resulting from unauthorized access to system resources."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "message-title-users-attempting-logon"
+   value_type: POLICY_TEXT
+   value_data: ".+"
+   check_type: CHECK_REGEX
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "LegalNoticeCaption"
+   info: "Title - Interactive logon: Message title for users attempting to log on"
+   info: "Description - The logon banner should be titled with a warning label containing the name of the owning organization."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "number-of-previous-logons-to-cache"
+   value_type: POLICY_DWORD
+   value_data: "2"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "CachedLogonsCount"
+   info: "Title - Interactive logon: Number of previous logons to cache (in case domain controller is not available)"
+   info: "Description - The default Windows XP configuration caches the last logon credentials for users who log on interactively to a system. This feature is provided for system availability reasons such as the users machine is disconnected from the network or domain controllers are not available. Even though the credential cache is well-protected, storing encrypted copies of users passwords on workstations do not always have the same physical protection required for domain controllers. If a workstation is attacked, the unauthorized individual may isolate the password to a domain user account using a password-cracking program, and gain access to the domain."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "prompt-user-to-change-password-before-expiration"
+   value_type: POLICY_DWORD
+   value_data: 14
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "PasswordExpiryWarning"
+   info: "Title - Interactive logon: Prompt user to change password before expiration"
+   info: "Description - This setting configures the system to display a warning to users telling them how many days are left before their password expires. By giving the user advanced warning, the user has time to construct a sufficiently strong password."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "require-domain-controller-authentication-to-unlock"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "ForceUnlockLogon"
+   info: "Title - Interactive logon: Require Domain Controller authentication to unlock workstation"
+   info: "Description - This setting controls the behavior of the system when you attempt to unlock the workstation. If this setting is enabled, the system will pass the credentials to the domain controller (if in a domain) for authentication before allowing the system to be unlocked."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "smart-card-removal-behaviour"
+   value_type: POLICY_TEXT
+   value_data: "1"
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "scremoveoption"
+   info: "Title - Interactive logon: Smart card removal behavior"
+   info: "Description - When the smart card for a logged-on user is removed from the smart card reader, the workstation should be locked."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-sign-communications-client-always"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "RequireSecuritySignature"
+   info: "Title - Microsoft network client: Digitally sign communications (always)"
+   info: "Description - This check verifies that the client policy is set to always sign packets."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-sign-communications-client-server-agrees"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "EnableSecuritySignature"
+   info: "Title - Microsoft network client: Digitally sign communications (if server agrees)"
+   info: "Description - This check verifies that the client policy is set to sign packets if the server agrees."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "send-unencrypted-password-to-third-party-smb-servers"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "EnablePlainTextPassword"
+   info: "Title - Microsoft network client: Send unencrypted password to third-party SMB servers"
+   info: "Description - Some non-Microsoft SMB servers only support unencrypted (plain text) password authentication. Sending plain text passwords across the network, when authenticating to an SMB server, reduces the overall security of the environment. Check with the Vendor of the SMB server to see if there is a way to support encrypted password authentication."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "amount-of-idle-time-required-before-suspending-session"
+   value_type: POLICY_DWORD
+   value_data: 15
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanServer\Parameters"
+   reg_item: "AutoDisconnect"
+   info: "Title - Microsoft network server: Amount of idle time required before suspending session"
+   info: "Description - Administrators should use this setting to control when a computer disconnects an inactive SMB session. If client activity resumes, the session is automatically reestablished."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-sign-communications-server-always"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "RequireSecuritySignature"
+   info: "Title - Microsoft network server: Digitally sign communications (always)"
+   info: "Description - This check verifies that the server policy is set to always sign packets."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "digitally-sign-communications-server-client-agrees"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters"
+   reg_item: "EnableSecuritySignature"
+   info: "Title - Microsoft network server: Digitally sign communications (if client agrees)"
+   info: "Description - Microsoft network server: Digitally sign communications (if client agrees). This check verifies that the server policy is set to sign packets if the client agrees."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "disconnect-client-when-logon-hours-expire"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+   reg_item: "EnableForcedLogOff"
+   info: "Title - Microsoft network server: Disconnect clients when logon hours expire"
+   info: "Description - Users should not be permitted to remain logged on to the network after they have exceeded their permitted logon hours. In many cases, this indicates that a user forgot to log off before leaving for the day. However, it may also indicate that a user is attempting unauthorized access at a time when the system may be less closely monitored."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "enable-automatic-logon"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "AutoAdminLogon"
+   info: "Title - MSS: (AutoAdminLogon) Enable Automatic Logon (Not Recommended)"
+   info: "Description - Determines whether the automatic logon feature is enabled. Automatic logon uses the domain, user name, and password stored in the registry to log users on to the computer when the system starts. The Log On to Windows dialog box is not displayed."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "disable-ip-source-routing"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "DisableIPSourceRouting"
+   info: "Title - MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)"
+   info: "Description - MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "enable-dead-gw-detect"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "EnableDeadGWDetect"
+   info: "Title - MSS: (EnableDeadGWDetect) Allow automatic detection of dead network gateways (could lead to DoS)"
+   info: "Description - MSS: (EnableDeadGWDetect) Allow automatic detection of dead network gateways (could lead to DoS)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "enable-icmp-redirect"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "EnableICMPRedirect"
+   info: "Title - MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes"
+   info: "Description - MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes"
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "hide-system-from-browse-list"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Lanmanserver\Parameters"
+   reg_item: "Hidden"
+   info: "Title - MSS: (Hidden) Hide Computer From the Browse List (not recommended except for highly secure environments)"
+   info: "Description - Hidden Registry key to 1. The machine will be accessible as a network server, but users must manually enter Uniform Naming Convention (UNC) pathnames to the server and its shared resources—the machine won't appear in network browse lists. After you make this change, you must stop and restart the Server service or reboot the machine. Also, a machine can take as many as 51 minutes to disappear from the browse list because of the Windows network browsing services' expiration policies. machine\SYSTEM\CurrentControlSet\Services\lanmanserver\parameters\hidden http://www.microsoft.com/technet/treeview/default.asp?url=/technet/security/prodtech/Windows/Win2kHG/05SConfg.asp, under Hide the computer from the network browse list"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "keep-alive-time"
+   value_type: POLICY_DWORD
+   value_data: 300000
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "KeepAliveTime"
+   info: "Title - MSS: (KeepAliveTime)How often keep-alive packets are sent in milliseconds"
+   info: "Description - This value controls how often TCP attempts to verify that an idle connection is still intact by sending a keep-alive packet. If the remote computer is still reachable, it acknowledges the keep-alive packet. HKLM\System\CurrentControlSet\Tcpip\Parameters\KeepAliveTime"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "no-drive-type-auto-run"
+   value_type: POLICY_DWORD
+   value_data: 255
+   reg_key: "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+   reg_item: "NoDriveTypeAutoRun"
+   info: "Title - MSS: (NoDriveTypeAutoRun) Disable Autorun for all drives (recommended)"
+   info: "Description - Disable Autorun on all drives, any pluggable device included (not just CDs) Affects registry key: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoDriveTypeAutoRun "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "no-name-release-on-demand"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Netbt\Parameters"
+   reg_item: "NoNameReleaseOnDemand"
+   info: "Title - MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers"
+   info: "Description - Network basic input/output system (NetBIOS) over TCP/IP is a networking protocol that, among other things, provides a means of easily resolving NetBIOS names registered on Windows- based systems to the IP addresses configured on those systems. This value determines whether the computer releases its NetBIOS name when it receives a name release request. The NoNameReleaseOnDemand setting configures the system to refuse name release requests to release its SMB name. This setting prevents an attacker from sending a name release request to a server, causing the server to be inaccessible to legitimate clients. If this setting is configured on a client, however, and that client is mis-configured with the same name as a critical server, the server will be unable to recover the name, and legitimate requests may be directed to the rogue server instead, causing a denial of service condition at best. HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netbt\Parameters\ NoNameReleaseOnDemand registry key."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "ntfs-disable-8dot3-name-creation"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\FileSystem"
+   reg_item: "NtfsDisable8dot3NameCreation"
+   info: "Title - MSS: (NtfsDisable8dot3NameCreation) Enable the computer to stop generating 8.3 style filenames (recommended)"
+   info: "Description - Vista supports 8.3 file name formats for backward compatibility with 16- bit applications. The 8.3 file name convention is a naming format that allows file names that are up to eight characters in length. The following registry value entry has been added to the template in the HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\FileSystem\ NtfsDisable8dotNameCreation registry key. "
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "perform-router-discovery"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "PerformRouterDiscovery"
+   info: "Title - MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure DefaultGateway addresses (could lead to DoS)"
+   info: "Description - This setting is used to enable or disabled the Internet Router Discovery Protocol (IRDP). IRDP allows the system to detect and configure Default Gateway addresses automatically. HKLM\System\CurrentControlSet\Tcpip\Parameters\PerformRouterDiscovery"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "safe-dll-search-mode"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager"
+   reg_item: "SafeDllSearchMode"
+   info: "Title - MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)"
+   info: "Description - Most programs on the Windows platform make use of various Dynamic Link Libraries (DLL) to avoid having to reimplement functionality. The operating system actually loads several DLLs for each program, depending on what type of program it is. When the program does not specify an absolute location for a DLL, the default search order is used to locate it. By default, the search order used by the operating system is as follows: 1. Memory 2. KnownDLLs 3. Manifests and .local 4. Application directory 5. Current working directory 6. System directories (%systemroot%, %systemroot%\system, and %systemroot%\system32) 7. The path variable The fact that the current working directory is searched before the system directories can be used by someone with access to the file system to cause a program launched by a user to load a spoofed DLL. If a user launches a program by double-clicking a document, the current working directory is actually the location of the document. If a DLL in that directory has the same name as a system DLL in that location will then be loaded instead of the system DLL. This attack vector was actually used by the Nimda virus. To combat this, a new setting was created in Service Pack 3, which moves the current working directory to after the system directories in the search order. To avoid application compatibility issues, however, this switch was not turned on by default. To turn it on, set the following registry valueMACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\SafeDllSearchMode"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "screen-saver-grace-period"
+   value_type: POLICY_DWORD
+   value_data: 5
+   reg_key: "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
+   reg_item: "ScreenSaverGracePeriod"
+   info: "Title - MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended)"
+   info: "Description - Setting Added to Registry to Make Screensaver Password Protection Immediate The default grace period allowed for user movement before the screen – saver lock takes effect is five seconds. Leaving the grace period in the default setting makes your computer vulnerable to a potential attack from someone walking up to the console to attempt to log onto the system before the lock takes effect. An entry to the registry can be made to adjust the length of the grace period."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "syn-attack-protect"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "SynAttackProtect"
+   info: "Title - MSS: (SynAttackProtect) Syn attack protection level (protects against DoS)"
+   info: "Description - This registry value causes TCP to adjust retransmission of SYN- ACKs. When you configure this value, the connection responses time- out more quickly in the event of a connect request (SYN) attack. 1 = Connections timeout more quickly if a SYN attack is detected 0 = No additional protection, use default settings Note: W2K had another option = 2 that has been incorporated into option 1 in W2K3. HKLM\System\CurrentControlSet\Tcpip\Parameters\SynAttackProtect"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "tcp-max-connect-response-retransmissions"
+   value_type: POLICY_DWORD
+   value_data: 2
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "TcpMaxConnectResponseRetransmissions"
+   info: "Title - MSS: (TCPMaxConnectResponseRetransmissions) SYN-ACK retransmissions when a connection request is not acknowledged"
+   info: "Description - This parameter determines the number of times that TCP retransmits a SYN before aborting the attempt. The retransmission time-out is doubled with each successive retransmission in a given connect attempt. The initial time-out value is three seconds. 0 = No retransmission, half- open connections dropped after 3 seconds 1 = 3 seconds, half- open connections dropped after 9 seconds 2 = 3 and 6 seconds, half- open connections dropped after 21 seconds 3 = 3, 6, and 9 seconds, half- open connections dropped after 45 seconds HKLM\System\CurrentControlSet\Tcpip\Parameters\TcpMaxConnectResponseRetransmissions"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "tcp-max-data-retransmissions"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters"
+   reg_item: "TcpMaxDataRetransmissions"
+   info: "Title - MSS: (TCPMaxDataRetransmissions) How many times unacknowledged data is retransmitted (3 recommended, 5 is default)"
+   info: "Description - MSS: (TCPMaxDataRetransmissions) How many times unacknowledged data is retransmitted (3 recommended, 5 is default)"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "warning-level"
+   value_type: POLICY_DWORD
+   value_data: 90
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Eventlog\Security"
+   reg_item: "WarningLevel"
+   info: "Title - MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning"
+   info: "Description - Windows Server 2003 and Service Pack 3 for Windows 2000 include a new feature for generating a security audit in the security event log when the security log reaches a user defined threshold. Note: new to W2K3 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Eventlog\Security\WarningLevel"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Restrict-anonymous-access-to-Named-Pipes-and-Shares"
+   value_type: POLICY_MULTI_TEXT
+   value_data: ""
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+   reg_item: "NullSessionShares"
+   info: "Title - Network access: Restrict anonymous access to Named Pipes and Shares"
+   info: "Description - This check determines whether anonymous access is restricted to named pipes and shares."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Shares-that-can-be-accessed-anonymously"
+   value_type: POLICY_MULTI_TEXT
+   value_data: ""
+   reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+   reg_item: "NullSessionShares"
+   info: "Title - Network access: Shares that can be accessed anonymously"
+   info: "Description - This setting controls which network shares may be accessed by an anonymous user. The default setting includes the shares, DFS$, and COMCFG. It is recommended that they be left as the default setting."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "do-not-allow-anonymous-enumeration-sam"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "RestrictAnonymousSAM"
+   info: "Title - Network access: Do not allow anonymous enumeration of SAM accounts"
+   info: "Description - If this setting is disabled, it allows anonymous logon users (null session connections) to list all account names, thus providing a map of potential points to attack the system."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "do-not-allow-anonymous-enumeration-sam-accounts-shares"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "RestrictAnonymous"
+   info: "Title - Network access: Do not allow anonymous enumeration of SAM accounts and shares"
+   info: "Description - If this setting is disabled, it allows anonymous logon users (null session connections) to list all account names and enumerate all shared resources, thus providing a map of potential points to attack the system."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "do-not-allow-storage-credentials-net-passports-network-authn"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "DisableDomainCreds"
+   info: "Title - Network access: Do not allow storage of credentials or .NET Passports for network authentication"
+   info: "Description - This setting controls the storage of authentication credentials or .NET passports on the local system. Such credentials should never be stored on the local machine as that may lead to account compromise."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "let-everyone-permissions-apply-to-anonymous-users"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "EveryoneIncludesAnonymous"
+   info: "Title - Network access: Let Everyone permissions apply to anonymous users"
+   info: "Description - This setting helps define the permissions that anonymous users have. If this setting is enabled then anonymous users have the same rights and permissions as the built-in Everyone group. Anonymous users should not have these permissions or rights."
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "named-pipes-accessed-anonymously"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "netlogon"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "NullSessionPipes"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "named-pipes-accessed-anonymously"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "lsarpc"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "NullSessionPipes"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "named-pipes-accessed-anonymously"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "samr"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "NullSessionPipes"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "named-pipes-accessed-anonymously"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "BROWSER"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "NullSessionPipes"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "named-pipes-accessed-anonymously"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "^((netlogon)|(lsarpc)|(samr)|(BROWSER))$"
+         check_type: CHECK_REGEX
+         reg_key: "HKLM\System\CurrentControlSet\Services\LanManServer\Parameters"
+         reg_item: "NullSessionPipes"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "named-pipes-accessed-anonymously"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "named-pipes-accessed-anonymously"
+         info: "Title - Network access: Named Pipes that can be accessed anonymously - netlogon, lsarpc, samr, browser"
+         info: "Description - Network access: Named Pipes that can be accessed anonymously. Pipes are internal system communications processes. They are identified internally by ID numbers that vary between systems. To make access to these processes easier, these pipes are given names that do not vary between systems. This setting controls which of these pipes anonymous users may access."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Sharing-and-security-model-for-local-accounts"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "ForceGuest"
+   info: "Title - Network access: Sharing and security model for local accounts"
+   info: "Description - Windows XP includes two network-sharing security models Classic and Guest only. It is recommended that the Classic mode be used."
+</custom_item>
+
+<custom_item>
+   type: PASSWORD_POLICY
+   description: "Force-logoff-when-logon-hours-expire"
+   value_type: POLICY_SET
+   value_data: "Enabled"
+   password_policy: FORCE_LOGOFF
+   info: "Title - Network security: Force logoff when logon hours expire"
+   info: "Description - This setting controls whether or not users are forced to log off when their allowed logon hours expire. If logon hours are set for users, then this should be enforced."
+</item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Lan-manager-authentication-level"
+   value_type: POLICY_DWORD
+   value_data: 5
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Lsa"
+   reg_item: "LmCompatibilityLevel"
+   info: "Title - Network Security: LAN Manager Authentication Level"
+   info: "Description - Windows network authentication has changed considerably as various security vulnerabilities have been identified and fixed. The original LAN Manager (or LM) password hash is considered very weak, but is still used by most Windows 9x clients. Using commercially available software, and off-the-shelf computers, most LM password hashes can be used to reveal the actual password in a matter of days, or hours. With the release of Windows NT 4.0, Microsoft developed NTLM authentication. Serious vulnerabilities made NTLM almost as easy to crack as LM, so NTLM version 2 (NTLMv2) was introduced. NTLMv2 provides significant improvements to security; when combined with strong password policy, accounts are well protected against brute force attacks. All of these authentication methods are incorporated into Windows 2000. All authentication models work with a hash of the password, not the password itself. This presents challenges with down-level compatibility between operating systems. In order to smooth the transition, when one computer attempts to authenticate with another, the default behavior is to send the basic LM hash along with the more secure NTLM hash. This setting improves control over the response to an authentication challenge: Send LM and NTLM responses,  Send LM and NTLM, Use NTLMv2 session security if negotiated, Send NTLM response only,  Send NTLMv2 response only,  Send NTLMv2 response only\refuse LM,   Send NTLMv2 response only\refuse LM and NTLM, The default, and weakest option, is the first: send LM and NTLM responses. As a result, using NTLM is ineffective because both protocols are sent together. In order to take a much more effective stand to protect network authentication, set LAN Manager Authentication Level to Send NTLMv2 response only\refuse LM and NTLM. Enabling this setting may have adverse effects on your ability to communicate with other Windows machines unless the change is made network-wide. If you find that you are unable to require a certain level of LM Authentication, back down to “Send LM andž2ó‰@"
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "LDAP-client-signing-requirements"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\LDAP"
+   reg_item: "LDAPClientIntegrity"
+   info: "Title - Network Security: LDAP client signing requirements"
+   info: "Description - Similar to the SMB protocol, the LDAP protocol supports signing. LDAP, “Lightweight Directory Access Protocol,” provides one means for the client to talk to active directory. LDAP protocol is text-based, but supports authentication to gain access to sensitive sections of the directory. Require signing to provide the assurance of mutual authentication for this communications channel."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "minimum-session-security-ntlm-ssp-based-clients"
+   value_type: POLICY_DWORD
+   value_data: 537395200
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
+   reg_item: "NTLMMinClientSec"
+   info: "Title - Network Security: Minimum session security for NTLM SSP based (including secure RPC) clients"
+   info: "Description - NTLM authentication can provide a security service to manage connection between various clients and servers, including through the Remote Procedure Call (RPC) service. Windows 2000 improved the security model for secure, authenticated client-server communications; this setting manages the new features for communications established by this workstation."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "minimum-session-security-ntlm-ssp-based-servers"
+   value_type: POLICY_DWORD
+   value_data: 537395200
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
+   reg_item: "NTLMMinServerSec"
+   info: "Title - Network Security: Minimum session security for NTLM SSP based (including secure RPC) servers"
+   info: "Description -  Similar to 'Network Security: Minimum session security for NTLM SSP based (including secure RPC) clients', this setting manages features for communication services provided by this workstation to other computers."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "recovery-console-allow-administrative-logon"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole"
+   reg_item: "SecurityLevel"
+   info: "Title - Recovery Console: Allow Automatic Administrative Logon"
+   info: "Description - The Recovery Console, new to Windows 2000 and XP, provides a limited command-line access to an otherwise unbootable operating system. The console allows access to the NTFS file system, which does not natively allow access when the operating system becomes unbootable. Other third-party applications have been developed to perform this action as well, but the Recovery Console is part of the operating system. It can be installed from the Windows 2000 CD with the “d:\i386\winnt32.exe /cmdcons” command. It can also be run directly from the Windows 2000 installation CD. The Recovery Console does not grant full and unrestricted access to the operating system by default. It does require that you log on using the password of the default Administrator account. Keep in mind that this must be the local administrator account, not just a member of the local administrators group. Also, the policy for renaming the administrator account does not apply to the recovery console, and that password must be used. If configured, a boot to the recovery console could result in automatic logon, and bypass the need for the password of the administrator account. Since this gives administrator access to anyone who can reboot the computer, the setting is generally disabled. "
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "recovery-console-allow-floppy-copy-access-all-drives-folders"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole"
+   reg_item: "SetCommand"
+   info: "Title - Recovery Console: Allow Floppy Copy and Access to All Drives and All Folders"
+   info: "Description - By default, the Recovery Console only allows access to the root folder of each drive, and the operating system folder (typically C:\Windows). The console also prevents copying files from the hard drive onto removable media. Although this protection can be bypassed by enabling floppy copy and drive access, the setting is enabled by default and should remain disabled."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "shutdown-allow-system-shutdown-without-having-logon"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "ShutdownWithoutLogon"
+   info: "Title - Shutdown: Allow System to be Shut Down Without Having to Log On"
+   info: "Description - Some systems run critical processes and should only be shut down by authorized users. Occasionally, special processes could be evoked during system startup, sometimes even trojaned processes. In environments where abnormal system reboots could cause problems, require a logon prior to reboot."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "shutdown-clear-virtual-memory-page"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
+   reg_item: "ClearPageFileAtShutdown"
+   info: "Title - Shutdown: Clear Virtual Memory Pagefile"
+   info: "Description - Virtual memory extends the physical memory available to the CPU. As data and applications fill the available physical memory, the operating system writes less-frequently used pages of memory out to disk, into the virtual memory pagefile. This greatly extends the amount of “virtual” memory available to the computer. Since the pagefile contains information that was in memory, it potentially holds a great deal of information useful for an attacker. Digging through the pagefile can reveal SSL web pages, queries set from the client to databases, sometimes even user ids and passwords from poorly written applications. The workstation does not clean this information from the pagefile on shutdown. Although the file can not be accessed when booted in Windows, anyone booting the workstation to an alternate operating system (e.g., from a boot CD) may access the page file. Enabling this options provides greater security by erasing the data during normal operations; however, this may also significantly increase the time required to shut down the computer. When enabled, the hibernation file (hiberfil.sys) is also cleaned on shutdown. "
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "system-cryptography-use-fips-compliant-alorithm"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy"
+   reg_item: "Enabled"
+   info: "Title - System Cryptography: Use FIPS compliant algorithms for encryption, hashing, and signing"
+   info: "Description - System Cryptography: Use FIPS compliant algorithms for encryption, hashing, and signing"
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "system-objects-require-case-insesitivity"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel"
+   reg_item: "ObCaseInsensitive"
+   info: "Title - System objects: Require case insensitivity for non-Windows subsystems"
+   info: "Description - The Windows operating systems ignore case when accessing resources; for example, “C:\Windows”, “C:\WINDOWS” and “c:\windows” all refer to the same directory. However, the Windows kernel allows interfaces with other case-sensitive operating systems (e.g., Unix). Enabling this setting causes the interoperability features to be case-insensitive as well. This setting has no effect when the workstation communicates only with other Windows systems. "
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "system-objects-strengthen-default-permissions-internal-system-objects"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager"
+   reg_item: "ProtectionMode"
+   info: "Title - System objects: Strengthen default permissions of internal system objects"
+   info: "Description - This setting actually digs deep into the operating system behavior and should be left at the default setting (Enabled) unless explicitly required. “Internal system objects” are shared physical and logical resources such as semaphores and DOS device name; the objects all are created with access control lists (ACLs). When enabled, the ACL allows other non-administrative system processes to query internal system objects, but will not allow them to modify them."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Anonymous-SID-Name-Translation"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\System\CurrentControlSet\Control\Lsa"
+   reg_item: "RestrictAnonymousSAM"
+   info: "Title - Network access: Allow anonymous SID-Name translation"
+   info: "Description - Determines if an anonymous user can request security identifier (SID) attributes for another user or use a SID to get the corresponding username."
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\ProductOptions"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+         info: "Description - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\Server Applications"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+         info: "Description - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "Software\Microsoft\Windows NT\CurrentVersion"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+         info: "Description - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "^((System\\CurrentControlSet\\Control\\ProductOptions)|(System\\CurrentControlSet\\Control\\Server Applications)|(Software\\Microsoft\\Windows NT\\CurrentVersion))$"
+         check_type: CHECK_REGEX
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+         info: "Description - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Remotely-accessible-registry-paths"
+         info: "Title - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+         info: "Description - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Remotely-accessible-registry-paths"
+         info: "Title - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+         info: "Description - Network access: Remotely accessible registry paths(System\CurrentControlSet\Control\ProductOptions; System\CurrentControlSet\Control\Server Applications; Software\Microsoft\Windows NT\CurrentVersion)"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\Print\Printers"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Services\Eventlog"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "Software\Microsoft\OLAP Server"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "Software\Microsoft\Windows NT\CurrentVersion\Print"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "Software\Microsoft\Windows NT\CurrentVersion\Windows"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\ContentIndex"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\Terminal Server"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\Terminal Server\UserConfig"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "Software\Microsoft\Windows NT\CurrentVersion\Perflib"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "System\CurrentControlSet\Services\SysmonLog"
+         check_type: CHECK_EQUAL_ANY
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         value_type: POLICY_MULTI_TEXT
+         value_data: "^((Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows)|(System\\CurrentControlSet\\Control\\Print\\Printers)|(System\\CurrentControlSet\\Services\\Eventlog)|(Software\\Microsoft\\OLAP Server)|(Software\\Microsoft\\Windows NT\\CurrentVersion\\Print)|(System\\CurrentControlSet\\Control\\ContentIndex)|(System\\CurrentControlSet\\Control\\Terminal Server)|(System\\CurrentControlSet\\Control\\Terminal Server\\UserConfig)|(System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration)|(Software\\Microsoft\\Windows NT\\CurrentVersion\\Perflib)|(System\\CurrentControlSet\\Services\\SysmonLog))$"
+         check_type: CHECK_REGEX
+         reg_key: "HKLM\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths"
+         reg_item: "Machine"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Remotely-accessible-registry-paths-and-sub-paths"
+         info: "Title - Network access: Remotely accessible registry paths and sub paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+         info: "Description - Network access: Remotely accessible registry paths ('Software\Microsoft\Windows NT\CurrentVersion\Print, Software\Microsoft\Windows NT\CurrentVersion\Windows, System\CurrentControlSet\Control\Print\Printers, System\CurrentControlSet\Services\Eventlog, Software\Microsoft\OLAP Server, System\CurrentControlSet\Control\ContentIndex, System\CurrentControlSet\Control\Terminal Server, System\CurrentControlSet\Control\Terminal Server\UserConfig, System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration, Software\Microsoft\Windows NT\CurrentVersion\Perflib, System\CurrentControlSet\Services\SysmonLog')"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "prevent-dial-up-password-saved"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\System\CurrentControlSet\Services\RasMan\Parameters"
+   reg_item: "DisableSavePassword"
+   info: "Title - MSS: (DisableSavePassword) Prevent the dial-up password from being saved"
+   info: "Description - This check determines whether the dial-up password is prevented from being saved."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Maximum-Application-Log-Size"
+   value_type: POLICY_DWORD
+   value_data: [4194340..MAX]
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application"
+   reg_item: "MaxSize"
+   info: "Title - Maximum Application Log Size"
+   info: "Description - Inadequate log size will cause the log to fill up quickly and require frequent clearing by administrative personnel. An exception is for NT workstations that do not share resources. The smaller size should allow sufficient audit information for supporting the investigation of suspicious events, but since it is overwritten, does not require administrator interaction for clearing the file.  Microsoft recommends that the combined size of all the event logs (including DNS logs, Directory Services logs, and Replication logs on Servers or Domain Controllers) should not exceed 300 megabytes.  Exceeding the recommended value can impact performance."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Maximum-Security-Log-Size"
+   value_type: POLICY_DWORD
+   value_data: [10485760..MAX]
+   reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Security"
+   reg_item: "MaxSize"
+   info: "Title - Maximum Security Log Size"
+   info: "Description - Inadequate log size will cause the log to fill up quickly and require frequent clearing by administrative personnel. An exception is for NT workstations that do not share resources. The smaller size should allow sufficient audit information for supporting the investigation of suspicious events, but since it is overwritten, does not require administrator interaction for clearing the file.  Microsoft recommends that the combined size of all the event logs (including DNS logs, Directory Services logs, and Replication logs on Servers or Domain Controllers) should not exceed 300 megabytes.  Exceeding the recommended value can impact performance."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Maximum-System-Log-Size"
+   value_type: POLICY_DWORD
+   value_data: [4194340..MAX]
+   reg_key: "HKLM\System\CurrentControlSet\Services\EventLog\System"
+   reg_item: "MaxSize"
+   info: "Title - Maximum System Log Size"
+   info: "Description - Inadequate log size will cause the log to fill up quickly and require frequent clearing by administrative personnel. An exception is for NT workstations that do not share resources. The smaller size should allow sufficient audit information for supporting the investigation of suspicious events, but since it is overwritten, does not require administrator interaction for clearing the file.  Microsoft recommends that the combined size of all the event logs (including DNS logs, Directory Services logs, and Replication logs on Servers or Domain Controllers) should not exceed 300 megabytes.  Exceeding the recommended value can impact performance."
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "BITS"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\BITS"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Background Intelligent Transfer Service"
+         info: "Description - Transfers files in the background using idle network bandwidth. If the service is disabled, then any applications that depend on BITS, such as Windows Update or MSN Explorer, will be unable to automatically download programs and other information. Impact: Windows Update"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "BITS"
+         value_type: POLICY_DWORD
+         value_data: 3
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\BITS"
+         reg_item: "Start"
+         info: "Title - Background Intelligent Transfer Service"
+         info: "Description - Transfers files in the background using idle network bandwidth. If the service is disabled, then any applications that depend on BITS, such as Windows Update or MSN Explorer, will be unable to automatically download programs and other information. Impact: Windows Update"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "BITS"
+         info: "Title - Background Intelligent Transfer Service"
+         info: "Description - Transfers files in the background using idle network bandwidth. If the service is disabled, then any applications that depend on BITS, such as Windows Update or MSN Explorer, will be unable to automatically download programs and other information. Impact: Windows Update"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "BITS"
+         info: "Title - Background Intelligent Transfer Service"
+         info: "Description - Transfers files in the background using idle network bandwidth. If the service is disabled, then any applications that depend on BITS, such as Windows Update or MSN Explorer, will be unable to automatically download programs and other information. Impact: Windows Update"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "Computer-Browser"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Browser"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Computer Browser"
+         info: "Description - Computer Browser"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Computer-Browser"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Browser"
+         reg_item: "Start"
+         info: "Title - Computer Browser"
+         info: "Description - Computer Browser"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Computer-Browser"
+         info: "Title - Computer Browser"
+         info: "Description - Computer Browser"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Computer-Browser"
+         info: "Title - Computer Browser"
+         info: "Description - Computer Browser"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "Routing-Remote-Access"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\RemoteAccess"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Routing and Remote Access"
+         info: "Description - Routing and Remote Access"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Routing-Remote-Access"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\RemoteAccess"
+         reg_item: "Start"
+         info: "Title - Routing and Remote Access"
+         info: "Description - Routing and Remote Access"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Routing-Remote-Access"
+         info: "Title - Routing and Remote Access"
+         info: "Description - Routing and Remote Access"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Routing-Remote-Access"
+         info: "Title - Routing and Remote Access"
+         info: "Description - Routing and Remote Access"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SNMP-Trap"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SNMPTRAP"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - SNMP Trap"
+         info: "Description - SNMP Trap"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SNMP-Trap"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SNMPTRAP"
+         reg_item: "Start"
+         info: "Title - SNMP Trap"
+         info: "Description - SNMP Trap"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SNMP-Trap"
+         info: "Title - SNMP Trap"
+         info: "Description - SNMP Trap"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SNMP-Trap"
+         info: "Title - SNMP Trap"
+         info: "Description - SNMP Trap"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "SSDP-Discovery"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\SSDPSRV"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - SSDP Discovery"
+         info: "Description - Simple Service Discovery Protocol (SSDP) Discovery Service should be disabled"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "SSDP-Discovery"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\SSDPSRV"
+         reg_item: "Start"
+         info: "Title - SSDP Discovery"
+         info: "Description - Simple Service Discovery Protocol (SSDP) Discovery Service should be disabled"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "SSDP-Discovery"
+         info: "Title - SSDP Discovery"
+         info: "Description - Simple Service Discovery Protocol (SSDP) Discovery Service should be disabled"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "SSDP-Discovery"
+         info: "Title - SSDP Discovery"
+         info: "Description - Simple Service Discovery Protocol (SSDP) Discovery Service should be disabled"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "Task-Scheduler"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Schedule"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Task Scheduler"
+         info: "Description - Task Scheduler"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Task-Scheduler"
+         value_type: POLICY_DWORD
+         value_data: 2
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Schedule"
+         reg_item: "Start"
+         info: "Title - Task Scheduler"
+         info: "Description - Task Scheduler"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Task-Scheduler"
+         info: "Title - Task Scheduler"
+         info: "Description - Task Scheduler"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Task-Scheduler"
+         info: "Title - Task Scheduler"
+         info: "Description - Task Scheduler"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "UPnP-Device-Host"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\upnphost"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - UPnP Device Host"
+         info: "Description - UPnP Device Host"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "UPnP-Device-Host"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\upnphost"
+         reg_item: "Start"
+         info: "Title - UPnP Device Host"
+         info: "Description - UPnP Device Host"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "UPnP-Device-Host"
+         info: "Title - UPnP Device Host"
+         info: "Description - UPnP Device Host"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "UPnP-Device-Host"
+         info: "Title - UPnP Device Host"
+         info: "Description - UPnP Device Host"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "Windows-Search"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Eventlog\Application\Windows Search Service"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Windows Search"
+         info: "Description - Windows Search"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Windows-Search"
+         value_type: POLICY_DWORD
+         value_data: 2
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Eventlog\Application\Windows Search Service"
+         reg_item: "Start"
+         info: "Title - Windows Search"
+         info: "Description - Windows Search"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Windows-Search"
+         info: "Title - Windows Search"
+         info: "Description - Windows Search"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Windows-Search"
+         info: "Title - Windows Search"
+         info: "Description - Windows Search"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "WMI-Performance-Adapter"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\wmiApSrv"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - WMI Performance Adapter"
+         info: "Description - WMI Performance Adapter"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "WMI-Performance-Adapter"
+         value_type: POLICY_DWORD
+         value_data: 3
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\wmiApSrv"
+         reg_item: "Start"
+         info: "Title - WMI Performance Adapter"
+         info: "Description - WMI Performance Adapter"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "WMI-Performance-Adapter"
+         info: "Title - WMI Performance Adapter"
+         info: "Description - WMI Performance Adapter"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "WMI-Performance-Adapter"
+         info: "Title - WMI Performance Adapter"
+         info: "Description - WMI Performance Adapter"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "Fax"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SYSTEM\CurrentControlSet\Services\Fax"
+         key_item: "Start"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Fax"
+         info: "Description - Enables you to send and receive faxes, utili ng fax resources available on this computer or on the network."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Fax"
+         value_type: POLICY_DWORD
+         value_data: 4
+         reg_key: "HKLM\SYSTEM\CurrentControlSet\Services\Fax"
+         reg_item: "Start"
+         info: "Title - Fax"
+         info: "Description - Enables you to send and receive faxes, utili ng fax resources available on this computer or on the network."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Fax"
+         info: "Title - Fax"
+         info: "Description - Enables you to send and receive faxes, utili ng fax resources available on this computer or on the network."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Fax"
+         info: "Title - Fax"
+         info: "Description - Enables you to send and receive faxes, utili ng fax resources available on this computer or on the network."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Mapper-IO-LLTDIO-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "EnableLLTDIO"
+         info: "Title - Turn on Mapper I/O (LLTDIO) driver"
+         info: "Description - This policy setting turns on the Mapper I/O network protocol driver. LLTDIO allows a computer to discover the topology of a network it's connected to."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Mapper-IO-LLTDIO-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "AllowLLTDIOOnDomain"
+         info: "Title - Turn on Mapper I/O (LLTDIO) driver"
+         info: "Description - This policy setting turns on the Mapper I/O network protocol driver. LLTDIO allows a computer to discover the topology of a network it's connected to."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Mapper-IO-LLTDIO-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "AllowLLTDIOOnPublicNet"
+         info: "Title - Turn on Mapper I/O (LLTDIO) driver"
+         info: "Description - This policy setting turns on the Mapper I/O network protocol driver. LLTDIO allows a computer to discover the topology of a network it's connected to."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Mapper-IO-LLTDIO-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "ProhibitLLTDIOOnPrivateNet"
+         info: "Title - Turn on Mapper I/O (LLTDIO) driver"
+         info: "Description - This policy setting turns on the Mapper I/O network protocol driver. LLTDIO allows a computer to discover the topology of a network it's connected to."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Turn-on-Mapper-IO-LLTDIO-driver"
+         info: "Title - Turn on Mapper I/O (LLTDIO) driver"
+         info: "Description - This policy setting turns on the Mapper I/O network protocol driver. LLTDIO allows a computer to discover the topology of a network it's connected to."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Turn-on-Mapper-IO-LLTDIO-driver"
+         info: "Title - Turn on Mapper I/O (LLTDIO) driver"
+         info: "Description - This policy setting turns on the Mapper I/O network protocol driver. LLTDIO allows a computer to discover the topology of a network it's connected to."
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Responder-RSPNDR-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "EnableRspndr"
+         info: "Title - Turn on Responder (RSPNDR) driver"
+         info: "Description - This policy setting turns on the Responder network protocol driver. The Responder allows a computer to participate in Link Layer Topology Discovery requests so that it can be discovered and located on the network."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Responder-RSPNDR-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "AllowRspndrOnDomain"
+         info: "Title - Turn on Responder (RSPNDR) driver"
+         info: "Description - This policy setting turns on the Responder network protocol driver. The Responder allows a computer to participate in Link Layer Topology Discovery requests so that it can be discovered and located on the network."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Responder-RSPNDR-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "AllowRspndrOnPublicNet"
+         info: "Title - Turn on Responder (RSPNDR) driver"
+         info: "Description - This policy setting turns on the Responder network protocol driver. The Responder allows a computer to participate in Link Layer Topology Discovery requests so that it can be discovered and located on the network."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Turn-on-Responder-RSPNDR-driver"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\LLTD"
+         reg_item: "ProhibitRspndrOnPrivateNet"
+         info: "Title - Turn on Responder (RSPNDR) driver"
+         info: "Description - This policy setting turns on the Responder network protocol driver. The Responder allows a computer to participate in Link Layer Topology Discovery requests so that it can be discovered and located on the network."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Turn-on-Responder-RSPNDR-driver"
+         info: "Title - Turn on Responder (RSPNDR) driver"
+         info: "Description - This policy setting turns on the Responder network protocol driver. The Responder allows a computer to participate in Link Layer Topology Discovery requests so that it can be discovered and located on the network."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Turn-on-Responder-RSPNDR-driver"
+         info: "Title - Turn on Responder (RSPNDR) driver"
+         info: "Description - This policy setting turns on the Responder network protocol driver. The Responder allows a computer to participate in Link Layer Topology Discovery requests so that it can be discovered and located on the network."
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-Off-Microsoft-Peer-to-Peer-Networking-Services"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\policies\Microsoft\Peernet"
+   reg_item: "Disabled"
+   info: "Title - Turn Off Microsoft Peer-to-Peer Networking Services"
+   info: "Description - This setting turns off Microsoft Peer-to-Peer Networking Services in its entirety, and will cause all dependent applications to stop working."
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Configuration-of-Wireless-Settings-Using-Windows-Connect-Now"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\WCN\UI"
+   reg_item: "DisableWcnUi"
+   info: "Title - Configuration of Wireless Settings Using Windows Connect Now"
+   info: "Description - Configuration of Wireless Settings Using Windows Connect Now"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"and">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Prohibit-Access-of-the-Windows-Connect-Now-Wizards"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\WCN\Registrars"
+         reg_item: "EnableRegistrars"
+         info: "Title - Prohibit Access of the Windows Connect Now Wizards"
+         info: "Description - Prohibit Access of the Windows Connect Now Wizards"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Prohibit-Access-of-the-Windows-Connect-Now-Wizards"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\WCN\Registrars"
+         reg_item: "DisableUPnPRegistrar"
+         info: "Title - Prohibit Access of the Windows Connect Now Wizards"
+         info: "Description - Prohibit Access of the Windows Connect Now Wizards"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Prohibit-Access-of-the-Windows-Connect-Now-Wizards"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\WCN\Registrars"
+         reg_item: "DisableFlashConfigRegistrar"
+         info: "Title - Prohibit Access of the Windows Connect Now Wizards"
+         info: "Description - Prohibit Access of the Windows Connect Now Wizards"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Prohibit-Access-of-the-Windows-Connect-Now-Wizards"
+         value_type: POLICY_DWORD
+         value_data: 1
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows\WCN\Registrars"
+         reg_item: "DisableWPDRegistrar"
+         info: "Title - Prohibit Access of the Windows Connect Now Wizards"
+         info: "Description - Prohibit Access of the Windows Connect Now Wizards"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Prohibit-Access-of-the-Windows-Connect-Now-Wizards"
+         info: "Title - Prohibit Access of the Windows Connect Now Wizards"
+         info: "Description - Prohibit Access of the Windows Connect Now Wizards"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Prohibit-Access-of-the-Windows-Connect-Now-Wizards"
+         info: "Title - Prohibit Access of the Windows Connect Now Wizards"
+         info: "Description - Prohibit Access of the Windows Connect Now Wizards"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Allow-remote-access-to-the-PnP-interface"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\DeviceInstall\Settings"
+   reg_item: "AllowRemoteRPC"
+   info: "Title - Allow remote access to the PnP interface"
+   info: "Description - Computer Configuration\Administrative Templates\System: Device Installation - Allow remote access to the PnP interface."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Do-not-create-system-restore-point-when-new-device-driver-installed"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\DeviceInstall\Settings"
+   reg_item: "DisableSystemRestore"
+   info: "Title - Do not create system restore point when new device driver installed"
+   info: "Description - Computer Configuration\Administrative Templates\System: Device Installation - Do not create system restore point when new device driver installed."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Do-not-send-Windows-Error-Report-when-generic-driver-is-installed-on-device"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\DeviceInstall\Settings"
+   reg_item: "DisableSendGenericDriverNotFoundToWER"
+   info: "Title - Do not send a Windows Error Report when a generic driver is installed on a device"
+   info: "Description - Computer Configuration\Administrative Templates\System: Device Installation - Do not send a Windows Error Report when a generic driver is installed on a device."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-Off-Windows-Update-Device-Driver-Search-Prompt"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\DriverSearching"
+   reg_item: "DontPromptForWindowsUpdate"
+   info: "Title - Turn Off Windows Update Device Driver Search Prompt"
+   info: "Description - Computer Configuration\Administrative Templates\System: Driver Installation - Turn Off Windows Update Device Driver Search Prompt."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Restrictions-for-Unauthenticated-RPC-clients"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Rpc"
+   reg_item: "RestrictRemoteClients"
+   info: "Title - Restrictions for Unauthenticated RPC clients"
+   info: "Description - Computer_Configuration - Administrative_Templates - System: Remote Assistance - Restrictions for Unauthenticated RPC clients."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-Off-Untrusted-Content"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Assistance\Client\1.0"
+   reg_item: "NoUntrustedContent"
+   info: "Title - Turn off Untrusted Content"
+   info: "Description - Specifies whether untrusted content is rendered. By default, the Help viewer renders untrusted assistance content pages with the exception of active links. Active links, such as ShellExecute and Guided Help, are rendered as text and are not clickable."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-off-downloading-enclosures"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Internet Explorer\Feeds"
+   reg_item: "DisableEnclosureDownload"
+   info: "Title - Turn off downloading of enclosures"
+   info: "Description - Turn off downloading of enclosures"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Set-client-connection-encryption-level"
+   value_type: POLICY_DWORD
+   value_data: 3
+   reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+   reg_item: "MinEncryptionLevel"
+   info: "Title - Set client connection encryption level"
+   info: "Description - Set client connection encryption level"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Disable-Logging"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting"
+   reg_item: "LoggingDisabled"
+   info: "Title - Disable Logging"
+   info: "Description - If this setting is enabled Windows Error Reporting events will not be logged to the system event log."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Disable-Windows-Error-Reporting"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting"
+   reg_item: "Disabled"
+   info: "Title - Disable Windows Error Reporting"
+   info: "Description - If this setting is enabled, Windows Error Reporting will not send any problem information to Microsoft. Additionally, solution information will not be available in the Problem Reports and Solutions control panel."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Do-Not-Send-Additional-Data"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting"
+   reg_item: "DontSendAdditionalData"
+   info: "Title - Do Not Send Additional Data"
+   info: "Description - If this setting is enabled any additional data requests from Microsoft in response to a Windows Error Reporting event will be automatically declined without notice to the user."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-off-heap-termination-corruption"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\Explorer"
+   reg_item: "NoHeapTerminationOnCorruption"
+   info: "Title - Turn off Heap termination on corruption"
+   info: "Description - Turn off Heap termination on corruption"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-off-shell-protocol-protected-mode"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\Explorer"
+   reg_item: "NoHeapTerminationOnCorruption"
+   info: "Title - Turn off shell protocol protected mode"
+   info: "Description - Turn off shell protocol protected mode"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Disable-IE-security-prompt-Windows-Installer-scripts"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\Installer"
+   reg_item: "SafeForScripting"
+   info: "Title - Disable IE security prompt for Windows Installer scripts"
+   info: "Description - Disable IE security prompt for Windows Installer scripts"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Enable-User-Control-over-installs"
+   value_type: POLICY_DWORD
+   value_data: 0
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\Installer"
+   reg_item: "EnableUserControl"
+   info: "Title - Enable user control over installs"
+   info: "Description - Permits users to change installation options that typically are available only to system administrators. This setting bypasses some of the security features of Windows Installer."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Prohibit-Non-Administrators-applying-vendorpatches"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\Installer"
+   reg_item: "DisableLUAPatching"
+   info: "Title - Prohibit non-administrators from applying vendor signed updates"
+   info: "Description - This setting controls the ability of non-administrators to install updates that have been digitally signed by the application vendor."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Report-logon-server-not-available-during-user-logon"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+   reg_item: "ReportControllerMissing"
+   info: "Title - Report Logon Server Not Available During User logon"
+   info: "Description - This setting controls the ability of non-administrators to install updates that have been digitally signed by the application vendor."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-off-communication-features"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows Mail"
+   reg_item: "DisableCommunities"
+   info: "Title - Turn off the communitication features"
+   info: "Description - Windows Mail will not check your newsgroup servers for Communities support."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Prevent-Windows-Media-DRM-Internet-Access"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\WMDRM"
+   reg_item: "DisableOnline"
+   info: "Title - Prevent Windows Media DRM Internet Access"
+   info: "Description - Prevents Windows Media Digital Rights Management (DRM) from accessing the Internet (or intranet). When enabled, Windows Media DRM is prevented from accessing the Internet (or intranet) for license acquisition and security upgrades."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-off-windows-meeting-space"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Policies\Microsoft\Windows\Windows Collaboration"
+   reg_item: "TurnOffWindowsCollaboration"
+   info: "Title - Turn off Windows Meeting Space"
+   info: "Description - Windows Meeting Space is a feature that enables quick, face-to-face collaboration for sharing programs and handouts and for passing notes. If you enable this setting, Windows Meeting Space will be turned off."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Disable-unpacking-installation-gadgets-not-digitally-signed"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar"
+   reg_item: "TurnOffUnsignedGadgets"
+   info: "Title - Disable unpacking and installation of gadgets that are not digitally signed"
+   info: "Description - Sidebar gadgets can be deployed as compressed files, either digitally signed or unsigned. If you enable this setting, Windows Sidebar will not extract any gadgets that have not been digitally signed. If you disable or do not configure this setting, Window"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "Override-more-gadgets-Lnk"
+         value_type: POLICY_TEXT
+         value_data: ".+"
+         check_type: CHECK_REGEX
+         reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar"
+         reg_item: "OverrideMoreGadgetsLink"
+         info: "Title - Override the More Gadgets Lnk"
+         info: "Description - Override the More Gadgets Lnk"
+      </custom_item>
+      <custom_item>
+         type: REG_CHECK
+         description: "Override-more-gadgets-Lnk"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar"
+         key_item: "OverrideMoreGadgetsLink"
+         reg_option: MUST_EXIST
+         info: "Title - Override the More Gadgets Lnk"
+         info: "Description - Override the More Gadgets Lnk"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "Override-more-gadgets-Lnk"
+         info: "Title - Override the More Gadgets Lnk"
+         info: "Description - Override the More Gadgets Lnk"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "Override-more-gadgets-Lnk"
+         info: "Title - Override the More Gadgets Lnk"
+         info: "Description - Override the More Gadgets Lnk"
+      </report>
+   </else>
+</if>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Turn-off-user-installed-windows-sidebar-gidgets"
+   value_type: POLICY_DWORD
+   value_data: 1
+   reg_key: "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar"
+   reg_item: "TurnOffUserInstalledGadgets"
+   info: "Title - Turn Off User Installed Windows Sidebar Gidgets"
+   info: "Description - Turn Off User Installed Windows Sidebar Gidgets"
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<custom_item>
+   type: REGISTRY_SETTING
+   description: "Screen-Saver-timeout"
+   value_type: POLICY_TEXT
+   value_data: "900"
+   reg_key: "HKCU\Software\Policies\Microsoft\Windows\Control Panel\Desktop"
+   reg_item: "ScreenSaveTimeOut"
+   info: "Title - Screen Saver timeout"
+   info: "Description - Specifies how much user idle time must elapse before the screen saver is launched. When configured, this idle time can be set from a minimum of 1 second to a maximum of 86,400 seconds, or 24 hours. If set to zero, the screen saver will not be started."
+   reg_option: CAN_NOT_BE_NULL
+</custom_item>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "set-timelimit-for-active-but-idle-TerminalServices-sessions"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+         reg_option: MUST_EXIST
+         info: "Title - Set a time limit for active but idle Terminal Services sessions"
+         info: "Description - This policy setting allows you to specify the maximum amount of time that an active Terminal Services session can be idle (without user input) before it is automatically disconnected. (15 min)"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "set-timelimit-for-active-but-idle-TerminalServices-sessions"
+         value_type: POLICY_DWORD
+         value_data: 900
+         reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+         reg_item: "MaxIdleTime"
+         info: "Title - Set a time limit for active but idle Terminal Services sessions"
+         info: "Description - This policy setting allows you to specify the maximum amount of time that an active Terminal Services session can be idle (without user input) before it is automatically disconnected. (15 min)"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "set-timelimit-for-active-but-idle-TerminalServices-sessions"
+         info: "Title - Set a time limit for active but idle Terminal Services sessions"
+         info: "Description - This policy setting allows you to specify the maximum amount of time that an active Terminal Services session can be idle (without user input) before it is automatically disconnected. (15 min)"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "set-timelimit-for-active-but-idle-TerminalServices-sessions"
+         info: "Title - Set a time limit for active but idle Terminal Services sessions"
+         info: "Description - This policy setting allows you to specify the maximum amount of time that an active Terminal Services session can be idle (without user input) before it is automatically disconnected. (15 min)"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "set-timelimit-for-disconnected-sessions"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+         reg_option: MUST_EXIST
+         info: "Title - Set a time limit for disconnected sessions"
+         info: "Description - You can use this policy setting to specify the maximum amount of time that a disconnected session is kept active on the server. By default, Terminal Services allows users to disconnect from a remote session without logging off and ending the session.  (1 min)"
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "set-timelimit-for-disconnected-sessions"
+         value_type: POLICY_DWORD
+         value_data: 60
+         reg_key: "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+         reg_item: "MaxDisconnectionTime"
+         info: "Title - Set a time limit for disconnected sessions"
+         info: "Description - You can use this policy setting to specify the maximum amount of time that a disconnected session is kept active on the server. By default, Terminal Services allows users to disconnect from a remote session without logging off and ending the session.  (1 min)"
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "set-timelimit-for-disconnected-sessions"
+         info: "Title - Set a time limit for disconnected sessions"
+         info: "Description - You can use this policy setting to specify the maximum amount of time that a disconnected session is kept active on the server. By default, Terminal Services allows users to disconnect from a remote session without logging off and ending the session.  (1 min)"
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "set-timelimit-for-disconnected-sessions"
+         info: "Title - Set a time limit for disconnected sessions"
+         info: "Description - You can use this policy setting to specify the maximum amount of time that a disconnected session is kept active on the server. By default, Terminal Services allows users to disconnect from a remote session without logging off and ending the session.  (1 min)"
+      </report>
+   </else>
+</if>
+
+<if>
+   <condition type:"or">
+      <custom_item>
+         type: REG_CHECK
+         description: "configure-ms-spynet-reporting"
+         value_type: POLICY_TEXT
+         value_data: "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet"
+         reg_option: MUST_NOT_EXIST
+         info: "Title - Configure Microsoft SpyNet Reporting"
+         info: "Description - When Windows Defender detects software or changes by software not yet classified for risks, you see how other members responded to the alert. In turn, the action you apply help other members choose how to respond. Your actions also help Microsoft choose which software to investigate for potential threats. You can choose to send basic or additional information about detected software. Additional information helps improve how Windows Defender works. It can include, for example, the location of detected items on your computer if harmful software has been removed. Windows Defender will automatically collect and send the information."
+      </custom_item>
+      <custom_item>
+         type: REGISTRY_SETTING
+         description: "configure-ms-spynet-reporting"
+         value_type: POLICY_DWORD
+         value_data: 0
+         reg_key: "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet"
+         reg_item: "SpyNetReporting"
+         info: "Title - Configure Microsoft SpyNet Reporting"
+         info: "Description - When Windows Defender detects software or changes by software not yet classified for risks, you see how other members responded to the alert. In turn, the action you apply help other members choose how to respond. Your actions also help Microsoft choose which software to investigate for potential threats. You can choose to send basic or additional information about detected software. Additional information helps improve how Windows Defender works. It can include, for example, the location of detected items on your computer if harmful software has been removed. Windows Defender will automatically collect and send the information."
+      </custom_item>
+   </condition>
+   <then>
+      <report type:"PASSED">
+         description: "configure-ms-spynet-reporting"
+         info: "Title - Configure Microsoft SpyNet Reporting"
+         info: "Description - When Windows Defender detects software or changes by software not yet classified for risks, you see how other members responded to the alert. In turn, the action you apply help other members choose how to respond. Your actions also help Microsoft choose which software to investigate for potential threats. You can choose to send basic or additional information about detected software. Additional information helps improve how Windows Defender works. It can include, for example, the location of detected items on your computer if harmful software has been removed. Windows Defender will automatically collect and send the information."
+      </report>
+   </then>
+   <else>
+      <report type:"FAILED">
+         description: "configure-ms-spynet-reporting"
+         info: "Title - Configure Microsoft SpyNet Reporting"
+         info: "Description - When Windows Defender detects software or changes by software not yet classified for risks, you see how other members responded to the alert. In turn, the action you apply help other members choose how to respond. Your actions also help Microsoft choose which software to investigate for potential threats. You can choose to send basic or additional information about detected software. Additional information helps improve how Windows Defender works. It can include, for example, the location of detected items on your computer if harmful software has been removed. Windows Defender will automatically collect and send the information."
+      </report>
+   </else>
+</if>
+
+
+#####CPE checking
+<report type: "PASSED">
+description: "CPE Platform Check"
+</report>
+</then>
+<else>
+<report type: "WARNING">
+description: "CPE Platform Check"
+</report>
+</else>
+</if>
+#####CPE checking
+
+
+   </group_policy>
+   </check_type>

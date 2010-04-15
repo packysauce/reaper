@@ -1,0 +1,9 @@
+<li><a href="{% url compliance_policies %}">Policy Manager</a></li>
+<li><a href="{% url compliance_scans %}">Scan Manager</a></li>
+{% ifequal subtitle 'Scans' %}
+<li>
+    <ul>
+        <li>Create Scan</li>
+    </ul>
+</li>
+{% endifequal %}

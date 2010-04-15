@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script>
+    $(document).ready(function() {
+        $('tr.result').toggle(
+            function() {
+                $(this).next().show();
+            },
+            function() {
+                $(this).next().hide();
+            }
+        );
+        $('#toggle_form').toggle(
+            function() {
+                $('#upload_form').slideDown();
+            },
+            function() {
+                $('#upload_form').slideUp();
+            }
+        );
+    });
+</script>
+{% endblock %}
+
+{% block sidebar %}
+{% include 'compliance_sidebar.html' %}
+{% endblock %}
+
+{% block main_body %}
+<h1>Compliance Scan Policies</h1>
+{% for message in messages %}
+    {% if forloop.first %}
+    <ul id="messages">
+    {% endif %}
+        <li class="warning"> {{ message }} </li>
+    {% if forloop.last %}
+    </ul>
+    {% endif %}
+{% endfor %}
+
+<h2>Upload new policy <a id='toggle_form' href="#">[+]</a></h2>
+<div class='hidden' id='upload_form'>
+    <form method='post' action='{% url compliance_policy_upload %}' enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td>
+                    <label for='filename'>Policy Name</label>
+                </td>
+                <td>
+                    <input style="width: 150px;" id='filename' type='text' size=255 name='filename'></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for='type'>Policy Type</label>
+                </td>
+                <td>
+                    <select name='type' id='type'>
+                        {% for k,v in policy_types %}
+                        <option value='{{k}}'>{{ v }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for='file'>Select File</label>
+                </td>
+                <td>
+                    <input id='file' type='file' name='file'></input>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <input style='float: right;' type="submit" value="Upload" name="btnUpload"></input>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<h2>Existing Policies</h2>
+{% for policy in policies %}
+    {% if forloop.first %}
+    <table class='block'>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Uploaded</th>
+        </tr>
+    {% endif %}
+        <tr class='result'>
+            <td>{{policy.name}}</td>
+            <td>{{policy.get_type_display}}</td>
+            <td>{{policy.timestamp|date:'F j, Y'}}</td>
+        </tr>
+        <tr style='background-color: #E4DFD1;' class='hidden'>
+            <td colspan=3>
+                <a style='float: right;' href="{% url compliance_policy_delete policy.id %}">Delete</a>
+                <p>
+                <a href="{% url compliance_policy_download policy.id %}">Download</a><br>
+                SHA: {{ policy.hash }}
+                </p>
+            </td>
+        </tr>
+    {% if forloop.last %}
+    </table>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

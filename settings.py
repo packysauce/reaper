@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'reaper.scans',
     'reaper.userprofile',
     'reaper.subscriptions',
+    'reaper.compliance',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
