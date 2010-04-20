@@ -3,7 +3,9 @@
 {% ifequal subtitle 'Scans' %}
 <li>
     <ul>
-        <li>Create Scan</li>
+        <li><a href="{% url compliance_scan_schedule %}">Schedule</a></li>
+        <li>Configurations</li>
+        <li>Templates</li>
     </ul>
 </li>
 {% endifequal %}

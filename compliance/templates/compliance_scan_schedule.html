@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% load utils %}
+
+{% block extra_head %}
+<script>
+    $(document).ready(function () {
+        $('#show_scheduler').toggle(
+            function() {
+                $('#schedule_form').slideDown();
+            },
+            function() {
+                $('#schedule_form').slideUp();
+            }
+        );
+    });
+</script>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'compliance_sidebar.html' %}
+{% endblock %}
+
+{% block main_body %}
+<h1>Compliance Scan Schedules</h1>
+{% comment %}
+{% for message in messages %}
+    {% if forloop.first %}
+        <ul id="messages">
+    {% endif %}
+        <li class="warning"> {{ message }} </li>
+    {% if forloop.last %}
+        </ul>
+    {% endif %}
+{% endfor %}
+{% endcomment %}
+<h2>Schedule New Scan <a id='show_scheduler' href="#">[+]</a></h2>
+<div class='hidden' id="schedule_form">
+    <form action='{% url compliance_create_scan_schedule %}' method='POST'>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th></th>
+                <th>M</th>
+                <th>Tu</th>
+                <th>W</th>
+                <th>Th</th>
+                <th>F</th>
+                <th>Sa</th>
+                <th>Su</th>
+                <th></th>
+                <th>Time</th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="name"></input>
+                </td>
+                <td style="width: 20px;"></td>
+                <td>
+                    <input type='checkbox' name='mon'></input>
+                </td>
+                <td>
+                    <input type='checkbox' name='tue'></input>
+                </td>
+                <td>
+                    <input type='checkbox' name='wed'></input>
+                </td>
+                <td>
+                    <input type='checkbox' name='thu'></input>
+                </td>
+                <td>
+                    <input type='checkbox' name='fri'></input>
+                </td>
+                <td>
+                    <input type='checkbox' name='sat'></input>
+                </td>
+                <td>
+                    <input type='checkbox' name='sun'></input>
+                </td>
+                <td style="width: 20px;"></td>
+                <td>
+                    <select name='hour'>
+                        {% for i in 24|nrange %}
+                            <option value='{{ i }}'>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name='minute'>
+                        {% for i in 60|nrange:15 %}
+                            <option value='{{ i }}'>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            <tr>
+                <td colspan=11>
+                    <input style="float: right;" type="submit" value="Submit"></input>
+                </td>
+            </td>
+        </table>
+    </form>
+</div>
+<h2>Scheduled Scans</h2>
+<table class='block'>
+    <tr>
+        <th>Name</th>
+        <th>Time</th>
+        <th>M</th>
+        <th>Tu</th>
+        <th>W</th>
+        <th>Th</th>
+        <th>F</th>
+        <th>Sa</th>
+        <th>Su</th>
+    </tr>
+{% for schedule in schedules %}
+    <tr>
+        <td>{{ schedule.name }}</td>
+        <td>{{ schedule.time }}</td>
+        {% if schedule.monday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+        {% if schedule.tuesday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+        {% if schedule.wednesday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+        {% if schedule.thursday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+        {% if schedule.friday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+        {% if schedule.saturday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+        {% if schedule.sunday %}
+            <td><img src="{{MEDIA_URL}}images/bullet-green-14x14.gif"></td>
+        {% else %}
+            <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
+        {% endif %}
+    </tr>
+{% empty %}
+    <tr>
+        <td style='text-align: center;' colspan=9>
+            No scans are scheduled
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

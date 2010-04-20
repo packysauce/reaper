@@ -37,3 +37,15 @@ class Result(models.Model):
     plugin = models.ForeignKey('plugins.Plugin')
     type = models.CharField(max_length = 25)
     description = models.TextField()
+
+class ScheduledScan(models.Model):
+    scan = models.ForeignKey('compliance.Scan', null=True)
+    name = models.CharField(max_length=80)
+    time = models.TimeField()
+    sunday = models.BooleanField(default=False)
+    monday = models.BooleanField(default=False)
+    tuesday = models.BooleanField(default=False)
+    wednesday = models.BooleanField(default=False)
+    thursday = models.BooleanField(default=False)
+    friday = models.BooleanField(default=False)
+    saturday = models.BooleanField(default=False)
