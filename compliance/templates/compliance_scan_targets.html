@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script>
+    $(document).ready(function() {
+        $('tr.result').toggle(
+            function() {
+                $(this).next().show();
+            },
+            function() {
+                $(this).next().hide();
+            }
+        );
+        $('#show-new').toggle(
+            function() {
+                $('#newform').show();
+            },
+            function() {
+                $('#newform').hide();
+            }
+        );
+    });
+</script>
+{% endblock %}
+
+{% block sidebar %}
+{% include 'compliance_sidebar.html' %}
+{% endblock %}
+
+{% block main_body %}
+<h1>Compliance Scan Targets</h1>
+<h2>New Target Definition <a href="#" id='show-new'>[+]</a></h2>
+<div style='margin-left: 10px;' id='newform' class='hidden'>
+    <form action='{% url compliance_create_targets %}' method='POST'>
+        <label style='margin-right: 1em;' for='name'>Name</label><input name='name' type='text'></input><br/>
+        <br/>
+        <label for='targetdata'>Targets data</label><br/>
+        <textarea style="width: 40em; height: 20em;" name='targetdata'></textarea>
+        <br/>
+        <input type='submit' value='Submit'/>
+    </form>
+</div>
+
+<h2>Existing Targets</h2>
+<table class='block'>
+    {% for target in targets %}
+    {% if forloop.first %}
+    <tr>
+        <th>Name</th>
+        <th>Hash</th>
+    </tr>
+    {% endif %}
+    <tr class='result'>
+        <td>{{ target.name }}</td>
+        <td>{{ target.hash }}</td>
+    </tr>
+    <tr class='hidden'>
+        <td colspan=2 class='result'>
+            <a style='float: right;' href="{% url compliance_delete_targets target.id %}">Delete</a>
+            <pre class="safe">
+{{ target.targets }}
+            </pre>
+        </td>
+    </tr>
+
+    {% empty %}
+    <tr>
+        <td style='text-align: center;' colspan=4>
+            There are no target definitions
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %} 

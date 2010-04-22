@@ -170,9 +170,11 @@ tr.result:hover {
     background-color: lightyellow;
 }
 
-tr.hidden > td.textresult {
-    white-space: pre-wrap;   
-    width: 40px;
+tr.hidden > td.result {
     background-color: #E4DFD1;
 }
 
+h1.message {
+    background-color: #000;
+    color: #fff;
+}

@@ -13,7 +13,7 @@ def index(request):
 
     render_dict = {
             'pagetitle': 'Compliance',
-            'results': Result.objects.all().order_by('-scan__stop'),
+            'results': Result.objects.all() #.order_by('-scan__stop'),
             #'results': Result.objects.filter( scan__stop__gte = dt.date.today() - dt.timedelta(days=7) ),
             }
 
@@ -90,3 +90,32 @@ def scan_schedules(request):
             }
 
     return render_to_response('compliance_scan_schedule.html', render_dict, context_instance=RequestContext(request))
+
+@user_passes_test(lambda u: u.is_staff == 1)
+def scan_configurations(request):
+    render_dict = {
+            'pagetitle': 'Compliance',
+            'subtitle': 'Scans',
+            }
+
+    return render_to_response('compliance_scan_configurations.html', render_dict, context_instance=RequestContext(request))
+
+@user_passes_test(lambda u: u.is_staff == 1)
+def scan_targets(request):
+    render_dict = {
+            'pagetitle': 'Compliance',
+            'subtitle': 'Scans',
+            'targets': Target.objects.all(),
+            }
+
+    return render_to_response('compliance_scan_targets.html', render_dict, context_instance=RequestContext(request))
+
+@user_passes_test(lambda u: u.is_staff == 1)
+def scan_templates(request):
+    render_dict = {
+            'pagetitle': 'Compliance',
+            'subtitle': 'Scans',
+            'templates': Template.objects.all(),
+            }
+
+    return render_to_response('compliance_scan_templates.html', render_dict, context_instance=RequestContext(request))

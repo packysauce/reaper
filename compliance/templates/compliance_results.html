@@ -42,8 +42,10 @@
             <td>{{ i.description|truncatewords:5 }}</td>
         </tr>
         <tr class="hidden">
-            <td class='textresult' colspan=4>
+            <td class='result' colspan=4>
+            <pre width=75 class="safe">
 {{i.description}}
+            </pre>
             </td>
         </tr>
     {% empty %}

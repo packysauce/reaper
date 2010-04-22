@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+{% include 'compliance_sidebar.html' %}
+{% endblock %}
+
+{% block main_body %}
+<h1>Compliance Scan Configurations</h1>
+<h2>New Scan Configuration <a href="#" id='show-new'>[+]</a></h2>
+<h2>Existing Scan Configurations</h2>
+<table class='block'>
+{% for config in configs %}
+    {% if forloop.first %}
+    <tr>
+        <th>Name</th>
+        <th># Plugins</th>
+        <th># Policies</th>
+        <th>Template Name</th>
+    </tr>
+    {% endif %}
+    <tr>
+        <td>{{ config.name }}</td>
+        <td>{{ config.plugin_set.count }}</td>
+        <td>{{ config.policy_set.count }}</td>
+        <td>{{ config.template__name }}</td>
+    </tr> 
+    {% empty %}
+    <tr>
+        <td style='text-align: center;' colspan=4>
+            There are no scan configurations
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

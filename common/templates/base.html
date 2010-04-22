@@ -15,11 +15,38 @@
         <script src="{{MEDIA_URL}}scripts/jquery.delegate.js" type="text/javascript"></script>
         <script src="{{MEDIA_URL}}scripts/jquery.dimensions.js" type="text/javascript"></script>
         <script src="{{MEDIA_URL}}scripts/jquery.tooltip.min.js" type="text/javascript"></script>
+        <script src="{{MEDIA_URL}}scripts/jquery.blockui.js" type="text/javascript"></script>
+        <script>
+            $(document).ready(function() { 
+                var messages = {% if messages %}true{% else %}false{% endif %};
+                if (messages) {
+                    $.blockUI({
+                        message: $('#message-block'),
+                        css: { 
+                            border: 'none', 
+                            padding: '15px', 
+                            backgroundColor: '#000', 
+                            '-webkit-border-radius': '10px', 
+                            '-moz-border-radius': '10px', 
+                            opacity: 1, 
+                            color: '#fff' 
+                    } }); 
+
+                    $('.blockUI').attr('title','Click to proceed').click($.unblockUI);
+                    //setTimeout($.unblockUI, 2000);
+                }
+            }); 
+        </script>
         {% block extra_head %}
         {% endblock %}
     </head>
 
     <body>
+        <div id="message-block" class='hidden'>
+            {% for message in messages %}
+            <h1 class='message'>{{ message }}</h1>
+            {% endfor %}
+        </div>
         <!-- Page Header -->
         <div id="banner">
             <div class="lefth">

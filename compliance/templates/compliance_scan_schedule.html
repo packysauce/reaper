@@ -5,6 +5,14 @@
 {% block extra_head %}
 <script>
     $(document).ready(function () {
+        $('tr.result').toggle(
+            function() {
+                $(this).next().show();
+            },
+            function() {
+                $(this).next().hide();
+            }
+        );
         $('#show_scheduler').toggle(
             function() {
                 $('#schedule_form').slideDown();
@@ -112,7 +120,7 @@
         <th>Su</th>
     </tr>
 {% for schedule in schedules %}
-    <tr>
+    <tr class='result'>
         <td>{{ schedule.name }}</td>
         <td>{{ schedule.time }}</td>
         {% if schedule.monday %}
@@ -150,6 +158,11 @@
         {% else %}
             <td><img src="{{MEDIA_URL}}images/bullet-grey-14x14.gif"></td>
         {% endif %}
+    </tr>
+    <tr class='hidden'>
+        <td class='result' colspan=9>
+            <a style='float: right;' href="#">Delete</a>
+        </td>
     </tr>
 {% empty %}
     <tr>

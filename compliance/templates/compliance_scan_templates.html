@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script>
+    $(document).ready(function() {
+        $('tr.result').toggle(
+            function() {
+                $(this).next().show();
+            },
+            function() {
+                $(this).next().hide();
+            }
+        );
+        $('#show-new').toggle(
+            function() {
+                $('#newform').show();
+            },
+            function() {
+                $('#newform').hide();
+            }
+        );
+    });
+</script>
+{% endblock %}
+
+{% block sidebar %}
+{% include 'compliance_sidebar.html' %}
+{% endblock %}
+
+{% block main_body %}
+<h1>Compliance Scan Templates</h1>
+<h2>New Template <a href="#" id='show-new'>[+]</a></h2>
+<div style='margin-left: 10px;' id='newform' class='hidden'>
+    <form action='{% url compliance_create_template %}' method='POST'>
+        <label style='margin-right: 1em;' for='name'>Name</label><input name='name' type='text'></input><br/>
+        <br/>
+        <label for='data'>Template data</label><br/>
+        <textarea style="width: 40em; height: 20em;" name='data'></textarea>
+        <br/>
+        <input type='submit' value='Submit'/>
+    </form>
+</div>
+
+<h2>Existing Templates</h2>
+<table class='block'>
+    {% for template in templates %}
+    {% if forloop.first %}
+    <tr>
+        <th>Name</th>
+        <th>Hash</th>
+    </tr>
+    {% endif %}
+    <tr class='result'>
+        <td>{{ template.name }}</td>
+        <td>{{ template.hash }}</td>
+    </tr>
+    <tr class='hidden'>
+        <td colspan=2 class='result'>
+            <a style='float: right;' href="{% url compliance_delete_template template.id %}">Delete</a>
+            <pre class="safe">
+{{ template.data }}
+            </pre>
+        </td>
+    </tr>
+
+    {% empty %}
+    <tr>
+        <td style='text-align: center;' colspan=4>
+            There are no templates
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %} 

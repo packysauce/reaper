@@ -1,11 +1,14 @@
+<li><a href="{% url compliance %}">Scan Results</a></li>
+<li><hr></li>
 <li><a href="{% url compliance_policies %}">Policy Manager</a></li>
 <li><a href="{% url compliance_scans %}">Scan Manager</a></li>
 {% ifequal subtitle 'Scans' %}
 <li>
     <ul>
         <li><a href="{% url compliance_scan_schedule %}">Schedule</a></li>
-        <li>Configurations</li>
-        <li>Templates</li>
+        <li><a href="{% url compliance_scan_configurations %}">Configurations</a></li>
+        <li><a href="{% url compliance_scan_targets %}">Targets</a></li>
+        <li><a href="{% url compliance_scan_templates %}">Templates</a></li>
     </ul>
 </li>
 {% endifequal %}

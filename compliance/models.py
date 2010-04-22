@@ -12,12 +12,12 @@ class Policy(models.Model):
     data = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
-    hash = models.CharField(max_length=40)
+    hash = models.CharField(max_length=40, unique=True)
 
 class Template(models.Model):
     name = models.CharField(max_length=255)
     data = models.TextField()
-    hash = models.CharField(max_length=40)
+    hash = models.CharField(max_length=40, unique=True)
 
 class ScanConfig(models.Model):
     name = models.CharField(max_length=255)
@@ -25,9 +25,14 @@ class ScanConfig(models.Model):
     policies = models.ManyToManyField('compliance.Policy')
     template = models.ForeignKey('compliance.Template')
 
+class Target(models.Model):
+    name = models.CharField(max_length=255)
+    targets = models.TextField()
+    hash = models.CharField(max_length=40, unique=True)
+
 class Scan(models.Model):
     scan_config = models.ForeignKey('compliance.ScanConfig')
-    targets = models.TextField() #can't decide if I should m2m this with ip address... seems like that could get hairy fast
+    targets = models.ForeignKey('compliance.Target')
     start = models.DateTimeField()
     stop = models.DateTimeField()
 
@@ -40,6 +45,8 @@ class Result(models.Model):
 
 class ScheduledScan(models.Model):
     scan = models.ForeignKey('compliance.Scan', null=True)
+    scan_config = models.ForeignKey('compliance.ScanConfig')
+    targets = models.ForeignKey('compliance.Target')
     name = models.CharField(max_length=80)
     time = models.TimeField()
     sunday = models.BooleanField(default=False)
