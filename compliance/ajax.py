@@ -112,3 +112,65 @@ def delete_template(request, id):
         return HttpResponseRedirect( reverse('compliance_scan_templates') )
 
     return HttpResponseRedirect( reverse('compliance_scan_templates') )
+
+@user_passes_test(lambda u: u.is_staff == 1)
+def create_scanconfig(request):
+    if not request.POST.has_key('name') or not request.POST['name']:
+        request.user.message_set.create(message='You must include a name for the new configuration')
+        return HttpResponseRedirect( reverse('compliance_scan_configurations') )
+    if not request.POST.has_key('template') or request.POST['template'] == '-1' or not re.match('-?\d+', request.POST['template']):
+        request.user.message_set.create(message='You must select a template to use for this configuration')
+        return HttpResponseRedirect( reverse('compliance_scan_configurations') )
+
+    has_policy = False
+    for i in range(5):
+        if request.POST.has_key('wi-policies%s' % str(i)) and request.POST['wi-policies%s' % str(i)] != '-1':
+            has_policy = True
+    for i in range(5):
+        if request.POST.has_key('wf-policies%s' % str(i)) and request.POST['wi-policies%s' % str(i)] != '-1':
+            has_policy = True
+    for i in range(5):
+        if request.POST.has_key('un-policies%s' % str(i)) and request.POST['wi-policies%s' % str(i)] != '-1':
+            has_policy = True
+    for i in range(5):
+        if request.POST.has_key('db-policies%s' % str(i)) and request.POST['wi-policies%s' % str(i)] != '-1':
+            has_policy = True
+
+    if not has_policy:
+        request.user.message_set.create(message="You must select at least one policy for a compliance scan.")
+        return HttpResponseRedirect( reverse('compliance_scan_configurations') )
+
+    #select the necessary plugins here
+    # 21156 - windows checks
+    # 21157 - Unix checks
+    # 33814 - db checks
+    # 24760 - windows file checks
+    windows_plugin = Plugin.objects.filter(nessus_id=21156).latest()
+    unix_plugin = Plugin.objects.filter(nessus_id=21157).latest()
+    db_plugin = Plugin.objects.filter(nessus_id=33814).latest()
+    windows_file_plugin = Plugin.objects.filter(nessus_id=24760).latest()
+
+    try:
+        new_config = ScanConfig()
+        new_config.plugin_set.add(windows_plugin)
+        new_config.plugin_set.add(unix_plugin)
+        new_config.plugin_set.add(db_plugin)
+        new_config.plugin_set.add(windows_file_plugin)
+
+        new_config.name = request.POST['name']
+        new_config.template = Template.objects.get(id=int(request.POST['template']))
+        new_config.save()
+    except Exception, e:
+        request.user.message_set.create(message="Unable to create new scan config: %s" % str(e))
+
+    return HttpResponseRedirect( reverse('compliance_scan_configurations') )
+
+@user_passes_test(lambda u: u.is_staff == 1)
+def delete_scanconfig(request, id):
+    try:
+        ScanConfig.objects.get(id=id).delete()
+    except Exception, e:
+        request.user.message_set.create(message='Error: %s' % str(e))
+        return HttpResponseRedirect( reverse('compliance_scan_configurations') )
+
+    return HttpResponseRedirect( reverse('compliance_scan_configurations') )

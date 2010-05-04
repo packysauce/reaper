@@ -178,3 +178,7 @@ h1.message {
     background-color: #000;
     color: #fff;
 }
+
+td.group-select > select {
+    display: block;
+}

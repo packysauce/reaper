@@ -2,6 +2,7 @@ from django.http import *
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from compliance.models import *
+from plugins.models import *
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 import datetime as dt
 from django.core.urlresolvers import reverse
@@ -28,6 +29,9 @@ def policy_manager(request):
             'policy_types': Policy.TYPE_CHOICES,
             'policies': Policy.objects.all().order_by('-timestamp', 'name'),
             }
+
+    if request.GET.has_key('show_add_form') and request.GET['show_add_form'] == '1':
+        render_dict['show_new'] = True
 
     return render_to_response('compliance_policies.html', render_dict, context_instance=RequestContext(request))
 
@@ -88,6 +92,9 @@ def scan_schedules(request):
             'subtitle': 'Scans',
             'schedules': ScheduledScan.objects.all().order_by('name'),
             }
+    
+    if request.GET.has_key('show_add_form') and request.GET['show_add_form'] == '1':
+        render_dict['show_new'] = True
 
     return render_to_response('compliance_scan_schedule.html', render_dict, context_instance=RequestContext(request))
 
@@ -96,7 +103,15 @@ def scan_configurations(request):
     render_dict = {
             'pagetitle': 'Compliance',
             'subtitle': 'Scans',
+            'wi_policies': Policy.objects.filter(type="WI").order_by('name'),
+            'wf_policies': Policy.objects.filter(type="WF").order_by('name'),
+            'un_policies': Policy.objects.filter(type="UN").order_by('name'),
+            'db_policies': Policy.objects.filter(type="DB").order_by('name'),
+            'configs': ScanConfig.objects.all().order_by('name'),
             }
+
+    if request.GET.has_key('show_add_form') and request.GET['show_add_form'] == '1':
+        render_dict['show_new'] = True
 
     return render_to_response('compliance_scan_configurations.html', render_dict, context_instance=RequestContext(request))
 
@@ -107,6 +122,8 @@ def scan_targets(request):
             'subtitle': 'Scans',
             'targets': Target.objects.all(),
             }
+    if request.GET.has_key('show_add_form') and request.GET['show_add_form'] == '1':
+        render_dict['show_new'] = True
 
     return render_to_response('compliance_scan_targets.html', render_dict, context_instance=RequestContext(request))
 
@@ -117,5 +134,8 @@ def scan_templates(request):
             'subtitle': 'Scans',
             'templates': Template.objects.all(),
             }
+
+    if request.GET.has_key('show_add_form') and request.GET['show_add_form'] == '1':
+        render_dict['show_new'] = True
 
     return render_to_response('compliance_scan_templates.html', render_dict, context_instance=RequestContext(request))

@@ -13,7 +13,7 @@
                 $(this).next().hide();
             }
         );
-        $('#show_scheduler').toggle(
+        $('#show-new').toggle(
             function() {
                 $('#schedule_form').slideDown();
             },
@@ -21,6 +21,9 @@
                 $('#schedule_form').slideUp();
             }
         );
+    {% if show_new %}
+    $('#show-new').click();
+    {% endif %}
     });
 </script>
 {% endblock %}
@@ -31,18 +34,7 @@
 
 {% block main_body %}
 <h1>Compliance Scan Schedules</h1>
-{% comment %}
-{% for message in messages %}
-    {% if forloop.first %}
-        <ul id="messages">
-    {% endif %}
-        <li class="warning"> {{ message }} </li>
-    {% if forloop.last %}
-        </ul>
-    {% endif %}
-{% endfor %}
-{% endcomment %}
-<h2>Schedule New Scan <a id='show_scheduler' href="#">[+]</a></h2>
+<h2>Schedule New Scan <a id='show-new' href="#">[+]</a></h2>
 <div class='hidden' id="schedule_form">
     <form action='{% url compliance_create_scan_schedule %}' method='POST'>
         <table>

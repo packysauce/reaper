@@ -13,12 +13,15 @@
         );
         $('#show-new').toggle(
             function() {
-                $('#newform').show();
+                $('#newform').slideDown();
             },
             function() {
-                $('#newform').hide();
+                $('#newform').slideUp();
             }
         );
+    {% if show_new %}
+    $('#show-new').click();
+    {% endif %}
     });
 </script>
 {% endblock %}

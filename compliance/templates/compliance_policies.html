@@ -11,7 +11,7 @@
                 $(this).next().hide();
             }
         );
-        $('#toggle_form').toggle(
+        $('#show-new').toggle(
             function() {
                 $('#upload_form').slideDown();
             },
@@ -19,6 +19,9 @@
                 $('#upload_form').slideUp();
             }
         );
+    {% if show_new %}
+    $('#show-new').click();
+    {% endif %}
     });
 </script>
 {% endblock %}
@@ -39,7 +42,7 @@
     {% endif %}
 {% endfor %}
 
-<h2>Upload new policy <a id='toggle_form' href="#">[+]</a></h2>
+<h2>Upload new policy <a id='show-new' href="#">[+]</a></h2>
 <div class='hidden' id='upload_form'>
     <form method='post' action='{% url compliance_policy_upload %}' enctype="multipart/form-data">
         <table>

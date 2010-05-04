@@ -1,35 +1,188 @@
 {% extends 'base.html' %}
+{% load utils %}
 
 {% block sidebar %}
 {% include 'compliance_sidebar.html' %}
 {% endblock %}
 
+{% block extra_head %}
+<script>
+    function l2h(a) {
+        var h = {};
+        for(var i=0; i<a.length; i++)
+            h[a[i]] = '';
+        return h;
+    }
+
+    function select_length(a) {
+        var i = 0;
+        for(var z; z < a.options.length; z++)
+            if(a.options[i].selected)
+                i++
+
+        return i;
+    }
+
+    var selectedCount = [];
+    $(document).ready(function () {
+        $('.select5').change(
+            function() {
+                if(select_length(this) <= 5) {
+                    selectedCount[this] = [];
+                    for(var z; z < this.options.length; z++)
+                        if(this.options[i].selected)
+                            selectedCount[this].push(i);
+                } else {
+                    for(var i; i < selectedCount[this].length - 5; i++)
+                        this.options[selectedCount[this].pop()].selected = false;
+                }
+            }
+        );
+        $('tr.result').toggle(
+            function() {
+                $(this).next().show();
+            },
+            function() {
+                $(this).next().hide();
+            }
+            );
+        $('#show-new').toggle(
+            function() {
+                $('#newform').slideDown();
+            },
+            function() {
+                $('#newform').slideUp();
+            }
+            );
+        {% if show_new %}
+            $('#show-new').click();
+        {% endif %}
+        });
+</script>
+{% endblock %}
+
+
 {% block main_body %}
 <h1>Compliance Scan Configurations</h1>
 <h2>New Scan Configuration <a href="#" id='show-new'>[+]</a></h2>
+<div id="newform" class="hidden">
+    <form action="{% url compliance_create_scan_config %}" method="POST">
+        <table>
+            <tr>
+                <td><label for="name">Name</label></td>
+                <td><input name="name"id="name" type="textbox"></input></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><label for="select-template">Template</label></td>
+                <td>
+                    <select id='select-template' name="template">
+                        <option value="-1"> -------- </option>
+                        {% for t in templates %}
+                        <option value="{{ t.id }}">{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan=4><h3>Policies<sub>(max 5 per column)</sub></h3></td>
+            </tr>
+            <tr>
+                <th>{% if wi_policies %}Windows{% endif %}</th>
+                <th>{% if wf_policies %}Windows File{% endif %}</th>
+                <th>{% if un_policies %}Unix{% endif %}</th>
+                <th>{% if db_policies %}Database{% endif %}</th>
+            </tr>
+            <tr>
+                <td class='group-select'>
+                    {% if wi_policies %}
+                    {% for i in 5|nrange %}
+                    <select name="wi-policies{{i}}">
+                        <option value="-1"> ---------- </option>
+                        {% for p in wi_policies %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endfor %}
+                    {% endif %}
+                </td>
+                <td class='group-select'>
+                    {% if wf_policies %}
+                    {% for i in 5|nrange %}
+                    <select name="wf-policies{{i}}">
+                        <option value="-1"> ---------- </option>
+                        {% for p in wf_policies %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endfor %}
+                    {% endif %}
+                </td>
+                <td class='group-select'>
+                    {% if un_policies %}
+                    {% for i in 5|nrange %}
+                    <select name="un-policies{{i}}">
+                        <option value="-1"> ---------- </option>
+                        {% for p in un_policies %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endfor %}
+                    {% endif %}
+                </td>
+                <td class='group-select'>
+                    {% if db_policies %}
+                    {% for i in 5|nrange %}
+                    <select name="db-policies{{i}}">
+                        <option value="-1"> ---------- </option>
+                        {% for p in db_policies %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2><input style="float:right;" type="submit" value="Submit"></input></td>
+                <td colspan=2></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
 <h2>Existing Scan Configurations</h2>
 <table class='block'>
-{% for config in configs %}
-    {% if forloop.first %}
-    <tr>
-        <th>Name</th>
-        <th># Plugins</th>
-        <th># Policies</th>
-        <th>Template Name</th>
-    </tr>
-    {% endif %}
-    <tr>
-        <td>{{ config.name }}</td>
-        <td>{{ config.plugin_set.count }}</td>
-        <td>{{ config.policy_set.count }}</td>
-        <td>{{ config.template__name }}</td>
-    </tr> 
-    {% empty %}
-    <tr>
-        <td style='text-align: center;' colspan=4>
+    {% for config in configs %}
+        {% if forloop.first %}
+        <tr>
+            <th>Name</th>
+            <th># Plugins</th>
+            <th># Policies</th>
+            <th>Template Name</th>
+        </tr>
+        {% endif %}
+        <tr class='result'>
+            <td>{{ config.name }}</td>
+            <td>{{ config.plugin_set.count }}</td>
+            <td>{{ config.policy_set.count }}</td>
+            <td>{{ config.template__name }}</td>
+        </tr> 
+        <tr class='hidden'>
+            <td colspan=4 class='result'>
+                <a style='float: right;' href="{% url compliance_delete_scan_config config.id %}">Delete</a>
+            </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+            <td style='text-align: center;' colspan=4>
             There are no scan configurations
-        </td>
-    </tr>
-{% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
 </table>
 {% endblock %}
